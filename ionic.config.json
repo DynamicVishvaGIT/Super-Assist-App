@@ -1,0 +1,7 @@
+{
+  "name": "Super-Assist-App",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "angular"
+}
