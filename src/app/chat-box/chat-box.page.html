@@ -1,0 +1,154 @@
+<ion-header class="chat-detail-header">
+  <ion-toolbar>
+    <div class="header-chat-row">
+      <ion-icon name="arrow-back-outline" class="back" (click)="onBack()"></ion-icon>
+      <!-- <div class="profile-wrapper">
+        <img src="assets/images/Prasenjit_Chanda.png">
+      </div> -->
+      <div class="avatar-circle">
+        {{ getInitials(contactName) }}
+      </div>
+      <div class="chat-user">
+        <div class="name">{{ contactName }}</div>
+        <div class="status">{{ recipientNo }}</div>
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+<ion-content #content class="chat-bg">
+  <div *ngFor="let msg of messages">
+    <div class="date-label">{{ msg.displayDate }}</div>
+    <div class="msg-row" [class.right]="msg.sender === 'me'" [class.left]="msg.sender === 'other'">
+      <div class="msg-bubble" [class.own]="msg.sender === 'me'" [class.other]="msg.sender === 'other'">
+        <!-- Header Text -->
+        <div class="template-header" *ngIf="msg.headerText">{{ msg.headerText }}</div>
+        <!-- Document Attachment -->
+        <div class="document-box" *ngIf="msg.headerType === 'document'">
+          <ion-icon name="document-text-outline"></ion-icon>
+          <div class="doc-info">
+            <div class="doc-name">Receipt.pdf</div>
+            <div class="doc-sub">Tap to view document</div>
+          </div>
+        </div>
+        <!-- Message Text -->
+        <div class="text">{{ msg.text }}</div>
+        <!-- Footer -->
+        <div class="powered" *ngIf="msg.footer">{{ msg.footer }}</div>
+        <!-- Buttons -->
+        <div class="template-buttons" *ngIf="msg.buttons?.length">
+          <div class="template-button" *ngFor="let btn of msg.buttons" (click)="onTemplateButtonClick(btn)">
+            <ion-icon *ngIf="btn.action_type === 'URL'" name="globe-outline"> </ion-icon>
+            <ion-icon *ngIf="btn.action_type === 'PHONE_NUMBER'" name="call-outline"></ion-icon>
+            <ion-icon *ngIf="btn.action_type === 'QUICK_REPLY'" name="chatbubble-outline"></ion-icon>
+            <ion-icon *ngIf="btn.action_type === 'FLOW'" name="paper-plane-outline"></ion-icon>
+            <span>{{ btn.label }}</span>
+          </div>
+        </div>
+        <!-- Time -->
+        <div class="meta">{{ msg.time }}
+          <ion-icon *ngIf="msg.sender === 'me'" name="checkmark-done" class="tick"></ion-icon>
+        </div>
+      </div>
+    </div>
+  </div>
+  &nbsp;
+</ion-content>
+<ion-footer>
+  <!-- Footer when conversation is ACTIVE (within 24 hours) -->
+  <ion-toolbar class="chat-footer" *ngIf="!showTemplateOnlyFooter">
+    <!-- <div class="template-btn" (click)="goToTemplate()">
+      📋 Template
+    </div> -->
+    <div class="input-row">
+      <input [(ngModel)]="newMessage" (focus)="scrollToBottom()" (keyup.enter)="send_messages()" placeholder="Message">
+      <div class="send-btn" (click)="send_messages()">
+        <ion-icon name="paper-plane"></ion-icon>
+      </div>
+    </div>
+  </ion-toolbar>
+  <!-- Footer when conversation EXPIRED (>24 hours or null) -->
+  <ion-toolbar class="expired-footer" *ngIf="showTemplateOnlyFooter">
+    <div class="expired-info">
+      ⚠️ This chat has expired. After 24 hours of inactivity,
+      only WhatsApp template messages can be sent.
+    </div>
+    <!-- <div class="expired-template-btn" (click)="goToTemplate()">
+      Select Template
+    </div> -->
+  </ion-toolbar>
+</ion-footer>
+<!-- <ion-footer>
+  <ion-toolbar class="chat-footer">
+    <div class="template-btn" (click)="goToTemplate()">
+      📋 Template
+    </div>
+    <div class="input-row">
+      <input [(ngModel)]="newMessage" (focus)="scrollToBottom()" (keyup.enter)="send_messages()" placeholder="Message">
+      <div class="send-btn" (click)="send_messages()">
+        <ion-icon name="paper-plane"></ion-icon>
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-footer> -->
+
+
+<!-- <ion-header class="chat-detail-header">
+  <ion-toolbar>
+    <div class="header-chat-row">
+      <ion-icon name="arrow-back-outline" class="back" (click)="onBack()"></ion-icon>
+      <div class="profile-wrapper">
+        <img src="assets/images/Prasenjit_Chanda.png">
+      </div>
+      <div class="chat-user">
+        <div class="name">Sarah Johnson</div>
+        <div class="status">9434478921</div>
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content #content class="chat-bg">
+  <div class="date-label">Today</div>
+  <div *ngFor="let msg of messages" 
+       class="msg-row"
+       [class.right]="msg.sender === 'me'"
+       [class.left]="msg.sender === 'other'" (click)="toggleSelect(msg)"
+       [class.selected-msg]="msg.selected">
+
+    <div class="msg-bubble" 
+         [class.own]="msg.sender === 'me'"
+         [class.other]="msg.sender === 'other'">
+
+      <div class="text">{{msg.text}}</div>
+      <div class="powered" *ngIf="msg.sender === 'me'">
+        Powered by dv
+      </div>
+      <div class="meta" [class.small]="msg.sender === 'other'">
+        {{msg.time}}
+        <ion-icon 
+          *ngIf="msg.sender === 'me'" 
+          name="checkmark-done"
+          class="tick">
+        </ion-icon>
+      </div>
+    </div>
+  </div>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar class="chat-footer">
+    <div class="template-btn" (click)="goToTemplate()">📋 Template</div>
+
+    <div class="input-row">
+      <input 
+        [(ngModel)]="newMessage"
+        (focus)="scrollToBottom()"
+        (keyup.enter)="sendMessage()"
+        placeholder="Message">
+
+      <div class="send-btn" (click)="sendMessage()">
+        <ion-icon name="paper-plane"></ion-icon>
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-footer> -->

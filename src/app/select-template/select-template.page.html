@@ -1,0 +1,23 @@
+<ion-header class="template-header">
+  <ion-toolbar>
+    <ion-icon name="chevron-back-outline" class="back" (click)="goBack()"></ion-icon>
+    <div class="title">Select Template</div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="template-content">
+  <!-- SEARCH -->
+  <div class="search-box">
+    <ion-icon name="search-outline"></ion-icon>
+    <input type="text" placeholder="Search templates" [(ngModel)]="searchText" (input)="filterTemplates()">
+  </div>
+  <div class="divider"></div>
+  <!-- LIST -->
+  <div class="template-item" *ngFor="let item of filteredTemplates" (click)="selectTemplate(item)">
+    <div class="left">
+      <div class="name">{{item.name}}</div>
+      <div class="badge">{{item.category__name}}</div>
+    </div>
+    <ion-icon name="chevron-forward-outline" class="arrow"></ion-icon>
+  </div>
+</ion-content>

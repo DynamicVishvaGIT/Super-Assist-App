@@ -1,0 +1,89 @@
+<ion-header class="preview-header">
+  <ion-toolbar>
+    <ion-icon
+      name="chevron-back-outline"
+      class="back"
+      (click)="goBack()">
+    </ion-icon>
+
+    <div class="title">
+      {{ template_data?.templates?.name }}
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="preview-content">
+  <div class="chat-wrapper right">
+    <div class="chat-bubble">
+
+      <!-- Header -->
+      <div
+        class="header-text"
+        *ngIf="template_data?.templates?.header_type === 'text'">
+        {{ template_data?.templates?.header_text }}
+      </div>
+
+      <!-- Body -->
+      <div class="text">
+        {{ template_data?.templates?.body_content }}
+      </div>
+
+      <!-- Time -->
+      <div class="time">
+        {{ currentTime }}
+      </div>
+
+      <!-- Divider -->
+      <div
+        class="divider"
+        *ngIf="template_data?.templates_button?.length > 0">
+      </div>
+
+      <!-- Buttons -->
+      <div
+        class="btn-box"
+        *ngIf="template_data?.templates_button?.length > 0">
+
+        <div
+          class="action-btn"
+          *ngFor="let btn of template_data?.templates_button">
+
+          <ng-container [ngSwitch]="btn.action_type">
+
+            <span *ngSwitchCase="'FLOW'">
+              ⚡ {{ btn.label }}
+            </span>
+
+            <span *ngSwitchCase="'URL'">
+              🔗 {{ btn.label }}
+            </span>
+
+            <span *ngSwitchCase="'PHONE_NUMBER'">
+              📞 {{ btn.label }}
+            </span>
+
+            <span *ngSwitchDefault>
+              📋 {{ btn.label }}
+            </span>
+
+          </ng-container>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div
+        class="powered"
+        *ngIf="template_data?.templates?.footer_content">
+        {{ template_data?.templates?.footer_content }}
+      </div>
+
+    </div>
+  </div>
+</ion-content>
+
+<!-- Footer -->
+<div class="footer">
+  <div class="send-btn" (click)="sendTemplate()">
+    Send Template
+  </div>
+</div>

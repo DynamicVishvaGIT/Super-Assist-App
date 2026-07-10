@@ -1,0 +1,1027 @@
+<ion-header class="chat-detail-header">
+  <ion-toolbar>
+    <div class="header-chat-row">
+
+      <ion-icon
+        name="arrow-back-outline"
+        class="back"
+        (click)="onBack()">
+      </ion-icon>
+
+      <div class="avatar-circle">
+        {{ getInitials(contactName) }}
+      </div>
+
+      <div class="chat-user">
+        <div class="name">
+          {{ contactName }}
+        </div>
+
+        <div class="status">
+          {{ recipientNo }}
+        </div>
+      </div>
+
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+
+
+
+
+<ion-content #content class="chat-bg">
+
+<div *ngFor="let msg of messages">
+
+  <div class="date-label" *ngIf="msg.showDate">
+      {{msg.displayDate}}
+  </div>
+
+  <div class="msg-row" [class.right]="msg.sender=='me'" [class.left]="msg.sender=='other'">
+
+
+
+
+<!-------------------------------------------------------------
+--------------------- OUTGOING MESSAGE -------------------------
+--------------------------------------------------------------->
+
+<div class="msg-bubble own" *ngIf="msg.sender=='me'">
+
+
+
+
+<!-- ==========================================================
+==================== TEMPLATE MESSAGE ==========================
+=========================================================== -->
+
+<ng-container *ngIf="msg.message_type=='template'; else outNormalMessage">
+
+
+
+
+<!--======================== HEADER ==========================-->
+
+<div
+class="template-header-wrapper"
+*ngIf="msg.template?.header_type!='none'">
+
+
+
+
+<!-- TEXT HEADER -->
+
+<div
+class="template-header-text"
+*ngIf="msg.template?.header_type=='text'">
+
+{{msg?.template?.header_text}}
+
+</div>
+
+
+
+
+
+<!-- IMAGE HEADER -->
+
+<div
+class="template-image"
+*ngIf="msg.template?.header_type=='image'">
+
+<img
+[src]="imgURL + msg?.template?.header_media_file"
+(click)="openImage(imgURL + msg?.template?.header_media_file)">
+
+</div>
+
+
+
+
+
+<!-- VIDEO HEADER -->
+
+<div
+class="template-video"
+*ngIf="msg.template?.header_type=='video'">
+
+<video
+controls
+preload="metadata">
+
+<source
+[src]="imgURL + msg.template?.header_media_file">
+
+</video>
+
+</div>
+
+
+
+
+
+
+<!-- DOCUMENT HEADER -->
+
+<div
+class="template-document"
+*ngIf="msg.template?.header_type=='document'"
+(click)="downloadFile(imgURL + msg?.template?.header_media_file,
+msg.template?.header_file_name)">
+
+<div class="doc-left">
+
+<ion-icon
+name="document-text-outline">
+</ion-icon>
+
+<div>
+
+<div class="doc-name">
+
+{{msg.template?.header_file_name}}
+
+</div>
+
+<div class="doc-sub">
+
+Tap to download
+
+</div>
+
+</div>
+
+</div>
+
+<ion-icon
+name="download-outline">
+</ion-icon>
+
+</div>
+
+</div>
+
+
+
+
+
+<!--======================= BODY =========================-->
+
+<div class="template-body">
+
+{{msg.renderedBody}}
+
+</div>
+
+
+
+
+
+<!--====================== FOOTER =========================-->
+
+<div
+class="template-footer"
+*ngIf="msg.template?.footer_content">
+
+{{msg.template?.footer_content}}
+
+</div>
+
+
+
+
+
+<!--====================== BUTTONS ========================-->
+
+<div
+class="template-buttons"
+*ngIf="msg.template?.buttons?.length">
+
+<div
+
+class="template-button"
+
+*ngFor="let btn of msg.template?.buttons"
+
+(click)="onTemplateButtonClick(btn)">
+
+<ion-icon
+
+*ngIf="btn.action_type=='PHONE_NUMBER'"
+
+name="call-outline">
+
+</ion-icon>
+
+<ion-icon
+
+*ngIf="btn.action_type=='URL'"
+
+name="globe-outline">
+
+</ion-icon>
+
+<ion-icon
+
+*ngIf="btn.action_type=='QUICK_REPLY'"
+
+name="chatbubble-outline">
+
+</ion-icon>
+
+<ion-icon
+
+*ngIf="btn.action_type=='FLOW'"
+
+name="paper-plane-outline">
+
+</ion-icon>
+
+<span>
+
+{{btn.label}}
+
+</span>
+
+</div>
+
+</div>
+
+</ng-container>
+
+
+
+
+
+
+<!--======================================================
+============== NORMAL OUT MESSAGE START ==================
+=======================================================-->
+
+<ng-template #outNormalMessage>
+  <!-- ==========================================================
+===================== OUTGOING IMAGE ===========================
+=========================================================== -->
+
+<ng-container [ngSwitch]="msg.message_type">
+
+  <!-- IMAGE -->
+  <div *ngSwitchCase="'image'" class="media-wrapper">
+
+    <img
+      class="chat-image"
+      [src]="imgURL + msg.media_path"
+      (click)="openImage(imgURL + msg.media_path)"
+      loading="lazy">
+
+    <div
+      class="media-caption"
+      *ngIf="msg.text">
+
+      {{ msg.text }}
+
+    </div>
+
+  </div>
+
+
+
+
+  <!-- ==========================================================
+====================== VIDEO ===============================
+=========================================================== -->
+
+  <div *ngSwitchCase="'video'" class="media-wrapper">
+
+    <video
+      class="chat-video"
+      controls
+      preload="metadata">
+
+      <source [src]="imgURL + msg.media_path">
+
+    </video>
+
+    <!-- <div
+      class="media-caption"
+      *ngIf="msg.text">
+
+      {{ msg.text }}
+
+    </div> -->
+
+  </div>
+
+  <!-- ===================== DOCUMENT ===================== -->
+
+<div *ngSwitchCase="'document'" class="media-wrapper">
+
+  <div
+    class="document-card"
+    (click)="downloadFile(imgURL + msg.media_path, msg.file_name)">
+
+    <div class="doc-left">
+
+      <ion-icon
+        name="document-text-outline"
+        class="doc-icon">
+      </ion-icon>
+
+      <div class="doc-details">
+
+        <div class="doc-title">
+          {{ msg.file_name || getFileName(msg.media_path) }}
+        </div>
+
+      </div>
+
+    </div>
+
+    <ion-icon
+      name="download-outline"
+      class="download-icon">
+    </ion-icon>
+
+  </div>
+
+  <div
+    class="media-caption"
+    *ngIf="msg.text">
+
+    {{ msg.text }}
+
+  </div>
+
+</div>
+
+
+
+
+
+<!-- ======================= AUDIO ====================== -->
+
+<div *ngSwitchCase="'audio'" class="media-wrapper">
+
+  <audio
+    controls
+    class="chat-audio">
+
+    <source
+      [src]="imgURL + msg.media_path">
+
+  </audio>
+
+  <div
+    class="media-caption"
+    *ngIf="msg.text">
+
+    {{ msg.text }}
+
+  </div>
+
+</div>
+
+
+
+
+
+<!-- ===================== LOCATION ===================== -->
+
+<div *ngSwitchCase="'location'" class="media-wrapper">
+
+  <img
+
+    class="location-image"
+
+    [src]="
+            'https://maps.googleapis.com/maps/api/staticmap?center=' +
+            msg.latitude + ',' + msg.longitude +
+            '&zoom=16&size=600x260' +
+            '&markers=color:red|' +
+            msg.latitude + ',' + msg.longitude +
+            '&key=AIzaSyDinqEFwSCs66zyeb1WwpjmklkC8pio99k'
+          "
+
+    (click)="openLocation(msg?.latitude,msg?.longitude)">
+
+  <div class="location-title">
+    Show in Maps
+    <!-- {{msg.location_name}} -->
+
+  </div>
+
+</div>
+
+
+
+
+
+
+<!-- ===================== CONTACT ===================== -->
+
+<div *ngSwitchCase="'contacts'" class="media-wrapper">
+
+  <div class="contact-card">
+
+    <div class="contact-avatar">
+
+      {{ getInitials(msg?.contact_name) }}
+
+    </div>
+
+    <div class="contact-details">
+
+      <div class="contact-name">
+
+        {{msg?.contact_name}}
+
+      </div>
+
+      <div class="contact-number">
+
+        {{msg?.contact_number}}
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- ==========================================================
+======================= REPLY ================================
+=========================================================== -->
+
+<div *ngSwitchCase="'reply'" class="reply-message">
+
+  <div
+      class="reply-box"
+      *ngIf="msg.parent_message">
+
+      <div class="reply-name">
+
+          {{msg.parent_message.sender_name}}
+
+      </div>
+
+      <div class="reply-text">
+
+          {{msg.parent_message.preview_text}}
+
+      </div>
+
+  </div>
+
+  <div class="text">
+
+      {{msg.text}}
+
+  </div>
+
+</div>
+
+
+
+
+
+<!-- ==========================================================
+===================== FORWARDED ==============================
+=========================================================== -->
+
+<div *ngSwitchCase="'forward'" class="forward-message">
+
+    <div class="forward-label">
+
+        <ion-icon
+            name="arrow-redo-outline">
+        </ion-icon>
+
+        Forwarded
+
+    </div>
+
+    <div class="text">
+
+        {{msg.text}}
+
+    </div>
+
+</div>
+
+
+  <!-- ==========================================================
+====================== TEXT ===============================
+=========================================================== -->
+
+  <div *ngSwitchDefault>
+
+    <div class="text">
+
+      {{ msg.text }}
+
+    </div>
+
+  </div>
+
+</ng-container>
+
+
+
+
+
+<!-- MESSAGE TIME -->
+
+<div class="meta">
+
+  <span>
+
+      {{msg.time}}
+
+  </span>
+
+  <ion-icon
+
+      *ngIf="msg.status=='sent'"
+
+      name="checkmark-outline"
+
+      class="tick">
+
+  </ion-icon>
+
+  <ion-icon
+  *ngIf="msg.sender==='me'"
+  [class.tick]="true"
+  [name]="getStatusIcon(msg)"
+  [style.color]="getStatusColor(msg)">
+  </ion-icon>
+
+  <!-- <ion-icon
+
+      *ngIf="msg.status=='delivered'"
+
+      name="checkmark-done-outline"
+
+      class="tick">
+
+  </ion-icon> -->
+
+  <ion-icon
+
+      *ngIf="msg.status=='read'"
+
+      name="checkmark-done"
+
+      class="tick read">
+
+  </ion-icon>
+
+</div>
+
+</ng-template>
+
+</div>
+
+<!-- ==========================================================
+===================== INCOMING MESSAGE =========================
+=========================================================== -->
+
+<div
+  class="msg-bubble other"
+  *ngIf="msg.sender == 'other'">
+
+  <ng-container [ngSwitch]="msg.message_type">
+
+    <!-- ======================================================
+    ====================== IMAGE =============================
+    ======================================================= -->
+
+    <div *ngSwitchCase="'image'" class="media-wrapper">
+
+      <img
+        class="chat-image"
+        [src]="getImageUrl(msg.media_path)"
+        loading="lazy"
+        (click)="openImage(getImageUrl(msg.media_path))" *ngIf="msg.media_path">
+
+      <div
+        class="media-caption"
+        *ngIf="msg.text && msg.text !== '[Image]'">
+
+        {{ msg.text }}
+
+      </div>
+      <div
+        class="media-caption"
+        *ngIf="!msg.media_path">
+
+        Image unavailable
+
+      </div>
+
+    </div>
+
+
+
+    <!-- ======================================================
+    ====================== VIDEO =============================
+    ======================================================= -->
+
+    <div *ngSwitchCase="'video'" class="media-wrapper">
+
+      <video
+        class="chat-video"
+        controls
+        preload="metadata">
+
+        <source [src]="imgURL + msg.media_path">
+
+      </video>
+
+      <!-- <div
+        class="media-caption"
+        *ngIf="msg.text">
+
+        {{ msg.text }}
+
+      </div> -->
+
+    </div>
+
+    <!-- ======================================================
+==================== DOCUMENT ===========================
+====================================================== -->
+
+<div *ngSwitchCase="'document'" class="media-wrapper">
+
+  <div
+      class="document-card"
+      (click)="downloadFile(imgURL + msg.media_path,msg.file_name)">
+
+      <div class="doc-left">
+
+          <ion-icon
+              name="document-text-outline"
+              class="doc-icon">
+          </ion-icon>
+
+          <div class="doc-details">
+
+              <div class="doc-title">
+
+                  {{msg.file_name || getFileName(msg.media_path)}}
+
+              </div>
+
+              <!-- <div class="doc-subtitle">
+
+                  Tap to download
+
+              </div> -->
+
+          </div>
+
+      </div>
+
+      <ion-icon
+          name="download-outline"
+          class="download-icon">
+      </ion-icon>
+
+  </div>
+
+  <div
+      class="media-caption"
+      *ngIf="msg.text">
+
+      {{msg.text}}
+
+  </div>
+
+</div>
+
+<!-- ======================================================
+===================== AUDIO =============================
+====================================================== -->
+
+<div *ngSwitchCase="'audio'" class="media-wrapper">
+
+  <audio
+      controls
+      class="chat-audio">
+
+      <source
+          [src]="imgURL + msg.media_path">
+
+  </audio>
+
+  <div
+      class="media-caption"
+      *ngIf="msg.text">
+
+      {{msg.text}}
+
+  </div>
+
+</div>
+
+<!-- ======================================================
+===================== VOICE =============================
+====================================================== -->
+
+<div *ngSwitchCase="'voice'" class="media-wrapper">
+
+  <audio
+      controls
+      class="chat-audio">
+
+      <source
+          [src]="imgURL+msg.media_path">
+
+  </audio>
+
+</div>
+
+<!-- ======================================================
+===================== STICKER ==========================
+====================================================== -->
+
+<div *ngSwitchCase="'sticker'">
+
+  <img
+
+      class="sticker-image"
+
+      [src]="imgURL+ msg.media_path"
+
+      loading="lazy"
+
+      (click)="openImage(imgURL+msg.media_path)">
+
+</div>
+
+<!-- ======================================================
+==================== LOCATION ===========================
+====================================================== -->
+
+<div *ngSwitchCase="'location'" class="media-wrapper">
+
+  <div class="location-card">
+      <img
+          class="location-map"
+          [src]="
+            'https://maps.googleapis.com/maps/api/staticmap?center=' +
+            msg.latitude + ',' + msg.longitude +
+            '&zoom=16&size=600x260' +
+            '&markers=color:red|' +
+            msg.latitude + ',' + msg.longitude +
+            '&key=AIzaSyDinqEFwSCs66zyeb1WwpjmklkC8pio99k'
+          ">
+
+      <div class="location-info">
+
+          <div class="location-title" (click)="openLocation(msg.latitude,msg.longitude)">
+
+              Show in Maps
+
+          </div>
+
+          <!-- <div class="location-address">
+
+              {{msg.address}}
+
+          </div> -->
+
+      </div>
+
+  </div>
+
+</div>
+
+<!-- ======================================================
+===================== CONTACT ===========================
+====================================================== -->
+
+<div *ngSwitchCase="'contacts'" class="media-wrapper">
+
+  <div class="contact-card">
+
+      <div class="contact-avatar">
+
+          {{getInitials(msg.contact_name)}}
+
+      </div>
+
+      <div class="contact-details">
+
+          <div class="contact-name">
+
+              {{msg.contact_name}}
+
+          </div>
+
+          <div class="contact-number">
+
+              {{msg.contact_number}}
+
+          </div>
+
+      </div>
+
+  </div>
+
+  <div class="contact-actions">
+
+      <button
+          class="contact-btn"
+          (click)="callContact(msg?.contact_number)">
+
+          <ion-icon name="call-outline"></ion-icon>
+
+          Call
+
+      </button>
+
+      <button
+          class="contact-btn"
+          (click)="saveContact(msg?.contact_name, msg?.contact_number)">
+
+          <ion-icon name="person-add-outline"></ion-icon>
+
+          Save
+
+      </button>
+
+  </div>
+
+</div>
+
+<!-- ========================= REPLY ========================= -->
+
+<div *ngSwitchCase="'reply'" class="reply-message">
+
+  <div
+      class="reply-box"
+      *ngIf="msg.parent_message">
+
+      <div class="reply-name">
+        {{getReplySender(msg)}}
+          <!-- {{msg.parent_message.sender_name}} -->
+
+      </div>
+
+      <div class="reply-text "><!--reply-preview-->
+        {{getReplyPreview(msg)}}
+          <!-- {{msg.parent_message.preview_text}} -->
+
+      </div>
+
+  </div>
+
+  <div class="text">
+
+      {{msg.text}}
+
+  </div>
+
+</div>
+
+<!-- ======================= FORWARDED ====================== -->
+
+<div *ngSwitchCase="'forward'" class="forward-message">
+
+  <div class="forward-label">
+
+      <ion-icon
+          name="arrow-redo-outline">
+      </ion-icon>
+
+      Forwarded
+
+  </div>
+
+  <div class="text">
+
+      {{msg.text}}
+
+  </div>
+
+</div>
+
+<!-- ===================== INTERACTIVE ====================== -->
+
+<div *ngSwitchCase="'interactive'">
+
+  <div class="text">
+
+      {{msg.text}}
+
+  </div>
+
+</div>
+
+<div *ngSwitchCase="'button_reply'">
+
+  <div class="text">
+
+      {{msg.text}}
+
+  </div>
+
+</div>
+
+<div *ngSwitchCase="'list_reply'">
+
+  <div class="text">
+
+      {{msg.text}}
+
+  </div>
+
+</div>
+
+<div *ngSwitchCase="'flow'">
+
+  <div class="text">
+
+      {{msg.text}}
+
+  </div>
+
+</div>
+
+<!-- ====================== UNSUPPORTED ===================== -->
+
+<div *ngSwitchCase="'unsupported'">
+
+  <div class="unsupported">
+
+      Unsupported message
+
+  </div>
+
+</div>
+
+<div *ngSwitchCase="'unknown'">
+
+  <div class="unsupported">
+
+      Unknown message type
+
+  </div>
+
+</div>
+
+    <!-- ======================================================
+    ======================= TEXT =============================
+    ======================================================= -->
+
+    <div *ngSwitchDefault>
+
+      <div class="text">
+  
+          {{msg.text}}
+  
+      </div>
+  
+  </div>
+
+  </ng-container>
+
+  <div class="meta small">
+
+    {{ msg.time }}
+
+  </div>
+
+</div>
+</div>
+</div>
+</ion-content>
+
+<ion-footer>
+  <!-- Footer when conversation is ACTIVE (within 24 hours) -->
+  <ion-toolbar class="chat-footer" *ngIf="!showTemplateOnlyFooter">
+    <!-- <div class="template-btn" (click)="goToTemplate()">
+      📋 Template
+    </div> -->
+    <div class="input-row">
+      <input [(ngModel)]="newMessage" (focus)="scrollToBottom()" (keyup.enter)="send_messages()" placeholder="Message">
+      <div class="send-btn" (click)="send_messages()">
+        <ion-icon name="paper-plane"></ion-icon>
+      </div>
+    </div>
+  </ion-toolbar>
+  <!-- Footer when conversation EXPIRED (>24 hours or null) -->
+  <ion-toolbar class="expired-footer" *ngIf="showTemplateOnlyFooter">
+    <div class="expired-info">
+      ⚠️ This chat has expired. After 24 hours of inactivity,
+      only WhatsApp template messages can be sent.
+    </div>
+    <!-- <div class="expired-template-btn" (click)="goToTemplate()">
+      Select Template
+    </div> -->
+  </ion-toolbar>
+</ion-footer>

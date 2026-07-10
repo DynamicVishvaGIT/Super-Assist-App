@@ -1,0 +1,2244 @@
+.media-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-image {
+  width: 100%;
+  max-width: 260px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.chat-video {
+  width: 100%;
+  max-width: 260px;
+  border-radius: 10px;
+  background: #000;
+}
+
+.media-caption {
+  margin-top: 8px;
+  font-size: 15px;
+  line-height: 22px;
+}
+/* DOCUMENT */
+
+.document-card{
+
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+
+  background:#f5f5f5;
+
+  border-radius:12px;
+
+  padding:12px;
+
+}
+
+.doc-left{
+
+  display:flex;
+  align-items:center;
+
+}
+
+.doc-icon{
+
+  font-size:34px;
+
+  color:#085e54;
+
+  margin-right:10px;
+
+}
+
+.doc-title{
+
+  font-size:15px;
+
+  font-weight:600;
+
+}
+
+.doc-subtitle{
+
+  font-size:12px;
+
+  color:#8e8e93;
+
+}
+
+.download-icon{
+
+  font-size:22px;
+
+  color:#085e54;
+
+}
+
+
+
+
+
+/* AUDIO */
+
+.chat-audio{
+
+  width:260px;
+
+}
+
+
+
+
+
+/* LOCATION */
+
+.location-image{
+
+  width:100%;
+
+  border-radius:10px;
+
+}
+
+.location-title{
+
+  margin-top:8px;
+
+  font-size:14px;
+
+}
+
+
+
+
+
+/* CONTACT */
+
+.contact-card{
+
+  display:flex;
+
+  align-items:center;
+
+  background:#f5f5f5;
+
+  border-radius:12px;
+
+  padding:12px;
+
+}
+
+.contact-avatar{
+
+  width:48px;
+
+  height:48px;
+
+  border-radius:50%;
+
+  background:#27d366;
+
+  color:white;
+
+  display:flex;
+
+  justify-content:center;
+
+  align-items:center;
+
+  font-weight:600;
+
+  margin-right:12px;
+
+}
+
+.contact-name{
+
+  font-size:15px;
+
+  font-weight:600;
+
+}
+
+.contact-number{
+
+  font-size:13px;
+
+  color:#8e8e93;
+
+}
+
+/* ================= REPLY ================= */
+
+.reply-box{
+
+  border-left:4px solid #00a884;
+
+  background:#eef7eb;
+
+  border-radius:8px;
+
+  padding:8px;
+
+  margin-bottom:8px;
+
+}
+
+.reply-name{
+
+  font-size:12px;
+
+  font-weight:600;
+
+  color:#00a884;
+
+}
+
+.reply-text{
+
+  font-size:13px;
+
+  color:#555;
+
+  margin-top:2px;
+
+}
+
+
+
+
+
+/* ================= FORWARDED ================= */
+
+.forward-label{
+
+  display:flex;
+
+  align-items:center;
+
+  font-size:12px;
+
+  color:#667781;
+
+  margin-bottom:6px;
+
+  font-style:italic;
+
+}
+
+.forward-label ion-icon{
+
+  font-size:14px;
+
+  margin-right:4px;
+
+}
+
+
+
+
+
+/* ================= MESSAGE STATUS ================= */
+
+.meta{
+
+  display:flex;
+
+  justify-content:flex-end;
+
+  align-items:center;
+
+  margin-top:6px;
+
+  font-size:11px;
+
+  color:#667781;
+
+}
+
+.tick{
+
+  margin-left:4px;
+
+  font-size:16px;
+
+}
+
+.tick.read{
+
+  color:#53bdeb;
+
+}
+/* ===================== INCOMING ====================== */
+
+.msg-bubble.other {
+
+  background: #ffffff;
+
+  border-radius: 10px;
+
+  box-shadow: 0 2px 6px rgba(0,0,0,.12);
+
+}
+
+/* incoming media */
+
+.msg-bubble.other .chat-image {
+
+  width: 100%;
+
+  max-width: 260px;
+
+  border-radius: 10px;
+
+  display: block;
+
+}
+
+.msg-bubble.other .chat-video {
+
+  width: 100%;
+
+  max-width: 260px;
+
+  border-radius: 10px;
+
+  background: #000;
+
+}
+
+.msg-bubble.other .media-caption {
+
+  margin-top: 8px;
+
+  font-size: 15px;
+
+  line-height: 22px;
+
+}
+
+.msg-bubble.other .meta {
+
+  justify-content: flex-start;
+
+}
+
+/* Incoming Document */
+
+.msg-bubble.other .document-card{
+
+  display:flex;
+
+  justify-content:space-between;
+
+  align-items:center;
+
+  background:#f6f6f6;
+
+  border-radius:12px;
+
+  padding:12px;
+
+}
+
+.msg-bubble.other .doc-left{
+
+  display:flex;
+
+  align-items:center;
+
+}
+
+.msg-bubble.other .doc-icon{
+
+  font-size:34px;
+
+  color:#085e54;
+
+  margin-right:10px;
+
+}
+
+.msg-bubble.other .doc-title{
+
+  font-size:15px;
+
+  font-weight:600;
+
+}
+
+.msg-bubble.other .doc-subtitle{
+
+  font-size:12px;
+
+  color:#8e8e93;
+
+}
+
+.msg-bubble.other .download-icon{
+
+  font-size:22px;
+
+  color:#085e54;
+
+}
+
+
+
+
+
+/* Audio */
+
+.chat-audio{
+
+  width:260px;
+
+}
+
+
+
+
+
+/* Sticker */
+
+.sticker-image{
+
+  width:140px;
+
+  display:block;
+
+}
+
+/* ================= LOCATION ================= */
+
+.location-card{
+
+  overflow:hidden;
+
+  border-radius:12px;
+
+  background:#ffffff;
+
+}
+
+.location-map{
+
+  width:100%;
+
+  height:170px;
+
+  object-fit:cover;
+
+  display:block;
+
+}
+
+.location-info{
+
+  padding:10px;
+
+}
+
+.location-title{
+
+  font-size:15px;
+
+  font-weight:600;
+
+}
+
+.location-address{
+
+  margin-top:4px;
+
+  font-size:13px;
+
+  color:#8e8e93;
+
+}
+
+
+
+
+
+/* ================= CONTACT ================= */
+
+.contact-card{
+
+  display:flex;
+
+  align-items:center;
+
+  background:#f5f5f5;
+
+  border-radius:12px;
+
+  padding:12px;
+
+}
+
+.contact-avatar{
+
+  width:48px;
+
+  height:48px;
+
+  border-radius:50%;
+
+  background:#27d366;
+
+  color:#fff;
+
+  display:flex;
+
+  justify-content:center;
+
+  align-items:center;
+
+  font-size:16px;
+
+  font-weight:600;
+
+  margin-right:12px;
+
+}
+
+.contact-details{
+
+  flex:1;
+
+}
+
+.contact-name{
+
+  font-size:15px;
+
+  font-weight:600;
+
+}
+
+.contact-number{
+
+  margin-top:2px;
+
+  color:#8e8e93;
+
+  font-size:13px;
+
+}
+
+.contact-actions{
+
+  display:flex;
+
+  justify-content:space-evenly;
+
+  margin-top:10px;
+
+  gap:10px;
+
+}
+
+.contact-btn{
+
+  flex:1;
+
+  height:38px;
+
+  border:none;
+
+  border-radius:8px;
+
+  background:#eef7ff;
+
+  color:#0088cc;
+
+  font-size:14px;
+
+  display:flex;
+
+  justify-content:center;
+
+  align-items:center;
+
+  gap:6px;
+
+}
+
+/* ================= Reply ================= */
+
+.reply-box{
+
+  background:#f4f4f4;
+
+  border-left:4px solid #009866;
+
+  padding:8px;
+
+  border-radius:8px;
+
+  margin-bottom:8px;
+
+}
+
+.reply-name{
+
+  font-size:12px;
+
+  font-weight:600;
+
+  color:#009866;
+
+}
+
+.reply-preview{
+
+  margin-top:3px;
+
+  font-size:13px;
+
+  color:#666;
+
+}
+
+
+
+
+
+/* ================= Forward ================= */
+
+.forward-label{
+
+  display:flex;
+
+  align-items:center;
+
+  font-size:12px;
+
+  color:#667781;
+
+  margin-bottom:6px;
+
+  font-style:italic;
+
+}
+
+.forward-label ion-icon{
+
+  font-size:14px;
+
+  margin-right:4px;
+
+}
+
+
+
+
+
+/* ================= Unsupported ================= */
+
+.unsupported{
+
+  padding:10px;
+
+  color:#999;
+
+  font-style:italic;
+
+  font-size:13px;
+
+}
+
+/* ==========================================================
+   PART 1B-1
+   Base Layout
+========================================================== */
+
+/* ================= HEADER ================= */
+
+.chat-detail-header ion-toolbar {
+  --background: #085e54;
+  --color: #ffffff;
+  padding: 6px 10px;
+}
+
+.header-chat-row {
+  display: flex;
+  align-items: center;
+  min-height: 56px;
+}
+
+.back {
+  color: #ffffff;
+  font-size: 24px;
+  margin-right: 12px;
+}
+
+.chat-user {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1;
+}
+
+.chat-user .name {
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.chat-user .status {
+  color: #d9ece8;
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+
+/* ================= AVATAR ================= */
+
+.avatar-circle {
+
+  width: 46px;
+  height: 46px;
+
+  min-width: 46px;
+
+  border-radius: 50%;
+
+  background: #d9fdd3;
+
+  color: #085e54;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 16px;
+  font-weight: 600;
+
+  margin-right: 12px;
+
+  text-transform: uppercase;
+
+}
+
+
+/* ================= CHAT BACKGROUND ================= */
+
+.chat-bg {
+
+  --background: #e9e3dc;
+
+}
+
+ion-content.chat-bg::part(scroll) {
+
+  background:
+      #e9e3dc
+      url('/assets/images/whatsapp-bg.png')
+      repeat;
+
+  background-size: 420px;
+
+}
+
+
+/* ================= DATE LABEL ================= */
+
+.date-label {
+
+  width: fit-content;
+
+  margin: 14px auto;
+
+  padding: 6px 12px;
+
+  border-radius: 8px;
+
+  background: #e7f3fb;
+
+  color: #54656f;
+
+  font-size: 12px;
+
+  font-weight: 500;
+
+}
+
+
+/* ================= CHAT ROW ================= */
+
+.msg-row {
+
+  display: flex;
+
+  margin: 6px 10px;
+
+}
+
+.msg-row.left {
+
+  justify-content: flex-start;
+
+}
+
+.msg-row.right {
+
+  justify-content: flex-end;
+
+}
+
+
+/* ================= BUBBLE ================= */
+
+.msg-bubble {
+
+  position: relative;
+
+  max-width: 78%;
+
+  border-radius: 12px;
+
+  padding: 10px 12px;
+
+  word-break: break-word;
+
+  overflow-wrap: anywhere;
+
+}
+
+
+/* OUT */
+
+.msg-bubble.own {
+
+  background: #ddf8c6;
+
+  border-top-right-radius: 4px;
+
+}
+
+
+/* IN */
+
+.msg-bubble.other {
+
+  background: #ffffff;
+
+  border-top-left-radius: 4px;
+
+  box-shadow: 0 1px 2px rgba(0,0,0,.12);
+
+}
+
+
+/* ================= BUBBLE TAIL ================= */
+
+.msg-bubble.own::after {
+
+  content: "";
+
+  position: absolute;
+
+  right: -6px;
+
+  top: 0;
+
+  width: 12px;
+
+  height: 12px;
+
+  background: #ddf8c6;
+
+  clip-path: polygon(0 0,100% 0,0 100%);
+
+}
+
+.msg-bubble.other::before {
+
+  content: "";
+
+  position: absolute;
+
+  left: -6px;
+
+  top: 0;
+
+  width: 12px;
+
+  height: 12px;
+
+  background: #ffffff;
+
+  clip-path: polygon(100% 0,100% 100%,0 0);
+
+}
+
+
+/* ================= TEXT ================= */
+
+.text {
+
+  font-size: 15px;
+
+  color: #111b21;
+
+  line-height: 22px;
+
+  // white-space: pre-wrap;
+
+}
+
+
+/* ================= POWERED ================= */
+
+.powered {
+
+  margin-top: 8px;
+
+  font-size: 12px;
+
+  color: #009866;
+
+  font-style: italic;
+
+}
+
+
+/* ================= META ================= */
+
+.meta {
+
+  margin-top: 6px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: flex-end;
+
+  gap: 4px;
+
+  font-size: 11px;
+
+  color: #667781;
+
+}
+
+.meta.small {
+
+  justify-content: flex-start;
+
+}
+
+
+/* ================= TICK ================= */
+
+.tick {
+
+  font-size: 16px;
+
+  color: #8696a0;
+
+}
+
+.tick.read {
+
+  color: #53bdeb;
+
+}
+
+
+/* ================= COMMON ================= */
+
+.media-wrapper {
+
+  display: flex;
+
+  flex-direction: column;
+
+}
+
+.media-caption {
+
+  margin-top: 8px;
+
+  font-size: 15px;
+
+  color: #111b21;
+
+  line-height: 22px;
+
+}
+
+
+/* Prevent image overflow */
+
+img,
+video {
+
+  max-width: 100%;
+
+  display: block;
+
+}
+
+/* ==========================================================
+                PART 1B-2
+        TEMPLATE MESSAGE DESIGN
+==========================================================*/
+
+/*========================
+    TEMPLATE WRAPPER
+=========================*/
+
+.template-header-wrapper{
+  width:100%;
+  margin-bottom:10px;
+}
+
+/*========================
+    HEADER TEXT
+=========================*/
+
+.template-header-text{
+
+  font-size:16px;
+
+  font-weight:600;
+
+  color:#111b21;
+
+  line-height:24px;
+
+  margin-bottom:8px;
+
+}
+
+/*========================
+      IMAGE
+=========================*/
+
+.template-image{
+
+  width:100%;
+
+  border-radius:12px;
+
+  overflow:hidden;
+
+  margin-bottom:10px;
+
+}
+
+.template-image img{
+
+  width:100%;
+
+  max-height:260px;
+
+  object-fit:cover;
+
+  display:block;
+
+}
+
+/*========================
+       VIDEO
+=========================*/
+
+.template-video{
+
+  border-radius:12px;
+
+  overflow:hidden;
+
+  background:#000;
+
+  margin-bottom:10px;
+
+}
+
+.template-video video{
+
+  width:100%;
+
+  display:block;
+
+}
+
+/*========================
+    TEMPLATE BODY
+=========================*/
+
+.template-body{
+
+  font-size:15px;
+
+  line-height:24px;
+
+  color:#111b21;
+
+  white-space:pre-wrap;
+  // border-bottom: 1px rgb(94 162 108 / 20%) solid;
+  word-break:break-word;
+
+}
+
+/*========================
+    TEMPLATE FOOTER
+=========================*/
+
+.template-footer{
+
+  margin-top:12px;
+
+  padding-top:10px;
+
+  border-top:1px solid #e5e5e5;
+
+  font-size:12px;
+
+  color:#7b7b7b;
+
+  font-style:italic;
+
+}
+
+/*========================
+    BUTTON WRAPPER
+=========================*/
+
+.template-buttons{
+
+  margin-top:12px;
+
+  border-top:1px solid #ececec;
+
+}
+
+/*========================
+      BUTTON
+=========================*/
+
+.template-button{
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:center;
+
+  gap:8px;
+
+  min-height:46px;
+
+  border-top:1px solid #ececec;
+
+  color:#0088cc;
+
+  font-size:15px;
+
+  font-weight:500;
+
+  background:#ffffff;
+
+  transition:.25s;
+
+}
+
+.template-button:first-child{
+
+  border-top:none;
+
+}
+
+.template-button ion-icon{
+
+  font-size:19px;
+
+}
+
+.template-button:active{
+
+  background:#f5f5f5;
+
+}
+
+/*========================
+      REPLY
+=========================*/
+
+.reply-message{
+
+  display:flex;
+
+  flex-direction:column;
+
+}
+
+.reply-box{
+
+  background:#edf7ec;
+
+  border-left:4px solid #00a884;
+
+  border-radius:8px;
+
+  padding:8px;
+
+  margin-bottom:10px;
+
+}
+
+.reply-name{
+
+  color:#00a884;
+
+  font-size:13px;
+
+  font-weight:600;
+
+}
+
+.reply-preview{
+
+  margin-top:4px;
+
+  color:#555;
+
+  font-size:13px;
+
+  line-height:20px;
+
+}
+
+/*========================
+    FORWARDED
+=========================*/
+
+.forward-message{
+
+  display:flex;
+
+  flex-direction:column;
+
+}
+
+.forward-label{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:4px;
+
+  color:#667781;
+
+  font-size:12px;
+
+  font-style:italic;
+
+  margin-bottom:6px;
+
+}
+
+.forward-label ion-icon{
+
+  font-size:14px;
+
+}
+
+/*========================
+      META
+=========================*/
+
+.meta{
+
+  margin-top:8px;
+
+  display:flex;
+
+  justify-content:flex-end;
+
+  align-items:center;
+
+  gap:4px;
+
+  font-size:11px;
+
+  color:#667781;
+
+}
+
+.meta.small{
+
+  justify-content:flex-start;
+
+}
+
+/*========================
+   POWERED BY DV
+=========================*/
+
+.powered{
+
+  margin-top:10px;
+
+  font-size:12px;
+
+  color:#009866;
+
+  font-style:italic;
+
+}
+
+/*========================
+ MESSAGE STATUS ICON
+=========================*/
+
+.tick{
+
+  font-size:16px;
+
+  color:#8696a0;
+
+}
+
+.tick.read{
+
+  color:#53bdeb;
+
+}
+
+/*========================
+TEMPLATE BUBBLE SPACING
+=========================*/
+
+.msg-bubble.own .template-body{
+
+  margin-top:2px;
+  // margin-bottom: 10px;
+
+}
+
+.msg-bubble.own .template-footer{
+
+  margin-bottom:4px;
+
+}
+
+/*========================
+CLICK EFFECT
+=========================*/
+
+.template-button:active{
+
+  transform:scale(.98);
+
+}
+/*==========================================================
+                PART 1B-3
+          MEDIA MESSAGE DESIGN
+==========================================================*/
+
+/*========================
+        COMMON MEDIA
+=========================*/
+
+.media-wrapper{
+  width:100%;
+}
+
+.media-wrapper img,
+.media-wrapper video{
+  display:block;
+  width:100%;
+  border-radius:12px;
+}
+
+
+/*========================
+      IMAGE
+=========================*/
+
+.chat-image{
+
+  width:100%;
+
+  max-width:280px;
+
+  border-radius:12px;
+
+  cursor:pointer;
+
+  object-fit:cover;
+
+  background:#f5f5f5;
+
+}
+
+.chat-image:active{
+
+  opacity:.9;
+
+}
+
+
+/*========================
+      STICKER
+=========================*/
+
+.sticker-image{
+
+  width:160px;
+
+  max-width:160px;
+
+  background:transparent;
+
+}
+
+
+/*========================
+      VIDEO
+=========================*/
+
+.chat-video{
+
+  width:100%;
+
+  max-width:280px;
+
+  border-radius:12px;
+
+  background:#000;
+
+}
+
+.chat-video::-webkit-media-controls{
+
+  border-radius:12px;
+
+}
+
+
+/*========================
+      AUDIO
+=========================*/
+
+.chat-audio{
+
+  width:270px;
+
+  height:42px;
+
+  border-radius:24px;
+
+  margin-top:2px;
+
+}
+
+.chat-audio:focus{
+
+  outline:none;
+
+}
+
+
+/*========================
+    DOCUMENT CARD
+=========================*/
+
+.document-card{
+
+  display:flex;
+
+  justify-content:space-between;
+
+  align-items:center;
+
+  background:#f6f6f6;
+
+  border-radius:12px;
+
+  padding:12px;
+
+  cursor:pointer;
+
+  transition:.25s;
+
+}
+
+.template-document {
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  background: #f5f6f6;
+
+  border-radius: 12px;
+
+  padding: 12px;
+
+  margin-bottom: 10px;
+
+  cursor: pointer;
+
+}
+
+.document-card:active{
+
+  background:#ececec;
+
+}
+
+.doc-left{
+
+  display:flex;
+
+  align-items:center;
+
+  flex:1;
+
+  overflow:hidden;
+
+}
+
+.doc-icon{
+
+  font-size:34px;
+
+  color:#085e54;
+
+  margin-right:10px;
+
+  flex-shrink:0;
+
+}
+
+.doc-details{
+
+  flex:1;
+
+  overflow:hidden;
+
+}
+
+.doc-title{
+
+  font-size:15px;
+
+  font-weight:600;
+
+  color:#111b21;
+
+  white-space:nowrap;
+
+  overflow:hidden;
+
+  text-overflow:ellipsis;
+
+}
+
+.doc-subtitle{
+
+  margin-top:2px;
+
+  font-size:12px;
+
+  color:#8e8e93;
+
+}
+
+.download-icon{
+
+  font-size:22px;
+
+  color:#085e54;
+
+  margin-left:10px;
+
+}
+
+
+/*========================
+      LOCATION
+=========================*/
+
+.location-card{
+
+  border-radius:12px;
+
+  overflow:hidden;
+
+  background:#fff;
+
+  cursor:pointer;
+
+}
+
+.location-map{
+
+  width:100%;
+
+  height:170px;
+
+  object-fit:cover;
+
+  display:block;
+
+}
+
+.location-info{
+
+  padding:10px;
+
+}
+
+.location-title{
+
+  font-size:15px;
+
+  font-weight:600;
+
+  color: #1a73e7;
+
+}
+
+.location-address{
+
+  margin-top:4px;
+
+  font-size:13px;
+
+  color:#8e8e93;
+
+}
+
+
+/*========================
+      CONTACT
+=========================*/
+
+.contact-card{
+
+  display:flex;
+
+  align-items:center;
+
+  padding:12px;
+
+  border-radius:12px;
+
+  background:#f6f6f6;
+
+}
+
+.contact-avatar{
+
+  width:50px;
+
+  height:50px;
+
+  border-radius:50%;
+
+  background:#27d366;
+
+  color:#fff;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:center;
+
+  font-weight:600;
+
+  font-size:17px;
+
+  margin-right:12px;
+
+}
+
+.contact-details{
+
+  flex:1;
+
+}
+
+.contact-name{
+
+  font-size:15px;
+
+  font-weight:600;
+
+  color:#111b21;
+
+}
+
+.contact-number{
+
+  margin-top:3px;
+
+  color:#8e8e93;
+
+  font-size:13px;
+
+}
+
+.contact-actions{
+
+  display:flex;
+
+  margin-top:10px;
+
+  gap:10px;
+
+}
+
+.contact-btn{
+
+  flex:1;
+
+  height:38px;
+
+  border:none;
+
+  border-radius:8px;
+
+  background:#eef7ff;
+
+  color:#0088cc;
+
+  display:flex;
+
+  justify-content:center;
+
+  align-items:center;
+
+  gap:6px;
+
+  font-size:14px;
+
+}
+
+.contact-btn ion-icon{
+
+  font-size:17px;
+
+}
+
+
+/*========================
+      MEDIA CAPTION
+=========================*/
+
+.media-caption{
+
+  margin-top:10px;
+
+  color:#111b21;
+
+  font-size:15px;
+
+  line-height:22px;
+
+  white-space:pre-wrap;
+
+  word-break:break-word;
+
+}
+
+
+/*========================
+    OUTGOING MEDIA
+=========================*/
+
+.msg-bubble.own .document-card{
+
+  background:#eef8e7;
+
+}
+
+.msg-bubble.own .contact-card{
+
+  background:#eef8e7;
+
+}
+
+
+/*========================
+    INCOMING MEDIA
+=========================*/
+
+.msg-bubble.other .document-card{
+
+  background:#f6f6f6;
+
+}
+
+.msg-bubble.other .contact-card{
+
+  background:#f6f6f6;
+
+}
+
+
+/*========================
+     DOWNLOAD ICON
+=========================*/
+
+.download-icon:active{
+
+  transform:scale(.9);
+
+}
+
+
+/*========================
+     IMAGE SHADOW
+=========================*/
+
+.chat-image,
+.chat-video{
+
+  box-shadow:0 2px 8px rgba(0,0,0,.15);
+
+}
+
+
+/*========================
+   DOCUMENT HOVER
+=========================*/
+
+.document-card:hover{
+
+  box-shadow:0 2px 8px rgba(0,0,0,.08);
+
+}
+
+
+/*========================
+    RESPONSIVE
+=========================*/
+
+@media(max-width:480px){
+
+  .chat-image,
+  .chat-video{
+
+      max-width:240px;
+
+  }
+
+  .chat-audio{
+
+      width:220px;
+
+  }
+
+}
+
+/*==========================================================
+                PART 1B-4
+         FINAL WHATSAPP POLISH
+==========================================================*/
+
+/*========================
+    MESSAGE ANIMATION
+=========================*/
+
+.msg-row {
+  animation: fadeInMessage .22s ease;
+}
+
+@keyframes fadeInMessage {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/*========================
+      DATE LABEL
+=========================*/
+
+.date-label {
+  position: sticky;
+  top: 8px;
+  z-index: 5;
+}
+
+
+/*========================
+      BUBBLE EFFECT
+=========================*/
+
+.msg-bubble {
+  transition: background .2s ease,
+              transform .15s ease,
+              box-shadow .2s ease;
+}
+
+.msg-bubble:active {
+  transform: scale(.985);
+}
+
+
+/*========================
+    SELECTED MESSAGE
+=========================*/
+
+.selected-msg .msg-bubble {
+  background: #d9fdd3 !important;
+}
+
+
+/*========================
+     TEMPLATE BUTTON
+=========================*/
+
+.template-button {
+  user-select: none;
+  cursor: pointer;
+}
+
+.template-button:hover {
+  background: #f7f7f7;
+}
+
+.template-button:active {
+  background: #ececec;
+}
+
+
+/*========================
+      CONTACT BUTTON
+=========================*/
+
+.contact-btn {
+  transition: .2s;
+}
+
+.contact-btn:hover {
+  background: #dff0ff;
+}
+
+.contact-btn:active {
+  transform: scale(.97);
+}
+
+
+/*========================
+      DOCUMENT CARD
+=========================*/
+
+.document-card {
+  user-select: none;
+}
+
+.document-card:hover {
+  transform: translateY(-1px);
+}
+
+
+/*========================
+        LOCATION
+=========================*/
+
+.location-card {
+  transition: .2s;
+}
+
+.location-card:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,.12);
+}
+
+
+/*========================
+      IMAGE EFFECT
+=========================*/
+
+.chat-image {
+  transition: .25s;
+}
+
+.chat-image:hover {
+  opacity: .96;
+}
+
+.chat-image:active {
+  transform: scale(.99);
+}
+
+
+/*========================
+       VIDEO
+=========================*/
+
+.chat-video {
+  transition: .25s;
+}
+
+
+/*========================
+       AUDIO
+=========================*/
+
+.chat-audio {
+  outline: none;
+}
+
+
+/*========================
+       FOOTER
+=========================*/
+
+.chat-footer {
+
+  --background: #ffffff;
+
+  padding: 10px;
+
+  border-top: 1px solid #e5e5ea;
+
+}
+
+
+/*========================
+      INPUT ROW
+=========================*/
+
+.input-row {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+}
+
+
+/*========================
+       INPUT
+=========================*/
+
+.input-row input {
+
+  flex: 1;
+
+  height: 48px;
+
+  border-radius: 24px;
+
+  border: 2px solid #e5e5ea;
+
+  background: #ffffff;
+
+  color: #111;
+
+  padding: 0 18px;
+
+  font-size: 15px;
+
+  transition: .2s;
+
+}
+
+.input-row input:focus {
+
+  outline: none;
+
+  border-color: #085e54;
+
+}
+
+
+/*========================
+      SEND BUTTON
+=========================*/
+
+.send-btn {
+
+  width: 48px;
+
+  height: 48px;
+
+  border-radius: 50%;
+
+  background: #27d366;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  box-shadow: 0 4px 10px rgba(39,211,102,.35);
+
+  transition: .2s;
+
+}
+
+.send-btn:hover {
+  transform: scale(1.03);
+}
+
+.send-btn:active {
+  transform: scale(.95);
+}
+
+.send-btn ion-icon {
+
+  color: #fff;
+
+  font-size: 22px;
+
+}
+
+
+/*========================
+    TEMPLATE BUTTON
+=========================*/
+
+.template-btn {
+
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  padding: 9px 16px;
+
+  margin-bottom: 10px;
+
+  border-radius: 20px;
+
+  background: #ffffff;
+
+  color: #009866;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  box-shadow: 0 2px 8px rgba(0,0,0,.08);
+
+  transition: .2s;
+
+}
+
+.template-btn:hover {
+  background: #f6f6f6;
+}
+
+.template-btn:active {
+  transform: scale(.98);
+}
+
+
+/*========================
+      SCROLLBAR
+=========================*/
+
+ion-content::part(scroll)::-webkit-scrollbar {
+  width: 4px;
+}
+
+ion-content::part(scroll)::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,.18);
+  border-radius: 8px;
+}
+
+
+/*========================
+      RESPONSIVE
+=========================*/
+
+@media (max-width: 480px) {
+
+  .msg-bubble {
+    max-width: 85%;
+  }
+
+  .chat-user .name {
+    font-size: 15px;
+  }
+
+  .chat-user .status {
+    font-size: 11px;
+  }
+
+  .avatar-circle {
+    width: 42px;
+    height: 42px;
+    min-width: 42px;
+    font-size: 15px;
+  }
+
+  .send-btn {
+    width: 46px;
+    height: 46px;
+  }
+
+  .input-row input {
+    height: 46px;
+  }
+
+}
+
+
+/*========================
+      SAFE AREA
+=========================*/
+
+ion-footer {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+ion-content {
+  --padding-bottom: 8px;
+}
+
+.expired-footer {
+  --background: #ffffff;
+  padding: 10px;
+}
+
+.expired-info {
+  background: #fffdf2;
+  border: 1px solid #f0d98a;
+  color: #5f6368;
+  border-radius: 12px;
+  padding: 14px;
+  font-size: 14px;
+  line-height: 22px;
+  margin-bottom: 12px;
+}
+
+.expired-template-btn {
+  width: 100%;
+  background: #27d366;
+  color: #ffffff;
+  text-align: center;
+  padding: 14px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 500;
+}

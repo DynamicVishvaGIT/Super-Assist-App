@@ -1,0 +1,147 @@
+.profile-header ion-toolbar {
+    --background: #ffffff;
+    border-bottom: 1px solid #eee;
+    position: relative;
+  }
+  
+  .back {
+    font-size: 24px;
+    color: #085e54;
+    position: absolute;
+    left: 12px;
+  }
+  
+  .title {
+    // text-align: center;
+    font-size: 18px;
+    font-weight: 500;
+    margin-left: 44px;
+  }
+  
+  /* PROFILE TOP */
+  
+  .profile-top {
+    text-align: center;
+    padding: 25px 0;
+    background: #fff;
+  }
+  
+  .profile-img {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  
+  .edit-text {
+    color: #085e54;
+    margin-top: 10px;
+    font-size: 16px;
+  }
+
+  // .edit-badge {
+  //   position: fixed;
+  //   bottom: 450px;
+  //   right: 174px;
+  //   width: 40px;
+  //   height: 40px;
+  //   background: #4caf50;
+  //   border-radius: 50%;
+  //   display: flex;
+  //   align-items: center;
+  //   justify-content: center;
+  //   border: 3px solid white;
+  // }
+  
+  // .edit-icon {
+  //   font-size: 22px;
+  //   color: white;
+  // }
+  
+  /* GAP */
+  
+  .gap {
+    height: 12px;
+    background: #f5f5f5;
+  }
+  
+  /* DETAILS */
+  
+  .details {
+    background: #fff;
+  }
+  
+  .field {
+    padding: 14px;
+  }
+  
+  .field label {
+    font-size: 13px;
+    color: #8e8e93;
+  }
+  
+  .field div {
+    font-size: 17px;
+    margin-top: 4px;
+  }
+  
+  .field input {
+    width: 100%;
+    border: none;
+    outline: none;
+    font-size: 17px;
+    margin-top: 4px;
+    background: transparent;
+  }
+  
+  .divider {
+    height: 1px;
+    background: #eee;
+    margin-left: 14px;
+  }
+  
+  /* FOOTER */
+  
+  .footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    padding: 12px;
+    background: #fff;
+  }
+  
+  /* LOGOUT */
+  
+  .logout-btn {
+    background: #ff3b31;
+    color: white;
+    text-align: center;
+    padding: 14px;
+    border-radius: 12px;
+    font-size: 16px;
+  }
+  
+  /* EDIT BUTTONS */
+  
+  .edit-btns {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .cancel {
+    flex: 1;
+    background: #ff3b31;
+    color: white;
+    text-align: center;
+    padding: 14px;
+    border-radius: 12px;
+  }
+  
+  .save {
+    flex: 1;
+    background: #27d366;
+    color: white;
+    text-align: center;
+    padding: 14px;
+    border-radius: 12px;
+  }

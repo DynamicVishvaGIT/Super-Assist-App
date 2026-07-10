@@ -1,33 +1,59 @@
 <ion-app>
   <ion-split-pane contentId="main-content">
-    <ion-menu contentId="main-content" type="overlay">
+    <ion-menu contentId="main-content" type="overlay" side="start" >
       <ion-content>
         <ion-list id="inbox-list">
-          <ion-list-header>Inbox</ion-list-header>
-          <ion-note>hi&#64;ionicframework.com</ion-note>
-
-          @for (p of appPages; track p; let i = $index) {
-            <ion-menu-toggle auto-hide="false">
-              <ion-item routerDirection="root" [routerLink]="[p.url]" lines="none" detail="false" routerLinkActive="selected">
-                <ion-icon aria-hidden="true" slot="start" [ios]="p.icon + '-outline'" [md]="p.icon + '-sharp'"></ion-icon>
-                <ion-label>{{ p.title }}</ion-label>
-              </ion-item>
-            </ion-menu-toggle>
-          }
-        </ion-list>
-
-        <ion-list id="labels-list">
-          <ion-list-header>Labels</ion-list-header>
-
-          @for (label of labels; track label) {
-            <ion-item lines="none">
-              <ion-icon aria-hidden="true" slot="start" ios="bookmark-outline" md="bookmark-sharp"></ion-icon>
-              <ion-label>{{ label }}</ion-label>
+          <ion-list-header >  <!--(click)="goToProfile()"-->
+            <ion-row>
+              <ion-col size="3" class="home-header-img"> <!--ion-text-center -->
+                 <!-- <img src="{{ displayProfileData.avatar }}" *ngIf="displayProfileData.avatar" width="215" height="215"> -->
+                 <img src="assets/imgs/avtar.png" alt="Profile" width="215" height="215" *ngIf="!displayProfileData.avatar">
+              </ion-col>
+              <ion-col size="9">
+                <!-- <p class="name-text">{{currentUser?.ar_name}}</p>
+                <p class="mail-text">{{currentUser?.ar_email}}</p> -->
+                <p class="name-text">Prasenjit Chanda</p>
+                <p class="mail-text">prasenjit@dynamicvishva.in</p>
+              </ion-col>
+            </ion-row>
+          </ion-list-header>
+          <ion-menu-toggle auto-hide="false" >
+            <ion-item lines="none" (click)="openPage(p)" *ngFor="let p of appPages" routerDirection="root" [class.selected]="selectedPath === p.url"  detail="false" >
+              <div [ngClass]="selectedPath===p.url?'circle-selected-container':'circle-container'">
+                <ion-icon slot="start" size="small" name="{{p.icon}}" [ngClass]="selectedPath===p.url?'icon-color':''"></ion-icon>
+              </div>
+              <ion-label [ngClass]="selectedPath===p.url?'label-color':''" style="margin-left: 20px;">{{''+p.title}}</ion-label>
             </ion-item>
-          }
+          </ion-menu-toggle>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+        </ion-list>
+        <ion-list id="labels-list">
+          <ion-item lines="none" (click)="doLogout()" [class.selected]="selectedPath === '/logout'">
+            <div [ngClass]="selectedPath==='/logout'?'circle-selected-container':'circle-container'">
+              <ion-icon slot="start" size="small" name="log-out-outline" [ngClass]="selectedPath==='/logout'?'icon-color':''"></ion-icon>
+            </div>
+            <ion-label [ngClass]="selectedPath==='/logout'?'label-color':''" style="margin-left: 20px;">logout</ion-label>
+          </ion-item>
         </ion-list>
       </ion-content>
     </ion-menu>
     <ion-router-outlet id="main-content"></ion-router-outlet>
+    <!-- <ion-tabs  #myTabs (ionTabsDidChange)="getSelectedTab()">
+      <ion-tab-bar slot="bottom" selectedTab="{{tab_name}}" *ngIf="tab_name =='my-targets' || tab_name =='my-visit' || tab_name =='my-lead' || tab_name =='my-task' || tab_name =='my-events' || tab_name =='attendance-history'|| tab_name =='home' || tab_name =='language'  || tab_name =='profile'|| tab_name =='gift-redeem' || tab_name =='scancode' || tab_name =='scheme' || tab_name =='orders' || tab_name =='project-lead' || tab_name =='scancounterboy' || tab_name =='passbook' || tab_name =='projectlist' ">
+        <ion-tab-button tab="home">
+          <ion-icon name="home-outline"></ion-icon>
+          <ion-label>Home</ion-label>
+        </ion-tab-button>
+        <ion-tab-button tab="profile">
+          <ion-icon name="person-outline"></ion-icon>
+          <ion-label>profile</ion-label>
+        </ion-tab-button>
+      </ion-tab-bar>
+    </ion-tabs> -->
   </ion-split-pane>
 </ion-app>

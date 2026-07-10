@@ -34,4 +34,67 @@
 
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
-@import "@ionic/angular/css/palettes/dark.system.css";
+// @import "@ionic/angular/css/palettes/dark.system.css";
+
+// Status Bar Fix
+ion-app {
+    padding-top: constant(safe-area-inset-top); // iOS 11.0
+    padding-top: env(safe-area-inset-top); // iOS 11.2+
+  }
+  
+  // Ensure proper header display
+  ion-header {
+    &::after {
+      display: none; // Remove bottom border/shadow
+    }
+  }
+  
+  // Fix for notched devices (iPhone X, etc.)
+  @supports (padding-top: constant(safe-area-inset-top)) or (padding-top: env(safe-area-inset-top)) {
+    ion-header {
+      ion-toolbar {
+        --padding-top: constant(safe-area-inset-top);
+        --padding-top: env(safe-area-inset-top);
+      }
+    }
+  }
+  
+  // Android status bar fix
+  .md ion-header {
+    ion-toolbar {
+      --min-height: 56px;
+    }
+  }
+  
+  // iOS status bar fix
+  .ios ion-header {
+    ion-toolbar {
+      --min-height: 44px;
+    }
+  }
+
+  .toast-error {
+    --background: var(--ion-color-danger) !important;
+    --color: white;
+  }
+  
+  .toast-success {
+    --background: var(--ion-color-success) !important;
+    --color: white;
+  }
+  
+  .toast-info {
+    --background: var(--ion-color-info) !important;
+    --color: white;
+  }
+  
+
+  // FOR MANDETORY FIELD
+
+.required:after {
+  content:" *";
+  color: red;
+}
+.transparent-modal {
+  --background: transparent !important;
+}

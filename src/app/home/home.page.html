@@ -1,0 +1,146 @@
+<ion-header class="chat-header">
+  <ion-toolbar>
+    <div class="header-row">
+      <div class="title">Super Assist</div>
+      <img [src]="currentUser.BUSINESS_LOGO" class="header-profile" (click)="goToProfile()">
+    </div>
+    <div class="search-wrapper">
+      <ion-icon name="search-outline"></ion-icon>
+      <ion-input placeholder="Search" [(ngModel)]="searchText" (ionInput)="filterChats()"></ion-input>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content class="chat-content">
+  <!-- Skeleton Loader -->
+  <div *ngIf="loading">
+    <div class="skeleton" *ngFor="let i of [1,2,3,4,5]"></div>
+  </div>
+  <ion-list *ngIf="!loading">
+    <ion-item-sliding *ngFor="let chat of chats">
+      <ion-item
+        (press)="selectChat(chat)"
+        [class.selected]="chat.selected"
+        lines="none"
+        class="chat-item" (click)="goToChatDetails(chat)">
+        <div class="chat-row">
+          <!-- <div class="avatar">
+            <img [src]="chat.image">
+            <div class="online" *ngIf="chat.online"></div>
+          </div> -->
+          <div class="avatar-circle">
+            {{ getInitials(chat.contacts__name) }}
+          </div>
+          <div class="chat-info">
+            <div class="row1">
+              <div class="name" [class.unread]="chat.unread_count>0">
+                {{chat.contacts__name? chat.contacts__name: chat.contacts__wa_id}}
+              </div>
+              <div class="date">
+                {{ chat.last_message_at | date:'dd MMM' }}
+              </div>
+            </div>
+            <div class="row2">
+              <div class="msg" [class.unread]="chat.unread_count>0">
+                {{chat.last_message_text}}
+              </div>
+              <div class="badge" *ngIf="chat.unread_count>0">
+                <!-- {{chat.count}} -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </ion-item>
+
+      <!-- Swipe Option -->
+      <ion-item-options side="end">
+        <ion-item-option color="danger" (click)="deleteChat(chat)">
+          Delete
+        </ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" class="fab-align">
+    <ion-fab-button class="fab-chat" (click)="openModal()">
+      <ion-icon name="chatbubble-ellipses"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+</ion-content>
+<!-- OVERLAY + MODAL -->
+<div class="custom-modal" *ngIf="showModal">
+  <div class="overlay"></div>
+    <div class="modal-card">
+      <!-- HEADER -->
+      <div class="modal-header">
+        <div>Add New Contact</div>
+        <ion-icon name="close" (click)="closeModal()"></ion-icon>
+      </div>
+      <!-- FORM -->
+      <div class="modal-body">
+        <!-- CONTACT NUMBER -->
+        <label>Contact Number</label>
+        <div class="phone-row">
+          <select [(ngModel)]="contact.country_code">
+            <option [value]="country.calling_code" *ngFor="let country of county_list">{{country.calling_code}}</option>
+          </select>
+          <input type="tel" [(ngModel)]="contact.contact_number" placeholder="Enter number">
+        </div>
+        <!-- NAME -->
+        <label>Contact Name</label>
+        <input [(ngModel)]="contact.contact_name" class="focus-green" placeholder="Enter name">
+        <!-- EMAIL -->
+        <label>Email</label>
+        <input [(ngModel)]="contact.email_id" placeholder="Enter Email Id">
+      </div>
+      <!-- FOOTER -->
+      <div class="modal-footer">
+        <div class="cancel" (click)="closeModal()">Cancel</div>
+        <div class="send" (click)="add_new_contacts()">Add</div>
+      </div>
+    </div>
+</div>
+<!-- <ion-header class="chat-header">
+  <ion-toolbar>
+    <div class="header-row">
+      <div class="title">Chats</div>
+      <img src="assets/images/Prasenjit_Chanda.png" class="header-profile">
+    </div>
+    <div class="search-wrapper">
+      <ion-icon name="search-outline"></ion-icon>
+      <ion-input placeholder="Search"></ion-input>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="chat-content">
+  <div class="chat-list">
+    <div class="chat-item" *ngFor="let chat of chats">
+      <div class="avatar">
+        <img [src]="chat.image">
+      </div>
+      <div class="chat-info">
+        <div class="row1">
+          <div class="name">{{chat.name}}</div>
+          <div class="date">{{ formatDate(chat.date) }}</div>
+        </div>
+        <div class="row2">
+          <div class="msg">{{chat.message}}</div>
+          <div class="badge" *ngIf="chat.count > 0">
+            {{chat.count}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button class="fab-chat">
+      <ion-icon name="logo-whatsapp"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+</ion-content> -->

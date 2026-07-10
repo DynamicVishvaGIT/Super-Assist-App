@@ -1,0 +1,41 @@
+<ion-content fullscreen class="login-page">
+  <div class="page-wrapper">
+    <div class="top-wrapper">
+      <img src="assets/images/dv_tech.jpg" class="logo">
+      <h2 class="title">Welcome To Super Assist</h2>
+      <p class="subtitle">Sign in to continue</p>
+      <img src="assets/images/login-page-icon.avif" class="illustration">
+    </div>
+    <!-- FORM AREA -->
+    <div class="form-wrapper">
+      <!-- EMAIL -->
+      <div class="field">
+        <label>Email Address</label>
+        <div class="input-wrapper">
+          <ion-input type="email" [(ngModel)]="login_data.username"></ion-input>
+        </div>
+      </div>
+      <!-- PASSWORD -->
+      <div class="field">
+        <label>Password</label>
+        <div class="input-wrapper password-wrapper">
+          <ion-input [type]="showPassword ? 'text' : 'password'" [(ngModel)]="login_data.password"></ion-input>
+          <ion-icon class="eye" (click)="togglePassword()" [name]="showPassword ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+        </div>
+      </div>
+      <div class="row">
+        <!-- <div class="remember">
+          <ion-checkbox></ion-checkbox>
+          <span>Remember me</span>
+        </div> -->
+        <div class="forgot">
+          Forgot password?
+        </div>
+      </div>
+      <div class="login-btn" (click)="onLogin()">
+        Log in
+        <ion-icon name="arrow-forward-outline"></ion-icon>
+      </div>
+    </div>
+  </div>
+</ion-content>

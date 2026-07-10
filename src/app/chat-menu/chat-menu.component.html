@@ -1,0 +1,37 @@
+<div class="overlay" (click)="close()"></div>
+
+<div class="menu-card">
+
+  <div class="menu-item" (click)="action('info')">
+    Contact Info <ion-icon name="chevron-forward"></ion-icon>
+  </div>
+
+  <div class="menu-item" (click)="action('select')">
+    Select Messages
+  </div>
+
+  <div class="menu-item" (click)="action('mute')">
+    {{ isMuted ? 'Unmute' : 'Mute' }}
+  </div>
+
+  <div class="menu-item" (click)="action('wallpaper')">
+    Wallpaper
+  </div>
+
+  <div class="menu-item" (click)="action('export')">
+    Export Chat
+  </div>
+
+  <div class="menu-item" (click)="action('clear')">
+    Clear Chat
+  </div>
+
+  <div class="menu-item danger" (click)="action('block')">
+    Block Contact
+  </div>
+
+  <div class="menu-item danger" (click)="action('report')">
+    Report Contact
+  </div>
+
+</div>

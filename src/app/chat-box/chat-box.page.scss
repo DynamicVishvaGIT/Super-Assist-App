@@ -1,0 +1,317 @@
+// ion-content {
+//   --padding-bottom: 80px; /* prevent footer overlap */
+//   // --keyboard-offset: 0px !important;
+// }
+.chat-detail-header ion-toolbar {
+    --background: #085e54;
+    padding: 6px 10px;
+  }
+  
+  .header-chat-row {
+    display: flex;
+    align-items: center;
+  }
+  
+  .back {
+    color: white;
+    font-size: 24px;
+    margin-right: 10px;
+  }
+
+  .profile-wrapper {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 10px;
+    // border: 2px solid white;
+  }
+  
+  .profile-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .chat-profile {
+    width: 40px;
+    height: 40px;
+    min-width: 40px; /* prevents shrinking */
+    border-radius: 50%;
+    object-fit: cover; /* 🔥 MOST IMPORTANT */
+    overflow: hidden;
+    margin-right: 10px;
+  }
+  
+  .chat-user .name {
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+  }
+  
+  .chat-user .status {
+    color: #cfe5e1;
+    font-size: 12px;
+  }
+  
+  .menu {
+    color: white;
+    font-size: 22px;
+    margin-left: auto;
+  }
+  
+  /* CHAT BACKGROUND */
+  
+  .chat-bg {
+    // --background: url('/assets/images/whatsapp-bg.png');
+    --background: #e9e3dc url('/assets/images/whatsapp-bg.png') no-repeat center center / cover;
+    padding: 10px;
+  }
+
+  ion-content.chat-bg::part(scroll) {
+    background: #e9e3dc url('/assets/images/whatsapp-bg.png') no-repeat center center;
+    background-size: cover;
+  }
+  
+  /* DATE LABEL */
+  
+  .date-label {
+    background: #e1f2fb;
+    color: #54656f;
+    font-size: 12px;
+    padding: 6px 12px;
+    border-radius: 12px;
+    width: fit-content;
+    margin: 10px auto;
+  }
+  
+  /* MESSAGE */
+  
+  .msg-row {
+    display: flex;
+    // margin: 6px 0;
+    margin: 6px 8px 0 8px;
+  }
+  
+  .msg-row.right {
+    justify-content: flex-end;
+  }
+  
+  .msg-bubble {
+    max-width: 75%;
+    padding: 10px 12px;
+    border-radius: 10px;
+    position: relative;
+  }
+  
+  .msg-bubble.own {
+    background: #ddf8c6;
+  }
+  
+  .msg-bubble.other {
+    background: white;
+    box-shadow: 0 2px 6px rgb(0 0 0 / 15%);
+  }
+  
+  .text {
+    font-size: 15px;
+  }
+  
+  .powered {
+    font-size: 13px;
+    color: #009866;
+    margin-top: 6px;
+  }
+  
+  .meta {
+    font-size: 11px;
+    color: #667781;
+    margin-top: 4px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+  
+  .meta.small {
+    justify-content: flex-start;
+  }
+  
+  .tick {
+    font-size: 16px;
+    color: #53bdeb;
+    margin-left: 4px;
+  }
+  
+  /* FOOTER */
+  
+  .chat-footer {
+    // position: fixed;
+    // bottom: 0;
+    width: 100%;
+    // background: #f0f2f5;
+    background: #ffffff;
+    padding: 8px;
+  }
+  
+  ion-content {
+    --keyboard-offset: 0px; /* let Ionic handle it */
+  }
+  
+  .template-btn {
+    background: white;
+    width: fit-content;
+    padding: 8px 14px;
+    border-radius: 18px;
+    margin-bottom: 6px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    color: #009866;
+    margin-left: 10px;
+  }
+  
+  .input-row {
+    display: flex;
+    align-items: center;
+  }
+  
+  .input-row input {
+    flex: 1;
+    height: 51px;
+    border-radius: 19px;
+    // border: none;
+    padding: 0 14px;
+    font-size: 15px;
+    border: 2px solid #e5e5ea;
+    background: #ffffff !important;
+    color: #000000 !important;
+    margin-left: 10px;
+    margin-bottom: 15px;
+  }
+  
+  .send-btn {
+    width: 46px;
+    height: 46px;
+    background: #27d366;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 8px;
+    margin-bottom: 15px;
+  }
+  
+  .send-btn ion-icon {
+    color: white;
+    font-size: 20px;
+  }
+
+  /* WhatsApp style menu */
+  .whatsapp-menu .action-sheet-group {
+    border-radius: 16px;
+  }
+
+  .whatsapp-menu .action-sheet-button {
+    font-size: 16px;
+  }
+
+  .whatsapp-menu .danger {
+    color: red;
+  }
+
+  /* Selected message */
+  .selected-msg {
+    background: #d9fdd3;
+  }
+
+  .template-header {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #111b21;
+  }
+  
+  .document-box {
+    display: flex;
+    align-items: center;
+    background: #f4f4f4;
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .document-box ion-icon {
+    font-size: 28px;
+    color: #085e54;
+    margin-right: 10px;
+  }
+  .doc-name {
+    font-size: 14px;
+    font-weight: 600;
+  }
+  
+  .doc-sub {
+    font-size: 12px;
+    color: #666;
+  }
+  
+  .template-buttons {
+    margin-top: 10px;
+    border-top: 1px solid #e4e4e4;
+  }
+  
+  .template-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    font-size: 14px;
+    color: #0a66c2;
+    border-top: 1px solid #e4e4e4;
+  }
+  
+  .template-button ion-icon {
+    margin-right: 6px;
+    font-size: 16px;
+  }
+
+  .avatar-circle {
+    width: 46px;
+    height: 46px;
+    min-width: 46px;
+    border-radius: 50%;
+    background: #d9fdd3;
+    color: #085e54;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    font-weight: 600;
+    margin-right: 12px;
+    text-transform: uppercase;
+  }
+
+  .expired-footer {
+    --background: #ffffff;
+    padding: 10px;
+  }
+  
+  .expired-info {
+    background: #fffdf2;
+    border: 1px solid #f0d98a;
+    color: #5f6368;
+    border-radius: 12px;
+    padding: 14px;
+    font-size: 14px;
+    line-height: 22px;
+    margin-bottom: 12px;
+  }
+  
+  .expired-template-btn {
+    width: 100%;
+    background: #27d366;
+    color: #ffffff;
+    text-align: center;
+    padding: 14px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 500;
+  }
