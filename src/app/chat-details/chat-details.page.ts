@@ -334,22 +334,20 @@ export class ChatDetailsPage implements OnInit, OnDestroy {
   
     const parent = msg.parent_message;
   
-    // Parent is template
+    // Template
     if (parent.message_type === 'template') {
   
       let body = parent.preview_text || '';
   
-      if (parent.body_var_values) {
+      const values = parent.body_var_values
+        ? parent.body_var_values.split(',')
+        : [];
   
-        const values = parent.body_var_values.split(',');
+      body = body.replace(/{{\s*(\d+)\s*}}/g, (_, i) => {
   
-        body = body.replace(/{{\s*(\d+)\s*}}/g, (_, i) => {
+        return values[Number(i) - 1] || '';
   
-          return values[Number(i) - 1] || '';
-  
-        });
-  
-      }
+      });
   
       return body;
   
@@ -358,6 +356,41 @@ export class ChatDetailsPage implements OnInit, OnDestroy {
     return parent.preview_text || '';
   
   }
+
+  // getReplyPreview(msg: ChatMessage): string {
+
+  //   if (!msg.parent_message) {
+  
+  //     return '';
+  
+  //   }
+  
+  //   const parent = msg.parent_message;
+  
+  //   // Parent is template
+  //   if (parent.message_type === 'template') {
+  
+  //     let body = parent.preview_text || '';
+  
+  //     if (parent.body_var_values) {
+  
+  //       const values = parent.body_var_values.split(',');
+  
+  //       body = body.replace(/{{\s*(\d+)\s*}}/g, (_, i) => {
+  
+  //         return values[Number(i) - 1] || '';
+  
+  //       });
+  
+  //     }
+  
+  //     return body;
+  
+  //   }
+  
+  //   return parent.preview_text || '';
+  
+  // }
 
   getReplySender(msg: ChatMessage): string {
 
@@ -382,56 +415,89 @@ export class ChatDetailsPage implements OnInit, OnDestroy {
   }
 
   getStatusIcon(msg: ChatMessage): string {
-
-    switch ((msg.status || '').toUpperCase()) {
-  
-      case 'READ':
-  
-        return 'checkmark-done';
-  
-      case 'DELIVERED':
-  
-        return 'checkmark-done';
-  
-      case 'FAILED':
-  
-        return 'alert-circle';
-  
-      case 'SENT':
-  
+    console.log(msg);
+    switch ((msg.status || '').toLowerCase()) {
+      case 'sent':
         return 'checkmark';
   
+      case 'delivered':
+        return 'checkmark-done';
+  
+      case 'read':
+        return 'checkmark-done';
+  
+      case 'failed':
+        return 'alert-circle';
+  
       default:
-  
         return 'time-outline';
-  
     }
-  
   }
-
+  
   getStatusColor(msg: ChatMessage): string {
-
-    switch ((msg.status || '').toUpperCase()) {
-  
-      case 'READ':
-  
+    switch ((msg.status || '').toLowerCase()) {
+      case 'read':
         return '#53bdeb';
   
-      case 'DELIVERED':
-  
-        return '#667781';
-  
-      case 'FAILED':
-  
+      case 'failed':
         return '#ff3b30';
   
       default:
-  
         return '#667781';
-  
     }
-  
   }
+
+  // getStatusIcon(msg: ChatMessage): string {
+  //   console.log(msg);
+  //   switch ((msg.status || '').toUpperCase()) {
+  
+  //     case 'READ':
+  
+  //       return 'checkmark-done';
+  
+  //     case 'DELIVERED':
+  
+  //       return 'checkmark-done';
+  
+  //     case 'FAILED':
+  
+  //       return 'alert-circle';
+  
+  //     case 'SENT':
+  
+  //       return 'checkmark';
+  
+  //     default:
+  
+  //       return 'time-outline';
+  
+  //   }
+  
+  // }
+
+  // getStatusColor(msg: ChatMessage): string {
+
+  //   switch ((msg.status || '').toUpperCase()) {
+  
+  //     case 'READ':
+  
+  //       return '#53bdeb';
+  
+  //     case 'DELIVERED':
+  
+  //       return '#667781';
+  
+  //     case 'FAILED':
+  
+  //       return '#ff3b30';
+  
+  //     default:
+  
+  //       return '#667781';
+  
+  //   }
+  
+  // }
 
   // get_message_list() {
   //   this.commonService.presentLoading();

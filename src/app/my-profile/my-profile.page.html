@@ -1,24 +1,30 @@
-<ion-header class="profile-header">
+<!-- <ion-header class="profile-header">
   <ion-toolbar>
     <ion-icon name="chevron-back-outline" class="back" (click)="onBack()"></ion-icon>
     <div class="title">Profile</div>
+  </ion-toolbar>
+</ion-header> -->
+<ion-header class="profile-header" mode="md">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button fill="clear" (click)="onBack()">
+        <ion-icon name="chevron-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Profile</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <!-- PROFILE IMAGE -->
   <div class="profile-top">
-    <img src="assets/images/Prasenjit_Chanda.png" class="profile-img" *ngIf="!selectedImage.name">
+    <!-- <img src="assets/images/Prasenjit_Chanda.png" class="profile-img" *ngIf="!selectedImage.name"> -->
+    <img [src]="currentUser.BUSINESS_LOGO" class="profile-img" *ngIf="!selectedImage.name">
     <img [src]="selectedImage.data" alt="" class="profile-img" *ngIf="selectedImage.name">
     <div class="edit-text" (click)="changeProfilePicture()">
       Select Photo
     </div>
-    <!-- <div class="edit-text" (click)="toggleEdit()">
-      {{ isEdit ? 'Done' : 'Edit' }}
-    </div> -->
-    <!-- <div class="edit-badge">
-      <ion-icon name="camera" class="edit-icon"></ion-icon>
-    </div> -->
+    
   </div>
   <!-- GAP -->
   <div class="gap"></div>
@@ -35,30 +41,7 @@
       <div *ngIf="!isEdit">{{myProfileData.email}}</div>
       <input *ngIf="isEdit" [(ngModel)]="user.email">
     </div>
-    <!-- <div class="divider"></div>
-    <div class="field">
-      <label>Phone Number</label>
-      <div *ngIf="!isEdit">{{myProfileData.phone}}</div>
-      <input *ngIf="isEdit" [(ngModel)]="user.phone">
-    </div> -->
-    <!-- <div class="divider"></div>
-    <div class="field">
-      <label>Business Name</label>
-      <div *ngIf="!isEdit">{{user.business}}</div>
-      <input *ngIf="isEdit" [(ngModel)]="user.business">
-    </div>
-    <div class="divider"></div>
-    <div class="field">
-      <label>Business ID</label>
-      <div *ngIf="!isEdit">{{user.businessId}}</div>
-      <input *ngIf="isEdit" [(ngModel)]="user.businessId">
-    </div>
-    <div class="divider"></div>
-    <div class="field">
-      <label>Waba No</label>
-      <div *ngIf="!isEdit">{{user.waba}}</div>
-      <input *ngIf="isEdit" [(ngModel)]="user.waba">
-    </div> -->
+   
   </div>
 </ion-content>
 

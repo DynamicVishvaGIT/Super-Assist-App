@@ -1,7 +1,7 @@
 <ion-content fullscreen class="login-page">
   <div class="page-wrapper">
-    <div class="top-wrapper">
-      <img src="assets/images/dv_tech.jpg" class="logo">
+    <div class="top-wrapper" [class.hide-top]="isKeyboardOpen">
+      <img src="assets/images/icon.png" class="logo">
       <h2 class="title">Welcome To Super Assist</h2>
       <p class="subtitle">Sign in to continue</p>
       <img src="assets/images/login-page-icon.avif" class="illustration">

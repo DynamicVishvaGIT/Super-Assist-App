@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { User } from '../user';
-import { filter, Subject, takeUntil } from 'rxjs';
+import { filter, Subject, Subscription, takeUntil } from 'rxjs';
 import { Common } from '../common';
 import { Api } from '../api';
+import { Platform } from '@ionic/angular';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-home',
@@ -12,6 +14,8 @@ import { Api } from '../api';
   standalone: false,
 })
 export class HomePage implements OnInit {
+
+  backButtonSub!: Subscription;
 
   private _unsubscribeAll: Subject<any>;
 
@@ -29,7 +33,7 @@ export class HomePage implements OnInit {
     email_id: ''
   };
 
-  constructor(private router: Router, private userService: User, private commonService: Common, private apiService: Api) { 
+  constructor(private router: Router, private userService: User, private commonService: Common, private apiService: Api, private platform: Platform, private location: Location) { 
     this._unsubscribeAll = new Subject();
   }
 
@@ -59,6 +63,23 @@ export class HomePage implements OnInit {
       this.loading = false;
     },1200);
     this.allChats = [...this.chats]; // backup original
+  }
+
+  ionViewDidEnter() {
+    this.backButtonSub = this.platform.backButton.subscribeWithPriority(9999, () => {
+      if (this.showModal) {
+        this.closeModal();
+        return;
+      }
+      // Normal back navigation
+      (navigator as any).app.exitApp();
+    });
+  }
+
+  ionViewWillLeave() {
+    if (this.backButtonSub) {
+      this.backButtonSub.unsubscribe();
+    }
   }
 
   load_country_codes() {

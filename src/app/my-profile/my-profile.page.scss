@@ -1,9 +1,49 @@
-.profile-header ion-toolbar {
+// .profile-header ion-toolbar {
+//     --background: #ffffff;
+//     border-bottom: 1px solid #eee;
+//     position: relative;
+//   }
+
+.profile-header {
+
+  ion-toolbar {
     --background: #ffffff;
-    border-bottom: 1px solid #eee;
-    position: relative;
+    --border-width: 0;
+    --min-height: 52px;
+    --padding-start: 8px;
+    --padding-end: 12px;
+    --padding-top: 0;
+    --padding-bottom: 0;
+
+    box-shadow: 0 2px 10px rgba(0,0,0,.08);
   }
-  
+
+  ion-buttons {
+    margin: 0;
+  }
+
+  ion-button {
+    --padding-start: 0;
+    --padding-end: 0;
+    --color: #085e54;
+    width: 36px;
+    height: 36px;
+  }
+
+  ion-icon {
+    font-size: 26px;
+  }
+
+  ion-title {
+    padding-inline-start: 6px;
+    padding-inline-end: 0;
+    text-align: left;
+
+    font-size: 18px;
+    font-weight: 500;
+    color: #222;
+  }
+}
   .back {
     font-size: 24px;
     color: #085e54;

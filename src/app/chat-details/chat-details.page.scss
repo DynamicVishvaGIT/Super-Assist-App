@@ -1174,13 +1174,91 @@ video {
       REPLY
 =========================*/
 
+/*====================================================
+            REPLY CARD
+====================================================*/
+
 .reply-message{
+
+  width:100%;
+
+}
+
+.reply-preview-card{
 
   display:flex;
 
-  flex-direction:column;
+  align-items:flex-start;
+
+  background:#f1f2f4;
+
+  border-radius:10px;
+
+  overflow:hidden;
+
+  margin-bottom:12px;
 
 }
+
+.reply-strip{
+
+  width:5px;
+
+  min-width:5px;
+
+  background:#008069;
+
+  border-radius:5px 0 0 5px;
+
+}
+
+.reply-preview-content{
+
+  flex:1;
+
+  padding:10px 12px;
+
+}
+
+.reply-preview-name{
+
+  color:#008069;
+
+  font-size:15px;
+
+  font-weight:600;
+
+  margin-bottom:4px;
+
+}
+
+.reply-preview-text{
+
+  color:#444;
+
+  font-size:14px;
+
+  line-height:20px;
+
+}
+
+.reply-body{
+
+  font-size:16px;
+
+  color:#111;
+
+  line-height:24px;
+
+}
+
+// .reply-message{
+
+//   display:flex;
+
+//   flex-direction:column;
+
+// }
 
 .reply-box{
 

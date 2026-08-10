@@ -88,11 +88,9 @@ class="template-header-text"
 
 <div
 class="template-image"
-*ngIf="msg.template?.header_type=='image'">
+*ngIf="msg.template?.header_type=='image' && msg?.template?.header_media_file!=null">
 
-<img
-[src]="imgURL + msg?.template?.header_media_file"
-(click)="openImage(imgURL + msg?.template?.header_media_file)">
+<img [src]="imgURL + msg?.template?.header_media_file" (click)="openImage(imgURL + msg?.template?.header_media_file)">
 
 </div>
 
@@ -194,33 +192,10 @@ class="template-footer"
 
 <!--====================== BUTTONS ========================-->
 
-<div
-class="template-buttons"
-*ngIf="msg.template?.buttons?.length">
-
-<div
-
-class="template-button"
-
-*ngFor="let btn of msg.template?.buttons"
-
-(click)="onTemplateButtonClick(btn)">
-
-<ion-icon
-
-*ngIf="btn.action_type=='PHONE_NUMBER'"
-
-name="call-outline">
-
-</ion-icon>
-
-<ion-icon
-
-*ngIf="btn.action_type=='URL'"
-
-name="globe-outline">
-
-</ion-icon>
+<div class="template-buttons" *ngIf="msg.template?.buttons?.length">
+  <div class="template-button" *ngFor="let btn of msg.template?.buttons" (click)="onTemplateButtonClick(btn)">
+    <ion-icon *ngIf="btn.action_type=='PHONE_NUMBER'" name="call-outline"></ion-icon>
+    <ion-icon *ngIf="btn.action_type=='URL'" name="globe-outline"></ion-icon>
 
 <ion-icon
 
@@ -247,7 +222,10 @@ name="paper-plane-outline">
 </div>
 
 </div>
-
+<!-- <div class="meta">
+  <span>{{ msg.time }}</span>
+  <ion-icon *ngIf="msg.sender === 'me'" class="tick" [name]="getStatusIcon(msg)" [style.color]="getStatusColor(msg)"></ion-icon>
+</div> -->
 </ng-container>
 
 
@@ -532,55 +510,22 @@ name="paper-plane-outline">
 
 
 <!-- MESSAGE TIME -->
-
-<div class="meta">
-
-  <span>
-
-      {{msg.time}}
-
-  </span>
-
-  <ion-icon
-
-      *ngIf="msg.status=='sent'"
-
-      name="checkmark-outline"
-
-      class="tick">
-
-  </ion-icon>
-
-  <ion-icon
-  *ngIf="msg.sender==='me'"
-  [class.tick]="true"
-  [name]="getStatusIcon(msg)"
-  [style.color]="getStatusColor(msg)">
-  </ion-icon>
-
-  <!-- <ion-icon
-
-      *ngIf="msg.status=='delivered'"
-
-      name="checkmark-done-outline"
-
-      class="tick">
-
-  </ion-icon> -->
-
-  <ion-icon
-
-      *ngIf="msg.status=='read'"
-
-      name="checkmark-done"
-
-      class="tick read">
-
-  </ion-icon>
-
-</div>
+<!-- <div class="meta">
+  <span>{{ msg.time }}</span>
+  <ion-icon *ngIf="msg.sender === 'me'" class="tick" [name]="getStatusIcon(msg)" [style.color]="getStatusColor(msg)"></ion-icon>
+</div> -->
+<!-- <div class="meta">
+  <span>{{msg.time}}</span>
+  <ion-icon *ngIf="msg.status=='sent'" name="checkmark-outline" class="tick"></ion-icon>
+  <ion-icon *ngIf="msg.sender==='me'" [class.tick]="true" [name]="getStatusIcon(msg)" [style.color]="getStatusColor(msg)"></ion-icon>
+  <ion-icon *ngIf="msg.status=='read'" name="checkmark-done" class="tick read"></ion-icon>
+</div> -->
 
 </ng-template>
+<div class="meta">
+  <span>{{ msg.time }}</span>
+  <ion-icon *ngIf="msg.sender === 'me'" class="tick" [name]="getStatusIcon(msg)" [style.color]="getStatusColor(msg)"></ion-icon>
+</div>
 
 </div>
 
@@ -860,7 +805,47 @@ name="paper-plane-outline">
 
 <!-- ========================= REPLY ========================= -->
 
-<div *ngSwitchCase="'reply'" class="reply-message">
+<!-- ===================== FLOW / REPLY ===================== -->
+
+<div *ngSwitchCase="'interactive'" class="reply-message">
+
+  <!-- Original Message Preview -->
+
+  <div
+      class="reply-preview-card"
+      *ngIf="msg.parent_message">
+
+      <div class="reply-strip"></div>
+
+      <div class="reply-preview-content">
+
+          <div class="reply-preview-name">
+
+              {{ msg.parent_message.sender_name || contactName }}
+
+          </div>
+
+          <div class="reply-preview-text">
+
+              {{ getReplyPreview(msg) }}
+
+          </div>
+
+      </div>
+
+  </div>
+
+  <!-- Current Reply -->
+
+  <!-- <div class="reply-body">
+
+      {{ msg.text }}
+
+  </div> -->
+
+</div>
+
+<!-- <div *ngSwitchCase="'reply'" class="reply-message">
 
   <div
       class="reply-box"
@@ -868,13 +853,11 @@ name="paper-plane-outline">
 
       <div class="reply-name">
         {{getReplySender(msg)}}
-          <!-- {{msg.parent_message.sender_name}} -->
 
       </div>
 
-      <div class="reply-text "><!--reply-preview-->
+      <div class="reply-text ">
         {{getReplyPreview(msg)}}
-          <!-- {{msg.parent_message.preview_text}} -->
 
       </div>
 
@@ -886,7 +869,7 @@ name="paper-plane-outline">
 
   </div>
 
-</div>
+</div> -->
 
 <!-- ======================= FORWARDED ====================== -->
 

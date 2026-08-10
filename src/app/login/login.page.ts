@@ -4,6 +4,9 @@ import { Subject, takeUntil } from 'rxjs';
 import { Common } from '../common';
 import { Api } from '../api';
 import { User } from '../user';
+import { Platform } from '@ionic/angular';
+
+declare var Keyboard: any;
 
 @Component({
   selector: 'app-login',
@@ -17,12 +20,21 @@ export class LoginPage implements OnInit {
 
   login_data: any={username:'', password:''};
   showPassword = false;
+  isKeyboardOpen = false;
 
-  constructor(private router: Router, private commonService: Common, private apiService: Api, private userService: User) { 
+  constructor(private router: Router, private commonService: Common, private apiService: Api, private userService: User, private platform: Platform) { 
     this._unsubscribeAll = new Subject();
   }
 
   ngOnInit() {
+    this.platform.ready().then(() => {
+      window.addEventListener('keyboardDidShow', () => {
+        this.isKeyboardOpen = true;
+      });
+      window.addEventListener('keyboardDidHide', () => {
+        this.isKeyboardOpen = false;
+      });
+    });
   }
 
   onLogin() {
