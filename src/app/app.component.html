@@ -43,17 +43,25 @@
       </ion-content>
     </ion-menu>
     <ion-router-outlet id="main-content"></ion-router-outlet>
-    <!-- <ion-tabs  #myTabs (ionTabsDidChange)="getSelectedTab()">
-      <ion-tab-bar slot="bottom" selectedTab="{{tab_name}}" *ngIf="tab_name =='my-targets' || tab_name =='my-visit' || tab_name =='my-lead' || tab_name =='my-task' || tab_name =='my-events' || tab_name =='attendance-history'|| tab_name =='home' || tab_name =='language'  || tab_name =='profile'|| tab_name =='gift-redeem' || tab_name =='scancode' || tab_name =='scheme' || tab_name =='orders' || tab_name =='project-lead' || tab_name =='scancounterboy' || tab_name =='passbook' || tab_name =='projectlist' ">
+    <ion-tabs  #myTabs (ionTabsDidChange)="getSelectedTab()">
+      <ion-tab-bar slot="bottom" [selectedTab]="tab_name" *ngIf="tab_name =='home' || tab_name =='my-profile' || tab_name =='contact-detail' || tab_name =='contact-list' || tab_name =='my-orders' || tab_name =='add-project-lead' || tab_name =='project-lead-list' || tab_name =='kyc-verification' || tab_name =='language-setting' || tab_name =='passbook' || tab_name =='schemes-offers' ">
         <ion-tab-button tab="home">
-          <ion-icon name="home-outline"></ion-icon>
-          <ion-label>Home</ion-label>
+          <img src="assets/images/chat.png" class="footer-icon">
+          <ion-label class="footer-label">Chats</ion-label>
         </ion-tab-button>
-        <ion-tab-button tab="profile">
-          <ion-icon name="person-outline"></ion-icon>
-          <ion-label>profile</ion-label>
+
+        <ion-tab-button tab="contact-list">
+          <img src="assets/images/contact.png" class="footer-icon">
+          <ion-label class="footer-label">Contacts</ion-label>
+        </ion-tab-button>
+
+        
+    
+        <ion-tab-button tab="my-profile">
+          <img src="assets/images/setting.png" class="footer-icon">
+          <ion-label class="footer-label">Settings</ion-label>
         </ion-tab-button>
       </ion-tab-bar>
-    </ion-tabs> -->
+    </ion-tabs>
   </ion-split-pane>
 </ion-app>

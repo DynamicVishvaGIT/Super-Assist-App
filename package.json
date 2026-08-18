@@ -81,7 +81,9 @@
       "cordova-plugin-android-permissions": {},
       "cordova-plugin-app-version": {},
       "cordova-in-app-update": {},
-      "cordova-plugin-camera": {},
+      "cordova-plugin-camera": {
+        "ANDROIDX_CORE_VERSION": "1.6.+"
+      },
       "cordova-plugin-inappbrowser": {},
       "cordova-plugin-statusbar": {},
       "cordova-plugin-device": {},

@@ -1,145 +1,1263 @@
+/* =========================================================
+   LOGIN PAGE
+   ========================================================= */
+
 .login-page {
-    --background: #eefdf8;
+  --background: #f2f8f5;
+
+  background:
+    radial-gradient(
+      circle at 8% 18%,
+      rgba(207, 244, 224, 0.72) 0%,
+      rgba(207, 244, 224, 0) 32%
+    ),
+    radial-gradient(
+      circle at 94% 84%,
+      rgba(208, 245, 226, 0.72) 0%,
+      rgba(208, 245, 226, 0) 34%
+    ),
+    linear-gradient(
+      180deg,
+      #f5faf8 0%,
+      #edf8f3 100%
+    );
+
+  --padding-start: 0;
+  --padding-end: 0;
+  --padding-top: 0;
+  --padding-bottom: 0;
+
+  width: 100%;
+  height: 100%;
+}
+.ture-icon-img {
+  width: 20px !important;
+  height: 18px !important;
+  object-fit: contain;
+}
+
+
+/* =========================================================
+   ION CONTENT
+   ========================================================= */
+
+ion-content.login-page {
+  --background: transparent;
+}
+
+ion-content.login-page::part(scroll) {
+  min-height: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   MAIN PAGE WRAPPER
+   ========================================================= */
+
+.page-wrapper {
+  width: 100%;
+  min-height: 100%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  box-sizing: border-box;
+
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+
+/* =========================================================
+   TOP SECTION
+   ========================================================= */
+
+.top-wrapper {
+  width: 100%;
+  max-width: 900px;
+
+  box-sizing: border-box;
+
+  text-align: center;
+
+  padding: 76px 24px 58px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+/* =========================================================
+   LOGO CONTAINER
+   ========================================================= */
+
+.brand-container {
+  width: 278px;
+  height: 49px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  position: relative;
+
+  margin: 0 auto 52px;
+
+  flex-shrink: 0;
+}
+
+
+/* =========================================================
+   ACTUAL SUPER ASSIST LOGO
+   ========================================================= */
+
+.brand-logo {
+  width: 278px;
+  height: 49px;
+
+  display: block;
+
+  object-fit: contain;
+
+  opacity: 1;
+
+  margin: 0;
+  padding: 0;
+}
+
+
+/* =========================================================
+   PAGE TITLE
+   ========================================================= */
+
+.title {
+  margin: 0;
+
+  color: #111515;
+
+  font-size: 57px;
+  line-height: 1.08;
+
+  font-weight: 700;
+
+  letter-spacing: -2px;
+
+  text-align: center;
+}
+
+
+/* =========================================================
+   SUBTITLE
+   ========================================================= */
+
+.subtitle {
+  margin: 20px 0 0;
+
+  color: #4c5750;
+
+  font-size: 30px;
+
+  line-height: 1.35;
+
+  font-weight: 400;
+
+  letter-spacing: -0.5px;
+
+  text-align: center;
+}
+
+
+/* =========================================================
+   FORM CARD
+   ========================================================= */
+
+.form-wrapper {
+  width: calc(100% - 68px);
+  max-width: 830px;
+
+  box-sizing: border-box;
+
+  background: rgba(255, 255, 255, 0.97);
+
+  border-radius: 38px;
+
+  padding: 78px 40px 48px;
+
+  margin: 0 auto 48px;
+
+  border: 1px solid rgba(226, 232, 228, 0.9);
+
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.025),
+    0 10px 35px rgba(24, 63, 45, 0.055);
+
+  position: relative;
+}
+
+
+/* =========================================================
+   FIELD
+   ========================================================= */
+
+.field {
+  width: 100%;
+
+  margin: 0 0 54px;
+}
+
+
+/* Password field */
+
+.password-field {
+  margin-bottom: 0;
+}
+
+
+/* =========================================================
+   LABEL
+   ========================================================= */
+
+.field label {
+  display: block;
+
+  margin: 0 0 22px 10px;
+
+  color: #171b1a;
+
+  font-size: 29px;
+
+  line-height: 1.2;
+
+  font-weight: 400;
+
+  letter-spacing: -0.5px;
+}
+
+
+/* =========================================================
+   INPUT WRAPPER
+   ========================================================= */
+
+.input-wrapper {
+  width: 100%;
+  height: 132px;
+
+  box-sizing: border-box;
+
+  display: flex;
+  align-items: center;
+
+  padding: 0 34px;
+
+  gap: 28px;
+
+  background: #ffffff;
+
+  border: 2px solid #b9cbbd;
+
+  border-radius: 37px;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+
+/* =========================================================
+   INPUT ICON
+   ========================================================= */
+
+.input-icon {
+  flex: 0 0 auto;
+
+  width: 43px;
+  height: 43px;
+
+  font-size: 43px;
+
+  color: #718074;
+}
+
+
+/* =========================================================
+   ION INPUT
+   ========================================================= */
+
+ion-input {
+  --background: transparent;
+
+  --color: #202522;
+
+  --placeholder-color: #c7cdca;
+
+  --placeholder-opacity: 1;
+
+  --padding-start: 0;
+  --padding-end: 0;
+  --padding-top: 0;
+  --padding-bottom: 0;
+
+  --highlight-color-focused: transparent;
+  --highlight-color-valid: transparent;
+  --highlight-color-invalid: transparent;
+
+  flex: 1;
+
+  width: 100%;
+  min-width: 0;
+
+  font-size: 29px;
+
+  font-weight: 400;
+
+  color: #202522;
+
+  --border-width: 0;
+}
+
+
+/* Remove Ionic default input highlight */
+
+ion-input::part(native) {
+  border: none !important;
+
+  outline: none !important;
+
+  box-shadow: none !important;
+}
+
+
+/* =========================================================
+   INPUT FOCUS
+   ========================================================= */
+
+/* =========================================================
+   FIX: GREEN FOCUS / BLINKING EFFECT
+========================================================= */
+
+/* =========================================================
+   FIX: GREEN FOCUS / BLINKING EFFECT (FORCED)
+========================================================= */
+
+.input-wrapper:focus-within {
+  border-color: #54b85a !important;
+  animation: greenInputBlink 1.4s ease-in-out infinite !important;
+}
+
+@keyframes greenInputBlink {
+  0% {
+    border-color: #54b85a;
+    box-shadow: 0 0 0 3px rgba(75, 189, 85, 0.08), 0 0 8px rgba(75, 189, 85, 0.05);
   }
-  
-  /* ⭐⭐ VERY IMPORTANT FIX FOR LAPTOP JUMP ISSUE */
-  ion-content.login-page::part(scroll) {
-    display: flex;
-    flex-direction: column;
-    min-height: 100%;
+  50% {
+    border-color: #2eb837;
+    box-shadow: 0 0 0 6px rgba(75, 189, 85, 0.25), 0 0 20px rgba(75, 189, 85, 0.3);
   }
-  
-  /* FULL PAGE FLEX LAYOUT */
-  .page-wrapper {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  
-    /* ⭐ remove vh dependency */
-    min-height: 100%;
+  100% {
+    border-color: #54b85a;
+    box-shadow: 0 0 0 3px rgba(75, 189, 85, 0.08), 0 0 8px rgba(75, 189, 85, 0.05);
   }
-  
-  /* TOP AREA */
+}
+
+
+/* =========================================================
+   PASSWORD WRAPPER
+   ========================================================= */
+
+.password-wrapper {
+  position: relative;
+
+  padding-right: 30px;
+}
+
+
+/* =========================================================
+   EYE ICON
+   ========================================================= */
+
+.eye {
+  flex: 0 0 auto;
+
+  width: 45px;
+  height: 45px;
+
+  font-size: 45px;
+
+  color: #718074;
+
+  cursor: pointer;
+
+  transition: color 0.2s ease;
+}
+
+.eye:active {
+  color: #4bbd55;
+}
+
+
+/* =========================================================
+   FORGOT PASSWORD ROW
+   ========================================================= */
+
+.row {
+  width: 100%;
+
+  display: flex;
+
+  justify-content: flex-end;
+
+  align-items: center;
+
+  margin: 27px 0 54px;
+}
+
+
+/* =========================================================
+   FORGOT PASSWORD
+   ========================================================= */
+
+.forgot {
+  color: #00a95b;
+
+  font-size: 29px;
+
+  line-height: 1.2;
+
+  font-weight: 500;
+
+  letter-spacing: -0.3px;
+
+  cursor: pointer;
+
+  user-select: none;
+
+  transition: opacity 0.2s ease;
+}
+
+.forgot:active {
+  opacity: 0.7;
+}
+
+
+/* =========================================================
+   LOGIN BUTTON
+   ========================================================= */
+
+.login-btn {
+  width: 100%;
+
+  height: 126px;
+
+  border-radius: 36px;
+
+  background: #05ae61;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 24px;
+
+  box-sizing: border-box;
+
+  color: #ffffff;
+
+  font-size: 29px;
+
+  line-height: 1;
+
+  font-weight: 700;
+
+  letter-spacing: -0.5px;
+
+  cursor: pointer;
+
+  user-select: none;
+
+  box-shadow:
+    0 13px 28px rgba(0, 174, 97, 0.22);
+
+  transition:
+    transform 0.15s ease,
+    opacity 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+
+/* =========================================================
+   LOGIN BUTTON ARROW
+   ========================================================= */
+
+.login-btn ion-icon {
+  width: 45px;
+  height: 45px;
+
+  font-size: 45px;
+
+  flex: 0 0 auto;
+}
+
+
+/* =========================================================
+   BUTTON PRESS
+   ========================================================= */
+
+.login-btn:active {
+  transform: scale(0.985);
+
+  opacity: 0.94;
+
+  box-shadow:
+    0 7px 18px rgba(0, 174, 97, 0.18);
+}
+
+
+/* =========================================================
+   MOBILE - 600px AND BELOW
+   ========================================================= */
+
+@media (max-width: 600px) {
+
   .top-wrapper {
-    text-align: center;
-    padding-top: calc(constant(safe-area-inset-top) + 20px);
-    padding-top: calc(env(safe-area-inset-top) + 20px);
-    padding-bottom: 20px;
-    transition:.3s;
+    padding: 42px 20px 34px;
   }
-  .hide-top + .form-wrapper{
-    min-height:100vh;
-    border-radius:30px 30px 0 0;
+
+
+  /* -------------------------
+     LOGO
+     ------------------------- */
+
+  .brand-container {
+    width: 278px;
+    max-width: 100%;
+
+    height: 49px;
+
+    margin-bottom: 34px;
   }
-  /* FORM CARD */
-  .form-wrapper {
-    min-height:42vh;
-    background: white;
-    border-top-left-radius: 35px;
-    border-top-right-radius: 35px;
-    padding: 25px 20px 35px;
-    box-shadow: 0 -4px 12px rgba(0,0,0,0.06);
+
+
+  .brand-logo {
+    width: 278px;
+    max-width: 100%;
+
+    height: 49px;
+
+    object-fit: contain;
   }
-  
-  .logo {
-    width: 55px;
-    height: 55px;
-    border-radius: 50%;
-    margin-top: 30px;
-  }
-  
+
+
+  /* -------------------------
+     TITLE
+     ------------------------- */
+
   .title {
-    font-size: 22px;
-    font-weight: 600;
-    margin-top: 10px;
+    font-size: 34px;
+
+    letter-spacing: -1px;
+
+    line-height: 1.1;
   }
-  
+
+
+  /* -------------------------
+     SUBTITLE
+     ------------------------- */
+
   .subtitle {
-    color: #6b7280;
-    font-size: 14px;
+    margin-top: 12px;
+
+    font-size: 18px;
+
+    line-height: 1.42;
   }
-  
-  .illustration {
-    width: 260px;
-    margin-top: 8px;
+
+
+  /* -------------------------
+     FORM CARD
+     ------------------------- */
+
+  .form-wrapper {
+    width: calc(100% - 34px);
+
+    max-width: none;
+
+    border-radius: 30px;
+
+    padding: 38px 26px 30px;
+
+    margin-bottom: 30px;
   }
-  
-  /* FIELD */
+
+
+  /* -------------------------
+     FIELD
+     ------------------------- */
+
   .field {
-    margin-bottom: 18px;
+    margin-bottom: 31px;
   }
-  
+
+
+  /* -------------------------
+     LABEL
+     ------------------------- */
+
   .field label {
-    font-size: 13px;
-    margin-bottom: 6px;
-    display: block;
+    font-size: 19px;
+
+    margin: 0 0 13px 8px;
+
+    line-height: 1.2;
   }
-  
-  /* INPUT BOX */
+
+
+  /* -------------------------
+     INPUT
+     ------------------------- */
+
   .input-wrapper {
-    background: #f9fafb;
-    border: 1.5px solid #e5e7eb;
-    border-radius: 12px;
-    height: 50px;
-  
-    display: flex;
-    align-items: center;
-    padding: 0 14px;
-  
-    transition: 0.25s;
+    height: 62px;
+
+    border-radius: 22px;
+
+    padding: 0 18px;
+
+    gap: 14px;
+
+    border-width: 1.5px;
   }
-  
+
+
+  /* -------------------------
+     INPUT ICON
+     ------------------------- */
+
+  .input-icon {
+    width: 25px;
+    height: 25px;
+
+    font-size: 25px;
+  }
+
+
+  /* -------------------------
+     INPUT TEXT
+     ------------------------- */
+
   ion-input {
-    --highlight-color-focused: transparent;
-    --padding-start: 0;
+    font-size: 18px;
   }
-  
-  .input-wrapper:focus-within {
-    border: 2px solid #009866;
-    box-shadow: 0 0 0 3px rgba(0,152,102,0.08);
-  }
-  
+
+
+  /* -------------------------
+     PASSWORD
+     ------------------------- */
+
   .password-wrapper {
-    position: relative;
+    padding-right: 17px;
   }
-  
+
+
+  /* -------------------------
+     EYE
+     ------------------------- */
+
   .eye {
-    position: absolute;
-    right: 12px;
-    font-size: 22px;
-    z-index: 10;   /* 🔥 IMPORTANT */
-    color: #009866;
+    width: 27px;
+    height: 27px;
+
+    font-size: 27px;
   }
-  
+
+
+  /* -------------------------
+     FORGOT ROW
+     ------------------------- */
+
   .row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 10px 0 16px;
+    margin: 15px 0 30px;
   }
-  
-  .remember {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  
+
+
+  /* -------------------------
+     FORGOT PASSWORD
+     ------------------------- */
+
   .forgot {
-    color: #009866;
-    font-weight: 500;
-    font-size: 14px;
+    font-size: 18px;
   }
-  
+
+
+  /* -------------------------
+     LOGIN BUTTON
+     ------------------------- */
+
   .login-btn {
-    height: 52px;
-    border-radius: 14px;
-    background: linear-gradient(90deg,#00b36b,#009866);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: white;
-    font-weight: 600;
-    gap: 8px;
-    box-shadow: 0 6px 16px rgba(0,152,102,0.35);
+    height: 69px;
+
+    border-radius: 22px;
+
+    font-size: 18px;
+
+    gap: 11px;
   }
+
+
+  .login-btn ion-icon {
+    width: 28px;
+    height: 28px;
+
+    font-size: 28px;
+  }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE - 390px AND BELOW
+   ========================================================= */
+
+@media (max-width: 390px) {
+
+  .top-wrapper {
+    padding-top: 32px;
+  }
+
+
+  /* Logo */
+
+  .brand-container {
+    width: 278px;
+    max-width: 100%;
+
+    height: 49px;
+
+    margin-bottom: 30px;
+  }
+
+
+  .brand-logo {
+    width: 278px;
+    max-width: 100%;
+
+    height: 49px;
+    margin-top: 85px;
+  }
+
+
+  /* Title */
+
+  .title {
+    font-size: 31px;
+    margin-top: 45px;
+  }
+
+
+  /* Subtitle */
+
+  .subtitle {
+    font-size: 16px;
+  }
+
+
+  /* Card */
+
+  .form-wrapper {
+    width: calc(100% - 24px);
+
+    padding: 32px 20px 25px;
+  }
+
+
+  /* Labels */
+
+  .field label {
+    font-size: 18px;
+  }
+
+
+  /* Inputs */
+
+  .input-wrapper {
+    height: 62px;
+
+    border-radius: 16px;
+
+    padding: 0 15px;
+
+    gap: 11px;
+  }
+
+
+  .input-icon {
+    width: 24px;
+    height: 24px;
+
+    font-size: 24px;
+  }
+
+
+  ion-input {
+    font-size: 16px;
+  }
+
+
+  /* Forgot */
+
+  .forgot {
+    font-size: 16px;
+  }
+
+
+  /* Button */
+
+  .login-btn {
+    height: 56px;
+
+    border-radius: 16px;
+
+    font-size: 16px;
+  }
+
+
+  .login-btn ion-icon {
+    width: 26px;
+    height: 26px;
+
+    font-size: 26px;
+  }
+
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (min-width: 601px) and (max-width: 1024px) {
+
+  .top-wrapper {
+    padding-top: 60px;
+
+    padding-bottom: 45px;
+  }
+
+
+  .brand-container {
+    width: 278px;
+    height: 49px;
+
+    margin-bottom: 42px;
+  }
+
+
+  .brand-logo {
+    width: 278px;
+    height: 49px;
+  }
+
+
+  .title {
+    font-size: 46px;
+  }
+
+
+  .subtitle {
+    font-size: 24px;
+  }
+
+
+  .form-wrapper {
+    width: calc(100% - 60px);
+
+    max-width: 760px;
+
+    padding: 55px 36px 40px;
+
+    border-radius: 34px;
+  }
+
+
+  .field label {
+    font-size: 25px;
+  }
+
+
+  .input-wrapper {
+    height: 105px;
+
+    border-radius: 31px;
+
+    padding: 0 28px;
+
+    gap: 22px;
+  }
+
+
+  .input-icon {
+    width: 36px;
+    height: 36px;
+
+    font-size: 36px;
+  }
+
+
+  ion-input {
+    font-size: 25px;
+  }
+
+
+  .eye {
+    width: 38px;
+    height: 38px;
+
+    font-size: 38px;
+  }
+
+
+  .forgot {
+    font-size: 24px;
+  }
+
+
+  .login-btn {
+    height: 102px;
+
+    border-radius: 30px;
+
+    font-size: 25px;
+  }
+
+
+  .login-btn ion-icon {
+    width: 38px;
+    height: 38px;
+
+    font-size: 38px;
+  }
+
+}
+
+
+/* =========================================================
+   DESKTOP / LAPTOP
+   ========================================================= */
+
+@media (min-width: 1025px) {
+
+  .top-wrapper {
+    padding-top: 76px;
+
+    padding-bottom: 58px;
+  }
+
+
+  .form-wrapper {
+    max-width: 830px;
+  }
+
+}
+
+
+/* =========================================================
+   LARGE DESKTOP
+   ========================================================= */
+
+@media (min-width: 1200px) {
+
+  .top-wrapper {
+    padding-top: 90px;
+
+    padding-bottom: 64px;
+  }
+
+
+  .form-wrapper {
+    max-width: 830px;
+  }
+
+}
+
+
+/* =========================================================
+   REDUCE MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .input-wrapper,
+  .eye,
+  .forgot,
+  .login-btn {
+    transition: none;
+  }
+  /* =========================================================
+   FIX: GREEN FOCUS / BLINKING EFFECT
+========================================================= */
+
+
+/* =========================================================
+   FIX: PASSWORD EYE BUTTON
+========================================================= */
+
+.eye-btn {
+  width: 45px;
+  height: 45px;
+
+  padding: 0;
+  margin: 0;
+
+  border: 0;
+  outline: 0;
+
+  background: transparent;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #718074;
+
+  cursor: pointer;
+
+  flex: 0 0 auto;
+
+  -webkit-tap-highlight-color: transparent;
+}
+
+.eye-btn ion-icon {
+  width: 45px;
+  height: 45px;
+
+  font-size: 45px;
+
+  color: #718074;
+
+  pointer-events: none;
+}
+
+.eye-btn:active ion-icon {
+  color: #4bbd55;
+}
+
+
+/* =========================================================
+   MOBILE EYE BUTTON
+========================================================= */
+
+@media (max-width: 600px) {
+
+  .eye-btn {
+    width: 27px;
+    height: 27px;
+
+    flex: 0 0 27px;
+  }
+
+  .eye-btn ion-icon {
+    width: 27px;
+    height: 27px;
+
+    font-size: 27px;
+  }
+}
+
+
+/* =========================================================
+   TABLET EYE BUTTON
+========================================================= */
+
+@media (min-width: 601px) and (max-width: 1024px) {
+
+  .eye-btn {
+    width: 38px;
+    height: 38px;
+
+    flex: 0 0 38px;
+  }
+
+  .eye-btn ion-icon {
+    width: 38px;
+    height: 38px;
+
+    font-size: 38px;
+  }
+}
+
+
+/* =========================================================
+   REDUCE MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .input-wrapper:focus-within {
+    animation: none;
+  }
+}
+.password-eye {
+      font-size: 25px;
+      color: #818181;
+      cursor: pointer;
+      margin-top: 18px; // aligns nicely with floating label
+    }
+
+}
+
+
+
+// .login-page {
+//     --background: #eefdf8;
+//   }
+  
+//   /* ⭐⭐ VERY IMPORTANT FIX FOR LAPTOP JUMP ISSUE */
+//   ion-content.login-page::part(scroll) {
+//     display: flex;
+//     flex-direction: column;
+//     min-height: 100%;
+//   }
+  
+//   /* FULL PAGE FLEX LAYOUT */
+//   .page-wrapper {
+//     flex: 1;
+//     display: flex;
+//     flex-direction: column;
+//     justify-content: space-between;
+  
+//     /* ⭐ remove vh dependency */
+//     min-height: 100%;
+//   }
+  
+//   /* TOP AREA */
+//   .top-wrapper {
+//     text-align: center;
+//     padding-top: calc(constant(safe-area-inset-top) + 20px);
+//     padding-top: calc(env(safe-area-inset-top) + 20px);
+//     padding-bottom: 20px;
+//     transition:.3s;
+//   }
+//   .hide-top + .form-wrapper{
+//     min-height:100vh;
+//     border-radius:30px 30px 0 0;
+//   }
+//   /* FORM CARD */
+//   .form-wrapper {
+//     min-height:42vh;
+//     background: white;
+//     border-top-left-radius: 35px;
+//     border-top-right-radius: 35px;
+//     padding: 25px 20px 35px;
+//     box-shadow: 0 -4px 12px rgba(0,0,0,0.06);
+//   }
+  
+//   .logo {
+//     width: 55px;
+//     height: 55px;
+//     border-radius: 50%;
+//     margin-top: 30px;
+//   }
+  
+//   .title {
+//     font-size: 22px;
+//     font-weight: 600;
+//     margin-top: 10px;
+//   }
+  
+//   .subtitle {
+//     color: #6b7280;
+//     font-size: 14px;
+//   }
+  
+//   .illustration {
+//     width: 260px;
+//     margin-top: 8px;
+//   }
+  
+//   /* FIELD */
+//   .field {
+//     margin-bottom: 18px;
+//   }
+  
+//   .field label {
+//     font-size: 13px;
+//     margin-bottom: 6px;
+//     display: block;
+//   }
+  
+//   /* INPUT BOX */
+//   .input-wrapper {
+//     background: #f9fafb;
+//     border: 1.5px solid #e5e7eb;
+//     border-radius: 12px;
+//     height: 50px;
+  
+//     display: flex;
+//     align-items: center;
+//     padding: 0 14px;
+  
+//     transition: 0.25s;
+//   }
+  
+//   ion-input {
+//     --highlight-color-focused: transparent;
+//     --padding-start: 0;
+//   }
+  
+//   .input-wrapper:focus-within {
+//     border: 2px solid #009866;
+//     box-shadow: 0 0 0 3px rgba(0,152,102,0.08);
+//   }
+  
+//   .password-wrapper {
+//     position: relative;
+//   }
+  
+//   .eye {
+//     position: absolute;
+//     right: 12px;
+//     font-size: 22px;
+//     z-index: 10;   /* 🔥 IMPORTANT */
+//     color: #009866;
+//   }
+  
+//   .row {
+//     display: flex;
+//     justify-content: space-between;
+//     align-items: center;
+//     margin: 10px 0 16px;
+//   }
+  
+//   .remember {
+//     display: flex;
+//     align-items: center;
+//     gap: 6px;
+//   }
+  
+//   .forgot {
+//     color: #009866;
+//     font-weight: 500;
+//     font-size: 14px;
+//   }
+  
+//   .login-btn {
+//     height: 52px;
+//     border-radius: 14px;
+//     background: linear-gradient(90deg,#00b36b,#009866);
+//     display: flex;
+//     justify-content: center;
+//     align-items: center;
+//     color: white;
+//     font-weight: 600;
+//     gap: 8px;
+//     box-shadow: 0 6px 16px rgba(0,152,102,0.35);
+//   }

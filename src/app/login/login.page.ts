@@ -83,8 +83,7 @@ export class LoginPage implements OnInit {
     this.showPassword = !this.showPassword;
   }
 
-  // onLogin() {
-  //   this.router.navigateByUrl('home');
-  // }
-
+  onForgotPassword() {
+this.router.navigateByUrl('forgot-password');
+}
 }

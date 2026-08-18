@@ -1,0 +1,117 @@
+<ion-header class="contact-header">
+  <div class="header-row">
+    <ion-button fill="clear" (click)="onBack()">
+      <ion-icon name="arrow-back-outline"></ion-icon>
+    </ion-button>
+  </div>
+</ion-header>
+
+<ion-content class="contact-content">
+  <div class="contact-container">
+
+    <!-- PROFILE -->
+    <div class="profile-top-section">
+      <div class="avatar-circle">
+        <span class="avatar-initials">{{ getInitials(contact.name) }}</span>
+      </div>
+
+      <h2 class="contact-name">{{ contact.name }}</h2>
+      <p class="contact-phone">{{ contact.phone }}</p>
+
+  <div class="action-buttons">
+  <button class="action-btn message-btn" (click)="sendMessage()">
+    <img src="assets/images/message.png" alt="Message" style="width: 20px !important; height: 20px !important; min-width: 20px !important; min-height: 20px !important; object-fit: contain !important;">
+  <span style="font-size: 16px !important; font-weight: 400 !important;">Message</span>
+  </button>
+
+  <button class="action-btn call-btn" (click)="makeCall()">
+    <img src="assets/images/call.png" alt="Call" style="width: 20px !important; height: 20px !important; min-width: 20px !important; min-height: 20px !important; object-fit: contain !important;">
+  <span style="font-size: 16px !important; font-weight: 400 !important;">Call</span>
+  </button>
+</div>
+</div>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- GROUPS -->
+    <div class="section-block">
+      <div class="section-title">GROUPS</div>
+
+      <div class="groups-chips">
+        <span class="group-chip" *ngFor="let group of contact.groups">
+          {{ group }}
+        </span>
+
+        <span class="group-chip more-chip">+3 More</span>
+      </div>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- SHARED MEDIA -->
+    <div class="section-block">
+      <div class="media-header">
+        <span class="section-title">SHARED MEDIA</span>
+
+        <span class="view-all" (click)="viewAllMedia()">
+          View All &gt;
+        </span>
+      </div>
+
+      <div class="media-grid">
+        <div
+          *ngFor="let media of contact.media; let i = index"
+          class="media-item"
+          [class.large]="i === 0"
+          [class.small]="i !== 0"
+          (click)="openMedia(media)"
+        >
+          <img [src]="media" alt="Shared Media">
+        </div>
+      </div>
+    </div>
+</ion-content>
+
+<!-- FULL SCREEN IMAGE VIEWER -->
+<div
+  class="image-viewer"
+  *ngIf="selectedImage"
+  (click)="closeMedia()"
+>
+  <button
+    class="image-viewer-close"
+    type="button"
+    (click)="closeMedia(); $event.stopPropagation()"
+  >
+    <ion-icon name="close-outline"></ion-icon>
+  </button>
+
+  <div
+    class="image-viewer-content"
+    (click)="$event.stopPropagation()"
+  >
+    <img
+      [src]="selectedImage"
+      alt="Shared Media Preview"
+      class="full-screen-image"
+    >
+  </div>
+</div>
+<!-- BOTTOM NAVIGATION TABS (Contacts Active) -->
+<!-- <div class="custom-bottom-tabs">
+  <div class="tab-item" [class.active]="activeTab === 'chats'" (click)="goToChats()">
+    <img [src]="activeTab === 'chats' ? 'assets/images/chat.active.png' : 'assets/images/chat.png'" alt="Chats" class="feature-icon-img" />
+    <span>Chats</span>
+  </div>
+  
+  <div class="tab-item" [class.active]="activeTab === 'contacts'" (click)="goToContacts()">
+    <img [src]="activeTab === 'contacts' ? 'assets/images/contact.active.png' : 'assets/images/contact.png'" alt="Contacts" class="feature-icon-img" />
+    <span>Contacts</span>
+  </div>
+
+  <div class="tab-item" [class.active]="activeTab === 'settings'" (click)="goToProfile()">
+    <img [src]="activeTab === 'settings' ? 'assets/images/setting.active.png' : 'assets/images/setting.png'" alt="Settings" class="feature-icon-img" />
+    <span>Settings</span>
+  </div>
+</div> -->

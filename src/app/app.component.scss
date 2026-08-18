@@ -1,119 +1,254 @@
-ion-menu ion-content {
-  --background: var(--ion-item-background, var(--ion-background-color, #fff));
+.menu-content {
+  --background: #F8FAFB;
 }
 
-ion-menu.md ion-content {
-  --padding-start: 8px;
-  --padding-end: 8px;
-  --padding-top: 20px;
-  --padding-bottom: 20px;
+.drawer-container {
+  width: 320px;
+  min-height: 100%;
+  padding: 32px 16px;
+  background: #F8FAFB;
+  border-top-right-radius: 16px;
+  border-bottom-right-radius: 16px;
+  position: relative;
 }
 
-ion-menu.md ion-list {
-  padding: 20px 0;
+.top-icon {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 16px;
+
+  ion-icon {
+    font-size: 28px;
+    color: #17479E;
+  }
 }
 
-ion-menu.md ion-note {
-  margin-bottom: 30px;
+/* Profile */
+
+.profile-image {
+  width: 80px;
+  height: 80px;
+  border-radius: 16px;
+  border: 2px solid #002B570D;
+  overflow: hidden;
+  box-shadow:
+    0px 4px 6px -4px #0000001A,
+    0px 10px 15px -3px #0000001A;
+
+  img {
+    width: 76px;
+    height: 76px;
+    object-fit: cover;
+  }
 }
 
-ion-menu.md ion-list-header,
-ion-menu.md ion-note {
-  padding-left: 10px;
+.user-name {
+  margin-top: 16px;
+  margin-bottom: 4px;
+  color: #17479E;
+  font-family: Manrope;
+  font-size: 20px;
+  font-weight: 900;
+  line-height: 28px;
+  letter-spacing: -0.5px;
 }
 
-ion-menu.md ion-list#inbox-list {
-  border-bottom: 1px solid var(--ion-background-color-step-150, #d7d8da);
-}
-
-ion-menu.md ion-list#inbox-list ion-list-header {
-  font-size: 22px;
-  font-weight: 600;
-
-  min-height: 20px;
-}
-
-ion-menu.md ion-list#labels-list ion-list-header {
-  font-size: 16px;
-
-  margin-bottom: 18px;
-
-  color: #757575;
-
-  min-height: 26px;
-}
-
-ion-menu.md ion-item {
-  --padding-start: 10px;
-  --padding-end: 10px;
-  border-radius: 4px;
-}
-
-ion-menu.md ion-item.selected {
-  --background: rgba(var(--ion-color-primary-rgb), 0.14);
-}
-
-ion-menu.md ion-item.selected ion-icon {
-  color: var(--ion-color-primary);
-}
-
-ion-menu.md ion-item ion-icon {
-  color: #616e7e;
-}
-
-ion-menu.md ion-item ion-label {
+.user-email {
+  margin: 0;
+  color: #424750;
+  font-family: Inter;
+  font-size: 14px;
   font-weight: 500;
+  line-height: 20px;
 }
 
-ion-menu.ios ion-content {
-  --padding-bottom: 20px;
+.member-badge {
+  margin-top: 12px;
+  width: fit-content;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  background: #1741741A;
 }
 
-ion-menu.ios ion-list {
-  padding: 20px 0 0 0;
+.badge-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #B61628;
 }
 
-ion-menu.ios ion-note {
-  line-height: 24px;
-  margin-bottom: 20px;
+.badge-text {
+  color: #174174;
+  font-family: Inter;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 15px;
+  letter-spacing: .5px;
 }
 
-ion-menu.ios ion-item {
-  --padding-start: 16px;
-  --padding-end: 16px;
-  --min-height: 50px;
+/* Points */
+
+.points-card {
+  margin-top: 25px;
+  height: 60px;
+  width: 256px;
+  background: #F2F4F5;
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
-ion-menu.ios ion-item.selected ion-icon {
-  color: var(--ion-color-primary);
+.points-label {
+  color: #424750;
+  font-family: Inter;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
 }
 
-ion-menu.ios ion-item ion-icon {
-  font-size: 24px;
-  color: #73849a;
+.points-value {
+  color: #17479E;
+  font-family: Inter;
+  font-size: 18px;
+  font-weight: 900;
 }
 
-ion-menu.ios ion-list#labels-list ion-list-header {
-  margin-bottom: 8px;
+/* Menu */
+
+.menu-list {
+  margin-top: 24px;
 }
 
-ion-menu.ios ion-list-header,
-ion-menu.ios ion-note {
-  padding-left: 16px;
-  padding-right: 16px;
+.menu-item {
+  height: 20px;
+  width: 272px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 16px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+
+  ion-icon {
+    font-size: 20px;
+    color: #94A3B8;
+  }
+
+  span {
+    font-family: Manrope;
+    font-size: 16px;
+    font-weight: 600;
+    color: #475569;
+  }
 }
 
-ion-menu.ios ion-note {
-  margin-bottom: 8px;
+.menu-item.active {
+  background: #174174;
+  box-shadow:
+    0px 2px 4px -2px #0000001A,
+    0px 4px 6px -1px #0000001A;
+  ion-icon,
+  span {
+    color: #FFFFFF;
+  }
 }
 
-ion-note {
-  display: inline-block;
-  font-size: 16px;
-
-  color: var(--ion-color-medium-shade);
+.divider {
+  height: 1px;
+  background: #E2E8F0;
+  margin: 12px 0;
 }
 
-ion-item.selected {
-  --color: var(--ion-color-primary);
+/* Logout */
+
+.logout-btn {
+  margin-top: 100px;
+  height: 52px;
+  width: 275px;
+  background: #B616280D;
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  ion-icon {
+    font-size: 20px;
+    color: #B61628;
+  }
+
+  span {
+    color: #B61628;
+
+    font-family: Manrope;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: .7px;
+  }
+}
+.footer-icon {
+  width: 18px;
+  height: 18px;
+   margin-top: 7px;
+  filter: grayscale(100%) opacity(60%);
+  transition: all 0.25s ease;
+}
+
+.footer-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.9px;
+  text-transform: camelcase;
+  font-family: Nimbus Sans;
+  color: #94A3B8;
+  transition: color 0.25s ease;
+}
+
+.icon-size {
+  height: 16px;
+  width: 16px;
+ 
+}
+
+ion-tab-bar {
+  --background: #fff;
+  --border: none;
+  height: 45px;
+  padding: 8px 12px;
+}
+
+ion-tab-button {
+  --background: transparent;
+  background: transparent;
+  border-radius: 0;
+  margin: 0 6px;
+  --color: #94A3B8;
+  --color-selected: #00cb82;
+
+  .footer-icon {
+    filter: grayscale(100%) opacity(60%);
+  }
+}
+
+ion-tab-button.tab-selected {
+  --background: transparent;
+  background: transparent;
+  border-radius: 0;
+  height: auto;
+  width: auto;
+
+  .footer-label {
+    color: #00cb82 !important;
+    font-weight: 800;
+  }
+
+  .footer-icon {
+    filter: brightness(0) saturate(100%) invert(56%) sepia(87%) saturate(452%) hue-rotate(117deg) brightness(96%) contrast(92%) !important;
+    transform: scale(1.15);
+  }
 }

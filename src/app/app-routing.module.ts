@@ -38,6 +38,18 @@ const routes: Routes = [
   {
     path: 'chat-box',
     loadChildren: () => import('./chat-box/chat-box.module').then( m => m.ChatBoxPageModule)
+  },
+  {
+    path: 'forgot-password',
+    loadChildren: () => import('./forgot-password/forgot-password.module').then( m => m.ForgotPasswordPageModule)
+  },
+  {
+    path: 'contact-detail',
+    loadChildren: () => import('./contact-detail/contact-detail.module').then( m => m.ContactDetailPageModule)
+  },
+  {
+    path: 'contact-list',
+    loadChildren: () => import('./contact-list/contact-list.module').then( m => m.ContactListPageModule)
   }
 ];
 

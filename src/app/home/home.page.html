@@ -1,4 +1,454 @@
-<ion-header class="chat-header">
+<ion-content class="chat-content">
+
+  <!-- =========================================================
+       TOP HEADER SECTION
+       ========================================================= -->
+
+  <div class="custom-header">
+
+    <!-- HEADER TOP ROW -->
+    <div class="header-top-row">
+
+      <div class="title">
+        Super Assist
+      </div>
+
+      <div
+        class="add-btn-wrapper"
+        (click)="openModal()">
+
+        <ion-icon
+          name="add"
+          class="add-icon">
+        </ion-icon>
+
+      </div>
+
+    </div>
+
+
+    <!-- =======================================================
+         SEARCH BAR
+         ======================================================= -->
+
+    <div class="search-wrapper">
+
+      <ion-icon
+        name="search-outline">
+      </ion-icon>
+
+      <ion-input
+        placeholder="Search"
+        [(ngModel)]="searchText"
+        (ionInput)="filterChats()">
+      </ion-input>
+
+    </div>
+
+
+    <!-- =======================================================
+         FILTER CHIPS
+         COMMENTED OUT AS REQUESTED
+         ======================================================= -->
+
+    <!--
+
+    <div class="filter-chips">
+
+      <div
+        class="chip"
+        [class.active]="activeFilter === 'all'"
+        (click)="setFilter('all')">
+
+        All
+
+      </div>
+
+
+      <div
+        class="chip"
+        [class.active]="activeFilter === 'unread'"
+        (click)="setFilter('unread')">
+
+        Unread {{ unreadCount }}
+
+      </div>
+
+
+      <div
+        class="chip"
+        [class.active]="activeFilter === 'favorites'"
+        (click)="setFilter('favorites')">
+
+        Favorites {{ favoriteCount }}
+
+      </div>
+
+    </div>
+
+    -->
+
+  </div>
+
+
+  <!-- =========================================================
+       SKELETON LOADER
+       ========================================================= -->
+
+  <div *ngIf="loading">
+
+    <div
+      class="skeleton"
+      *ngFor="let i of [1,2,3,4,5]">
+    </div>
+
+  </div>
+
+
+  <!-- =========================================================
+       CHAT LIST
+       ========================================================= -->
+
+  <ion-list
+    *ngIf="!loading"
+    lines="none"
+    class="ion-no-padding">
+
+    <ion-item-sliding
+      *ngFor="let chat of filteredChats">
+
+
+      <!-- =====================================================
+           CHAT ITEM
+           ===================================================== -->
+
+      <ion-item
+        (press)="selectChat(chat)"
+        [class.selected]="chat.selected"
+        lines="none"
+        class="chat-item"
+        (click)="goToChatDetails(chat)">
+
+
+        <div class="chat-row">
+
+
+          <!-- =================================================
+               INITIALS AVATAR
+               ================================================= -->
+
+          <div class="avatar initials-avatar">
+
+            {{ getInitials(
+              chat.contacts__name || chat.contacts__wa_id
+            ) }}
+
+          </div>
+
+
+          <!-- =================================================
+               CHAT INFORMATION
+               ================================================= -->
+
+          <div class="chat-info">
+
+
+            <!-- =================================================
+                 NAME + TIME
+                 ================================================= -->
+
+            <div class="row1">
+
+
+              <!-- CONTACT NAME -->
+
+              <div
+                class="name"
+                [class.unread]="chat.unread_count > 0">
+
+                {{
+                  chat.contacts__name
+                    ? chat.contacts__name
+                    : chat.contacts__wa_id
+                }}
+
+              </div>
+
+
+              <!-- MESSAGE TIME -->
+
+              <div class="date">
+
+                {{
+                  chat.last_message_at
+                    | date:'hh:mm a'
+                }}
+
+              </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 MESSAGE + UNREAD BADGE
+                 ================================================= -->
+
+            <div class="row2">
+
+
+              <!-- LAST MESSAGE -->
+
+              <div
+                class="msg"
+                [class.unread]="chat.unread_count > 0">
+
+                {{ chat.last_message_text }}
+
+              </div>
+
+
+              <!-- UNREAD COUNT -->
+
+              <div
+                class="badge"
+                *ngIf="chat.unread_count > 0">
+
+                {{ chat.unread_count }}
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </ion-item>
+
+
+      <!-- =====================================================
+           SWIPE DELETE OPTION
+           ===================================================== -->
+
+      <ion-item-options side="end">
+
+        <ion-item-option
+          color="danger"
+          (click)="deleteChat(chat)">
+
+          Delete
+
+        </ion-item-option>
+
+      </ion-item-options>
+
+
+    </ion-item-sliding>
+
+  </ion-list>
+
+</ion-content>
+
+
+
+
+<!-- ===========================================================
+     BOTTOM SHEET MODAL
+     =========================================================== -->
+
+<div
+  class="custom-modal"
+  *ngIf="showModal">
+
+
+  <!-- OVERLAY -->
+
+  <div
+    class="overlay"
+    (click)="closeModal()">
+  </div>
+
+
+  <!-- BOTTOM SHEET -->
+
+  <div class="bottom-sheet-card">
+
+
+    <!-- DRAG HANDLE -->
+
+    <div class="sheet-drag-handle">
+    </div>
+
+
+    <!-- =======================================================
+         MODAL HEADER
+         ======================================================= -->
+
+    <div class="modal-header">
+
+      <div class="modal-title-group">
+
+        <h2>
+          Add Contact
+        </h2>
+
+        <p>
+          Create a new contact record in your database.
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <!-- =======================================================
+         FORM BODY
+         ======================================================= -->
+
+    <div class="modal-body">
+
+
+      <!-- =====================================================
+           PHONE NUMBER
+           ===================================================== -->
+
+      <label>
+        Phone Number
+      </label>
+
+      <div class="phone-input-wrapper">
+
+        <div class="phone-row">
+
+
+          <img
+            src="assets/images/call.png"
+            alt="Phone"
+            class="ture-icon-img">
+
+
+          <!--
+          <select [(ngModel)]="contact.country_code">
+
+            <option
+              [value]="country.calling_code"
+              *ngFor="let country of county_list">
+
+              {{ country.calling_code }}
+
+            </option>
+
+          </select>
+          -->
+
+
+          <input
+            type="tel"
+            [(ngModel)]="contact.contact_number"
+            placeholder="7029900582">
+
+        </div>
+
+      </div>
+
+
+      <!-- =====================================================
+           FULL NAME
+           ===================================================== -->
+
+      <label>
+        Full Name
+      </label>
+
+      <div class="input-icon-row">
+
+        <ion-icon
+          name="person-outline">
+        </ion-icon>
+
+        <input
+          [(ngModel)]="contact.contact_name"
+          placeholder="e.g. Alex Rivera">
+
+      </div>
+
+
+      <!-- =====================================================
+           EMAIL ADDRESS
+           ===================================================== -->
+
+      <label>
+        Email Address
+      </label>
+
+      <div class="input-icon-row">
+
+        <ion-icon
+          name="mail-outline">
+        </ion-icon>
+
+        <input
+          [(ngModel)]="contact.email_id"
+          placeholder="alex@company.com">
+
+      </div>
+
+
+      <!-- =====================================================
+           ORGANIZATION
+           ===================================================== -->
+
+      <label>
+        Organization
+      </label>
+
+      <div class="input-icon-row">
+
+        <ion-icon
+          name="business-outline">
+        </ion-icon>
+
+        <input
+          [(ngModel)]="contact.organization"
+          placeholder="Company Name">
+
+      </div>
+
+    </div>
+
+
+    <!-- =======================================================
+         MODAL FOOTER
+         ======================================================= -->
+
+    <div class="modal-footer">
+
+      <div
+        class="cancel-btn"
+        (click)="closeModal()">
+
+        Cancel
+
+      </div>
+
+
+      <div
+        class="submit-btn"
+        (click)="add_new_contacts()">
+
+        Add Contact
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+
+<!-- <ion-header class="chat-header">
   <ion-toolbar>
     <div class="header-row">
       <div class="title">Super Assist</div>
@@ -13,7 +463,6 @@
 
 
 <ion-content class="chat-content">
-  <!-- Skeleton Loader -->
   <div *ngIf="loading">
     <div class="skeleton" *ngFor="let i of [1,2,3,4,5]"></div>
   </div>
@@ -25,10 +474,6 @@
         lines="none"
         class="chat-item" (click)="goToChatDetails(chat)">
         <div class="chat-row">
-          <!-- <div class="avatar">
-            <img [src]="chat.image">
-            <div class="online" *ngIf="chat.online"></div>
-          </div> -->
           <div class="avatar-circle">
             {{ getInitials(chat.contacts__name) }}
           </div>
@@ -46,14 +491,12 @@
                 {{chat.last_message_text}}
               </div>
               <div class="badge" *ngIf="chat.unread_count>0">
-                <!-- {{chat.count}} -->
               </div>
             </div>
           </div>
         </div>
       </ion-item>
 
-      <!-- Swipe Option -->
       <ion-item-options side="end">
         <ion-item-option color="danger" (click)="deleteChat(chat)">
           Delete
@@ -70,18 +513,14 @@
   </ion-fab>
 
 </ion-content>
-<!-- OVERLAY + MODAL -->
 <div class="custom-modal" *ngIf="showModal">
   <div class="overlay"></div>
     <div class="modal-card">
-      <!-- HEADER -->
       <div class="modal-header">
         <div>Add New Contact</div>
         <ion-icon name="close" (click)="closeModal()"></ion-icon>
       </div>
-      <!-- FORM -->
       <div class="modal-body">
-        <!-- CONTACT NUMBER -->
         <label>Contact Number</label>
         <div class="phone-row">
           <select [(ngModel)]="contact.country_code">
@@ -89,20 +528,22 @@
           </select>
           <input type="tel" [(ngModel)]="contact.contact_number" placeholder="Enter number">
         </div>
-        <!-- NAME -->
         <label>Contact Name</label>
         <input [(ngModel)]="contact.contact_name" class="focus-green" placeholder="Enter name">
-        <!-- EMAIL -->
         <label>Email</label>
         <input [(ngModel)]="contact.email_id" placeholder="Enter Email Id">
       </div>
-      <!-- FOOTER -->
       <div class="modal-footer">
         <div class="cancel" (click)="closeModal()">Cancel</div>
         <div class="send" (click)="add_new_contacts()">Add</div>
       </div>
     </div>
-</div>
+</div> -->
+
+
+
+
+
 <!-- <ion-header class="chat-header">
   <ion-toolbar>
     <div class="header-row">

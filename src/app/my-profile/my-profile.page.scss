@@ -1,187 +1,1364 @@
-// .profile-header ion-toolbar {
-//     --background: #ffffff;
-//     border-bottom: 1px solid #eee;
-//     position: relative;
-//   }
+/* ==========================================================
+   PROFILE PAGE - COMPLETE SCSS
+   SAFE AREA TOP + BOTTOM FIX
+   ========================================================== */
+
+
+/* ==========================================================
+   GLOBAL BOX SIZING
+   ========================================================== */
+
+* {
+  box-sizing: border-box;
+}
+
+
+/* ==========================================================
+   SAFE AREA VARIABLES
+   ========================================================== */
+
+:root {
+  --profile-safe-top: env(safe-area-inset-top, 0px);
+  --profile-safe-bottom: env(safe-area-inset-bottom, 0px);
+
+  --profile-header-height: 56px;
+  --profile-bottom-tabs-height: 60px;
+}
+
+
+/* ==========================================================
+   PROFILE HEADER
+   ========================================================== */
 
 .profile-header {
+  /* IMPORTANT:
+     Keeps the complete header below the Android/iOS status bar
+  */
+  padding-top: env(safe-area-inset-top, 0px);
+
+  background: #ffffff;
+
+  position: relative;
+
+  z-index: 1000;
 
   ion-toolbar {
     --background: #ffffff;
     --border-width: 0;
-    --min-height: 52px;
-    --padding-start: 8px;
-    --padding-end: 12px;
+
+    --min-height: 56px;
+
+    --padding-start: 16px;
+    --padding-end: 8px;
+
     --padding-top: 0;
     --padding-bottom: 0;
 
-    box-shadow: 0 2px 10px rgba(0,0,0,.08);
+    min-height: 56px;
+
+    height: 56px;
+
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  }
+
+  ion-title {
+    font-size: 22px;
+
+    font-weight: 500;
+
+    color: #1a1a1a;
+
+    padding: 0;
+
+    margin: 0;
+
+    line-height: 56px;
+
+    text-align: left;
+
+    white-space: nowrap;
+  }
+
+  ion-button {
+    --color: #333333;
+
+    --padding-start: 0;
+    --padding-end: 0;
+
+    font-size: 13px;
   }
 
   ion-buttons {
     margin: 0;
   }
 
-  ion-button {
-    --padding-start: 0;
-    --padding-end: 0;
-    --color: #085e54;
-    width: 36px;
-    height: 36px;
-  }
-
   ion-icon {
-    font-size: 26px;
-  }
-
-  ion-title {
-    padding-inline-start: 6px;
-    padding-inline-end: 0;
-    text-align: left;
-
-    font-size: 18px;
-    font-weight: 500;
-    color: #222;
+    color: #333333;
   }
 }
-  .back {
-    font-size: 24px;
-    color: #085e54;
-    position: absolute;
-    left: 12px;
-  }
-  
-  .title {
-    // text-align: center;
-    font-size: 18px;
-    font-weight: 500;
-    margin-left: 44px;
-  }
-  
-  /* PROFILE TOP */
-  
-  .profile-top {
-    text-align: center;
-    padding: 25px 0;
-    background: #fff;
-  }
-  
-  .profile-img {
-    width: 130px;
-    height: 130px;
-    border-radius: 50%;
+
+
+/* ==========================================================
+   PROFILE CONTENT
+   ========================================================== */
+
+.profile-content {
+  --background: #f4f6f8;
+
+  /*
+    60px = bottom tab height
+    safe-area-inset-bottom = Android/iOS navigation area
+  */
+  margin-bottom: calc(
+    var(--profile-bottom-tabs-height) +
+    env(safe-area-inset-bottom, 0px)
+  );
+
+  background: #f4f6f8;
+}
+
+
+/* Ionic scroll container */
+
+.profile-content::part(scroll) {
+  padding-top: 0;
+
+  padding-bottom: 24px;
+
+  background: #f4f6f8;
+}
+
+
+/* ==========================================================
+   PROFILE CONTAINER
+   ========================================================== */
+
+.profile-container {
+  width: 100%;
+
+  padding: 16px 16px 36px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  min-height: 100%;
+
+  position: relative;
+}
+
+
+/* ==========================================================
+   FEATURE ICON
+   ========================================================== */
+
+.feature-icon-img {
+  width: 18px;
+
+  height: 18px;
+
+  min-width: 18px;
+
+  min-height: 18px;
+
+  object-fit: contain;
+
+  display: block;
+}
+
+
+/* ==========================================================
+   AVATAR WRAPPER
+   ========================================================== */
+
+.avatar-wrapper {
+  position: relative;
+
+  z-index: 10;
+
+  margin-bottom: -55px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  cursor: pointer;
+
+  flex-shrink: 0;
+}
+
+
+/* ==========================================================
+   AVATAR CIRCLE
+   ========================================================== */
+
+.avatar-circle {
+  width: 110px;
+
+  height: 110px;
+
+  min-width: 110px;
+
+  min-height: 110px;
+
+  border-radius: 50%;
+
+  background: #e2e8f0;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.08);
+
+  border: 4px solid #ffffff;
+
+  overflow: hidden;
+
+  position: relative;
+
+  .avatar-img {
+    width: 100%;
+
+    height: 100%;
+
     object-fit: cover;
-  }
-  
-  .edit-text {
-    color: #085e54;
-    margin-top: 10px;
-    font-size: 16px;
+
+    display: block;
   }
 
-  // .edit-badge {
-  //   position: fixed;
-  //   bottom: 450px;
-  //   right: 174px;
-  //   width: 40px;
-  //   height: 40px;
-  //   background: #4caf50;
-  //   border-radius: 50%;
-  //   display: flex;
-  //   align-items: center;
-  //   justify-content: center;
-  //   border: 3px solid white;
-  // }
-  
-  // .edit-icon {
-  //   font-size: 22px;
-  //   color: white;
-  // }
-  
-  /* GAP */
-  
-  .gap {
-    height: 12px;
-    background: #f5f5f5;
+  .avatar-initials {
+    font-size: 36px;
+
+    font-weight: 600;
+
+    color: #1a1a1a;
+
+    letter-spacing: -0.5px;
   }
-  
-  /* DETAILS */
-  
-  .details {
-    background: #fff;
+}
+
+
+/* ==========================================================
+   PROFILE CARDS
+   ========================================================== */
+
+.profile-card {
+  background: #ffffff;
+
+  width: 100%;
+
+  border-radius: 16px;
+
+  padding: 6px 20px;
+
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.03);
+
+  border: 1px solid #edf2f7;
+
+  margin-bottom: 16px;
+
+  overflow: hidden;
+
+  position: relative;
+
+  &.card-top {
+    /*
+      Keeps avatar overlapping the card exactly
+    */
+    padding-top: 65px;
   }
-  
-  .field {
-    padding: 14px;
+
+
+  /* ========================================================
+     INFORMATION GROUP
+     ======================================================== */
+
+  .info-group {
+    padding: 14px 0;
+
+    label {
+      font-size: 16px;
+
+      font-weight: 600;
+
+      color: #8e8e93;
+
+      letter-spacing: 0.6px;
+
+      display: block;
+
+      margin-bottom: 4px;
+
+      line-height: 22px;
+    }
+
+
+    .info-value {
+      font-size: 16px;
+
+      font-weight: 500;
+
+      color: #1a1a1a;
+
+      line-height: 24px;
+
+      word-break: break-word;
+
+      overflow-wrap: anywhere;
+    }
+
+
+    .edit-input {
+      width: 100%;
+
+      border: 1px solid #cbd5e1;
+
+      border-radius: 8px;
+
+      padding: 8px 12px;
+
+      font-size: 16px;
+
+      outline: none;
+
+      background: #ffffff;
+
+      color: #1a1a1a;
+
+      appearance: none;
+
+      -webkit-appearance: none;
+
+      box-shadow: none;
+
+      &:focus {
+        border-color: #00ba63;
+
+        outline: none;
+
+        box-shadow: none;
+      }
+    }
   }
-  
-  .field label {
-    font-size: 13px;
-    color: #8e8e93;
-  }
-  
-  .field div {
-    font-size: 17px;
-    margin-top: 4px;
-  }
-  
-  .field input {
-    width: 100%;
-    border: none;
-    outline: none;
-    font-size: 17px;
-    margin-top: 4px;
-    background: transparent;
-  }
-  
-  .divider {
-    height: 1px;
-    background: #eee;
-    margin-left: 14px;
-  }
-  
-  /* FOOTER */
-  
-  .footer {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    padding: 12px;
-    background: #fff;
-  }
-  
-  /* LOGOUT */
-  
-  .logout-btn {
-    background: #ff3b31;
-    color: white;
-    text-align: center;
-    padding: 14px;
-    border-radius: 12px;
-    font-size: 16px;
-  }
-  
-  /* EDIT BUTTONS */
-  
-  .edit-btns {
+
+
+  /* ========================================================
+     OPTION ITEM
+     ======================================================== */
+
+  .option-item {
     display: flex;
-    gap: 10px;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    min-height: 62px;
+
+    padding: 20px 0;
+
+    cursor: pointer;
+
+    -webkit-tap-highlight-color: transparent;
+
+
+    .option-left {
+      display: flex;
+
+      align-items: center;
+
+      gap: 16px;
+
+      min-width: 0;
+
+      flex: 1;
+
+
+      .icon-box {
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        width: 24px;
+
+        min-width: 24px;
+
+        height: 24px;
+
+        ion-icon {
+          font-size: 22px;
+
+          color: #2c2c2c;
+
+          width: 22px;
+
+          height: 22px;
+        }
+      }
+
+
+      span {
+        font-size: 16px;
+
+        font-weight: 400;
+
+        color: #1a1a1a;
+
+        line-height: 22px;
+
+        white-space: nowrap;
+
+        overflow: hidden;
+
+        text-overflow: ellipsis;
+      }
+    }
+
+
+    .chevron-icon {
+      font-size: 18px;
+
+      width: 18px;
+
+      height: 18px;
+
+      min-width: 18px;
+
+      color: #8e8e93;
+
+      margin-left: 12px;
+
+      flex-shrink: 0;
+    }
   }
-  
+}
+
+
+/* ==========================================================
+   CARD DIVIDER
+   ========================================================== */
+
+.card-divider {
+  height: 1px;
+
+  min-height: 1px;
+
+  background: #f1f5f9;
+
+  width: 100%;
+}
+
+
+/* ==========================================================
+   VERSION TEXT
+   ========================================================== */
+
+.version-text {
+  width: 100%;
+
+  text-align: center;
+
+  margin-top: 20px;
+
+  margin-bottom: 20px;
+
+  padding: 0 10px;
+
+  font-size: 16px;
+
+  font-weight: 500;
+
+  color: #9ca3af;
+
+  line-height: 22px;
+}
+
+
+/* ==========================================================
+   EDIT BUTTONS
+   ========================================================== */
+
+.edit-btns {
+  display: flex;
+
+  gap: 12px;
+
+  width: 100%;
+
+  margin-top: 12px;
+
+  margin-bottom: 12px;
+
   .cancel {
     flex: 1;
-    background: #ff3b31;
-    color: white;
+
+    background: #ef4444;
+
+    color: #ffffff;
+
     text-align: center;
+
     padding: 14px;
+
     border-radius: 12px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    -webkit-tap-highlight-color: transparent;
   }
-  
+
+
   .save {
     flex: 1;
-    background: #27d366;
-    color: white;
+
+    background: #00ba63;
+
+    color: #ffffff;
+
     text-align: center;
+
     padding: 14px;
+
     border-radius: 12px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    -webkit-tap-highlight-color: transparent;
   }
+}
+
+
+/* ==========================================================
+   BOTTOM NAVIGATION
+   ========================================================== */
+
+.custom-bottom-tabs {
+  /*
+    IMPORTANT:
+    The complete bottom navigation includes the phone's
+    navigation/gesture safe area.
+  */
+  position: fixed;
+
+  left: 0;
+
+  right: 0;
+
+  bottom: 0;
+
+  width: 100%;
+
+  min-height: calc(
+    60px + env(safe-area-inset-bottom, 0px)
+  );
+
+  height: calc(
+    60px + env(safe-area-inset-bottom, 0px)
+  );
+
+  background: #ffffff;
+
+  border-top: 1px solid #f3f4f6;
+
+  display: flex;
+
+  justify-content: space-around;
+
+  align-items: flex-start;
+
+  padding-top: 7px;
+
+  padding-right: 0;
+
+  padding-left: 0;
+
+  /*
+    Push content above Android gesture/navigation area
+  */
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+
+  z-index: 1000;
+
+  box-shadow:
+    0 -4px 12px rgba(0, 0, 0, 0.03);
+
+  box-sizing: border-box;
+
+
+  /* ========================================================
+     TAB ITEM
+     ======================================================== */
+
+  .tab-item {
+    flex: 1;
+
+    height: 53px;
+
+    min-width: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    color: #9ca3af;
+
+    font-size: 10px;
+
+    line-height: 14px;
+
+    gap: 3px;
+
+    cursor: pointer;
+
+    text-align: center;
+
+    -webkit-tap-highlight-color: transparent;
+
+
+    ion-icon {
+      font-size: 22px;
+
+      width: 22px;
+
+      height: 22px;
+
+      display: block;
+
+      flex-shrink: 0;
+    }
+
+
+    &.active {
+      color: #00ba63;
+    }
+  }
+}
+
+
+/* ==========================================================
+   IONIC FOOTER SAFETY
+   ========================================================== */
+
+ion-footer {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+
+  background: #ffffff;
+
+  z-index: 1000;
+}
+
+
+ion-footer ion-toolbar {
+  --background: #ffffff;
+
+  --border-width: 0;
+
+  --border-style: none;
+
+  --border-color: transparent;
+
+  --padding-top: 0;
+
+  --padding-bottom: 0;
+}
+
+
+/* ==========================================================
+   SAFE AREA - IONIC CONTENT
+   ========================================================== */
+
+.profile-content {
+  /*
+    Do NOT add safe-area top padding here because the header
+    already handles the status bar.
+  */
+  --padding-top: 0;
+
+  /*
+    Keep content above the fixed bottom navigation.
+  */
+  --padding-bottom: calc(
+    24px +
+    60px +
+    env(safe-area-inset-bottom, 0px)
+  );
+}
+
+
+/* ==========================================================
+   MOBILE DEVICES
+   ========================================================== */
+
+@media (max-width: 480px) {
+
+  /* --------------------------------------------------------
+     HEADER
+     -------------------------------------------------------- */
+
+  .profile-header {
+    padding-top: env(safe-area-inset-top, 0px);
+
+    ion-toolbar {
+      --min-height: 56px;
+
+      min-height: 56px;
+
+      height: 56px;
+
+      --padding-start: 16px;
+
+      --padding-end: 8px;
+    }
+
+    ion-title {
+      font-size: 22px;
+
+      line-height: 56px;
+    }
+  }
+
+
+  /* --------------------------------------------------------
+     CONTENT
+     -------------------------------------------------------- */
+
+  .profile-container {
+    padding: 16px 16px 36px;
+  }
+
+
+  /* --------------------------------------------------------
+     AVATAR
+     -------------------------------------------------------- */
+
+  .avatar-wrapper {
+    margin-bottom: -55px;
+  }
+
+
+  .avatar-circle {
+    width: 110px;
+
+    height: 110px;
+
+    min-width: 110px;
+
+    min-height: 110px;
+  }
+
+
+  /* --------------------------------------------------------
+     CARDS
+     -------------------------------------------------------- */
+
+  .profile-card {
+    width: 100%;
+
+    border-radius: 16px;
+
+    padding-left: 20px;
+
+    padding-right: 20px;
+
+    margin-bottom: 16px;
+
+
+    &.card-top {
+      padding-top: 65px;
+    }
+
+
+    .info-group {
+
+      label {
+        font-size: 16px;
+
+        line-height: 22px;
+      }
+
+      .info-value {
+        font-size: 16px;
+
+        line-height: 24px;
+      }
+    }
+
+
+    .option-item {
+
+      padding-top: 20px;
+
+      padding-bottom: 20px;
+
+
+      .option-left {
+
+        gap: 16px;
+
+
+        span {
+          font-size: 16px;
+        }
+      }
+    }
+  }
+
+
+  /* --------------------------------------------------------
+     VERSION
+     -------------------------------------------------------- */
+
+  .version-text {
+    font-size: 16px;
+
+    margin-top: 20px;
+
+    margin-bottom: 20px;
+  }
+
+
+  /* --------------------------------------------------------
+     BOTTOM NAV
+     -------------------------------------------------------- */
+
+  .custom-bottom-tabs {
+    min-height: calc(
+      60px + env(safe-area-inset-bottom, 0px)
+    );
+
+    height: calc(
+      60px + env(safe-area-inset-bottom, 0px)
+    );
+
+    padding-top: 7px;
+
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+
+  .custom-bottom-tabs .tab-item {
+    height: 53px;
+
+    font-size: 10px;
+
+    gap: 3px;
+
+
+    ion-icon {
+      font-size: 22px;
+
+      width: 22px;
+
+      height: 22px;
+    }
+  }
+}
+
+
+/* ==========================================================
+   VERY SMALL DEVICES
+   ========================================================== */
+
+@media (max-width: 360px) {
+
+  /* --------------------------------------------------------
+     HEADER
+     -------------------------------------------------------- */
+
+  .profile-header {
+    padding-top: env(safe-area-inset-top, 0px);
+
+    ion-toolbar {
+      --padding-start: 12px;
+
+      --padding-end: 8px;
+
+      min-height: 54px;
+
+      height: 54px;
+
+      --min-height: 54px;
+    }
+
+
+    ion-title {
+      font-size: 21px;
+
+      line-height: 54px;
+    }
+  }
+
+
+  /* --------------------------------------------------------
+     CONTENT
+     -------------------------------------------------------- */
+
+  .profile-container {
+    padding-left: 12px;
+
+    padding-right: 12px;
+
+    padding-bottom: 30px;
+  }
+
+
+  /* --------------------------------------------------------
+     AVATAR
+     -------------------------------------------------------- */
+
+  .avatar-circle {
+    width: 100px;
+
+    height: 100px;
+
+    min-width: 100px;
+
+    min-height: 100px;
+  }
+
+
+  .avatar-wrapper {
+    margin-bottom: -50px;
+  }
+
+
+  /* --------------------------------------------------------
+     CARD
+     -------------------------------------------------------- */
+
+  .profile-card {
+
+    padding-left: 16px;
+
+    padding-right: 16px;
+
+
+    &.card-top {
+      padding-top: 60px;
+    }
+
+
+    .info-group {
+
+      label {
+        font-size: 15px;
+      }
+
+
+      .info-value {
+        font-size: 16px;
+      }
+    }
+
+
+    .option-item {
+
+      padding-top: 18px;
+
+      padding-bottom: 18px;
+
+
+      .option-left {
+
+        gap: 13px;
+
+
+        .icon-box {
+          width: 22px;
+
+          min-width: 22px;
+
+
+          ion-icon {
+            font-size: 21px;
+          }
+        }
+
+
+        span {
+          font-size: 15px;
+        }
+      }
+
+
+      .chevron-icon {
+        font-size: 17px;
+
+        width: 17px;
+
+        min-width: 17px;
+      }
+    }
+  }
+
+
+  /* --------------------------------------------------------
+     VERSION
+     -------------------------------------------------------- */
+
+  .version-text {
+    font-size: 15px;
+  }
+
+
+  /* --------------------------------------------------------
+     BOTTOM NAV
+     -------------------------------------------------------- */
+
+  .custom-bottom-tabs {
+    min-height: calc(
+      60px + env(safe-area-inset-bottom, 0px)
+    );
+
+    height: calc(
+      60px + env(safe-area-inset-bottom, 0px)
+    );
+  }
+
+
+  .custom-bottom-tabs .tab-item {
+    font-size: 9px;
+
+    height: 53px;
+
+
+    ion-icon {
+      font-size: 21px;
+
+      width: 21px;
+
+      height: 21px;
+    }
+  }
+}
+
+
+/* ==========================================================
+   ANDROID SAFE AREA / STATUS BAR SAFETY
+   ========================================================== */
+
+/*
+  This is the important part for the screenshot you sent.
+
+  The header starts BELOW the status bar instead of underneath it.
+*/
+
+@supports (padding-top: env(safe-area-inset-top)) {
+
+  .profile-header {
+    padding-top: env(safe-area-inset-top);
+  }
+
+
+  .custom-bottom-tabs {
+    padding-bottom: env(safe-area-inset-bottom);
+
+    height: calc(
+      60px + env(safe-area-inset-bottom)
+    );
+  }
+
+
+  .profile-content {
+    margin-bottom: calc(
+      60px + env(safe-area-inset-bottom)
+    );
+
+    --padding-bottom: calc(
+      24px +
+      60px +
+      env(safe-area-inset-bottom)
+    );
+  }
+}
+
+
+/* ==========================================================
+   PREVENT HORIZONTAL OVERFLOW
+   ========================================================== */
+
+.profile-content,
+.profile-container,
+.profile-card {
+  max-width: 100%;
+
+  overflow-x: hidden;
+}
+
+
+/* ==========================================================
+   TOUCH / TAP RESET
+   ========================================================== */
+
+.custom-bottom-tabs,
+.tab-item,
+.option-item,
+.avatar-wrapper,
+.edit-btns .cancel,
+.edit-btns .save {
+  -webkit-tap-highlight-color: transparent;
+}
+
+
+/* ==========================================================
+   IMAGE SAFETY
+   ========================================================== */
+
+.avatar-img,
+.feature-icon-img {
+  user-select: none;
+
+  -webkit-user-drag: none;
+}
+
+
+/* ==========================================================
+   REMOVE OLD / CONFLICTING PROFILE FOOTER STYLES
+   ========================================================== */
+
+.profile-header ion-toolbar,
+.profile-header ion-title,
+.profile-content,
+.custom-bottom-tabs {
+  box-sizing: border-box;
+}
+
+
+/* ==========================================================
+   FINAL PROFILE HEADER FIX
+   ========================================================== */
+
+.profile-header {
+  width: 100%;
+
+  margin: 0;
+
+  border: 0;
+
+  box-shadow: none;
+
+  overflow: visible;
+}
+
+
+/* ==========================================================
+   FINAL BOTTOM TAB FIX
+   ========================================================== */
+
+.custom-bottom-tabs {
+  margin: 0;
+
+  overflow: hidden;
+
+  transform: translateZ(0);
+
+  -webkit-transform: translateZ(0);
+}
+
+
+// // .profile-header ion-toolbar {
+// //     --background: #ffffff;
+// //     border-bottom: 1px solid #eee;
+// //     position: relative;
+// //   }
+
+// .profile-header {
+
+//   ion-toolbar {
+//     --background: #ffffff;
+//     --border-width: 0;
+//     --min-height: 52px;
+//     --padding-start: 8px;
+//     --padding-end: 12px;
+//     --padding-top: 0;
+//     --padding-bottom: 0;
+
+//     box-shadow: 0 2px 10px rgba(0,0,0,.08);
+//   }
+
+//   ion-buttons {
+//     margin: 0;
+//   }
+
+//   ion-button {
+//     --padding-start: 0;
+//     --padding-end: 0;
+//     --color: #085e54;
+//     width: 36px;
+//     height: 36px;
+//   }
+
+//   ion-icon {
+//     font-size: 26px;
+//   }
+
+//   ion-title {
+//     padding-inline-start: 6px;
+//     padding-inline-end: 0;
+//     text-align: left;
+
+//     font-size: 18px;
+//     font-weight: 500;
+//     color: #222;
+//   }
+// }
+//   .back {
+//     font-size: 24px;
+//     color: #085e54;
+//     position: absolute;
+//     left: 12px;
+//   }
+  
+//   .title {
+//     // text-align: center;
+//     font-size: 18px;
+//     font-weight: 500;
+//     margin-left: 44px;
+//   }
+  
+//   /* PROFILE TOP */
+  
+//   .profile-top {
+//     text-align: center;
+//     padding: 25px 0;
+//     background: #fff;
+//   }
+  
+//   .profile-img {
+//     width: 130px;
+//     height: 130px;
+//     border-radius: 50%;
+//     object-fit: cover;
+//   }
+  
+//   .edit-text {
+//     color: #085e54;
+//     margin-top: 10px;
+//     font-size: 16px;
+//   }
+
+//   // .edit-badge {
+//   //   position: fixed;
+//   //   bottom: 450px;
+//   //   right: 174px;
+//   //   width: 40px;
+//   //   height: 40px;
+//   //   background: #4caf50;
+//   //   border-radius: 50%;
+//   //   display: flex;
+//   //   align-items: center;
+//   //   justify-content: center;
+//   //   border: 3px solid white;
+//   // }
+  
+//   // .edit-icon {
+//   //   font-size: 22px;
+//   //   color: white;
+//   // }
+  
+//   /* GAP */
+  
+//   .gap {
+//     height: 12px;
+//     background: #f5f5f5;
+//   }
+  
+//   /* DETAILS */
+  
+//   .details {
+//     background: #fff;
+//   }
+  
+//   .field {
+//     padding: 14px;
+//   }
+  
+//   .field label {
+//     font-size: 13px;
+//     color: #8e8e93;
+//   }
+  
+//   .field div {
+//     font-size: 17px;
+//     margin-top: 4px;
+//   }
+  
+//   .field input {
+//     width: 100%;
+//     border: none;
+//     outline: none;
+//     font-size: 17px;
+//     margin-top: 4px;
+//     background: transparent;
+//   }
+  
+//   .divider {
+//     height: 1px;
+//     background: #eee;
+//     margin-left: 14px;
+//   }
+  
+//   /* FOOTER */
+  
+//   .footer {
+//     position: fixed;
+//     bottom: 0;
+//     width: 100%;
+//     padding: 12px;
+//     background: #fff;
+//   }
+  
+//   /* LOGOUT */
+  
+//   .logout-btn {
+//     background: #ff3b31;
+//     color: white;
+//     text-align: center;
+//     padding: 14px;
+//     border-radius: 12px;
+//     font-size: 16px;
+//   }
+  
+//   /* EDIT BUTTONS */
+  
+//   .edit-btns {
+//     display: flex;
+//     gap: 10px;
+//   }
+  
+//   .cancel {
+//     flex: 1;
+//     background: #ff3b31;
+//     color: white;
+//     text-align: center;
+//     padding: 14px;
+//     border-radius: 12px;
+//   }
+  
+//   .save {
+//     flex: 1;
+//     background: #27d366;
+//     color: white;
+//     text-align: center;
+//     padding: 14px;
+//     border-radius: 12px;
+//   }

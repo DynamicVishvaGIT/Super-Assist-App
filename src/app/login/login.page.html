@@ -1,4 +1,131 @@
-<ion-content fullscreen class="login-page">
+<ion-content
+  class="login-page"
+  [fullscreen]="true"
+  [scrollY]="true"
+>
+
+  <div class="page-wrapper">
+
+    <!-- ================= TOP / BRAND SECTION ================= -->
+    <div class="top-wrapper">
+
+      <!-- LOGO -->
+      <div class="brand-container">
+ <img
+      src="assets/images/super-assist-logo.png"
+      alt="Super Assist"
+      class="brand-logo"
+    >
+  </div>
+
+
+      <!-- PAGE TITLE -->
+      <h1 class="title">
+        Welcome Back
+      </h1>
+
+      <!-- SUBTITLE -->
+      <p class="subtitle">
+        Access your enterprise dashboard<br>
+        to continue.
+      </p>
+
+    </div>
+
+
+    <!-- ================= LOGIN CARD ================= -->
+    <div class="form-wrapper">
+
+      <!-- EMAIL -->
+      <div class="field">
+
+        <label>
+          Email Address
+        </label>
+
+        <div class="input-wrapper">
+
+          <img src="assets/images/mail.png" alt="Swap Task" class="ture-icon-img" />
+          <ion-input
+            type="email"
+            placeholder="name@company.com"
+            [(ngModel)]="login_data.username">
+          </ion-input>
+
+        </div>
+
+      </div>
+
+
+      <!-- PASSWORD -->
+      <div class="field password-field">
+
+        <label>
+          Password
+        </label>
+
+        <div class="input-wrapper password-wrapper">
+
+          <img src="assets/images/lock.png" alt="Swap Task" class="ture-icon-img" />
+
+          <ion-input
+            [type]="showPassword ? 'text' : 'password'"
+            placeholder="••••••••"
+            [(ngModel)]="login_data.password">
+          </ion-input>
+
+         
+
+<ion-icon
+  slot="end"
+  [name]="showPassword ? 'eye-off-outline' : 'eye-outline'"
+  class="password-eye"
+  (click)="togglePassword()"
+  style="font-size: 32px !important; width: 20px; height: 18px;">
+</ion-icon> 
+
+   </div>
+
+      </div>
+
+
+      <!-- FORGOT PASSWORD -->
+      <div class="row">
+
+        <div
+          class="forgot"
+          (click)="onForgotPassword()">
+
+          Forgot password?
+
+        </div>
+
+      </div>
+
+
+      <!-- LOGIN BUTTON -->
+      <div
+        class="login-btn"
+        (click)="onLogin()">
+
+        <span>
+          Log in to your account
+        </span>
+
+        <ion-icon
+          name="arrow-forward-outline">
+        </ion-icon>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</ion-content>
+
+
+<!-- <ion-content fullscreen class="login-page">
   <div class="page-wrapper">
     <div class="top-wrapper" [class.hide-top]="isKeyboardOpen">
       <img src="assets/images/icon.png" class="logo">
@@ -6,16 +133,13 @@
       <p class="subtitle">Sign in to continue</p>
       <img src="assets/images/login-page-icon.avif" class="illustration">
     </div>
-    <!-- FORM AREA -->
     <div class="form-wrapper">
-      <!-- EMAIL -->
       <div class="field">
         <label>Email Address</label>
         <div class="input-wrapper">
           <ion-input type="email" [(ngModel)]="login_data.username"></ion-input>
         </div>
       </div>
-      <!-- PASSWORD -->
       <div class="field">
         <label>Password</label>
         <div class="input-wrapper password-wrapper">
@@ -24,10 +148,6 @@
         </div>
       </div>
       <div class="row">
-        <!-- <div class="remember">
-          <ion-checkbox></ion-checkbox>
-          <span>Remember me</span>
-        </div> -->
         <div class="forgot">
           Forgot password?
         </div>
@@ -38,4 +158,4 @@
       </div>
     </div>
   </div>
-</ion-content>
+</ion-content> -->

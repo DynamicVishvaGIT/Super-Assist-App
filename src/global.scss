@@ -98,3 +98,45 @@ ion-app {
 .transparent-modal {
   --background: transparent !important;
 }
+
+
+.custom-bottom-tabs {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 60px;
+  background: #ffffff;
+  border-top: 1px solid #eaeaea;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 100;
+}
+
+.custom-bottom-tabs .tab-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  height: 100%;
+  cursor: pointer;
+  color: #8c8c8c; /* Inactive text color (gray) */
+}
+
+.custom-bottom-tabs .tab-item.active {
+  color: #00A651; /* Active text color (Green from your screenshot) */
+}
+
+.custom-bottom-tabs .tab-item span {
+  font-size: 11px;
+  margin-top: 4px;
+}
+
+.feature-icon-img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}

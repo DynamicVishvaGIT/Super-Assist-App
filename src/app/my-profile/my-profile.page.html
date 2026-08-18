@@ -1,10 +1,140 @@
+<ion-header class="profile-header" style="background: #ffffff; border-bottom: 1px solid #E6E8EA; box-shadow: none;">
+  <div class="header-row" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; min-height: 56px;">
+    <ion-title>Profile</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" class="menu-dots-btn" (click)="presentMenuOptions()">
+        <ion-icon name="ellipsis-vertical"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    </div>
+  
+</ion-header>
+
+<ion-content class="profile-content">
+  <div class="profile-container">
+    
+    <!-- CIRCULAR AVATAR SECTION -->
+    <div class="avatar-wrapper" >
+      <div class="avatar-circle">
+        <img [src]="selectedImage.data" *ngIf="selectedImage.name" class="avatar-img">
+        <img [src]="currentUser?.BUSINESS_LOGO" *ngIf="!selectedImage.name && currentUser?.BUSINESS_LOGO" class="avatar-img" onerror="this.style.display='none'">
+        <span *ngIf="!selectedImage.name && !currentUser?.BUSINESS_LOGO" class="avatar-initials">
+          {{ getInitials(myProfileData.full_name || user.full_name) }}
+        </span>
+      </div>
+    </div>
+
+    <!-- CARD 1: USER DETAILS -->
+    <div class="profile-card card-top">
+      <div class="info-group">
+        <label>FULL NAME</label>
+        <div class="info-value" *ngIf="!isEdit">{{ myProfileData.full_name || user.full_name || 'Dynamic Vishva' }}</div>
+        <input *ngIf="isEdit" [(ngModel)]="user.full_name" class="edit-input">
+      </div>
+      
+      <div class="card-divider"></div>
+
+      <div class="info-group">
+        <label>MOBILE NUMBER</label>
+        <div class="info-value" *ngIf="!isEdit">{{ myProfileData.mobile || myProfileData.phone || user.phone || '+91 9876 543210' }}</div>
+        <input *ngIf="isEdit" [(ngModel)]="user.phone" class="edit-input">
+      </div>
+
+      <div class="card-divider"></div>
+
+      <div class="info-group">
+        <label>EMAIL</label>
+        <div class="info-value" *ngIf="!isEdit">{{ myProfileData.email || user.email || 'dv@superassist.ai' }}</div>
+        <input *ngIf="isEdit" [(ngModel)]="user.email" class="edit-input">
+      </div>
+    </div>
+
+    <!-- CARD 2: OPTIONS / MENU -->
+    <div class="profile-card">
+      <div class="option-item" (click)="openHelpCentre()">
+        <div class="option-left">
+          <div class="icon-box">
+               <img src="assets/images/question.png" alt="Swap Task" class="feature-icon-img" />
+          </div>
+          <span>Help Centre</span>
+        </div>
+        <ion-icon name="chevron-forward-outline" class="chevron-icon"></ion-icon>
+      </div>
+
+      <div class="card-divider"></div>
+
+      <div class="option-item" (click)="openSupport()">
+        <div class="option-left">
+          <div class="icon-box">
+              <img src="assets/images/question.png" alt="Swap Task" class="feature-icon-img" />
+          </div>
+          <span>Support</span>
+        </div>
+      </div>
+
+      <div class="card-divider"></div>
+
+      <div class="option-item" (click)="openPrivacyPolicy()">
+        <div class="option-left">
+          <div class="icon-box">
+              <img src="assets/images/docu.png" alt="Swap Task" class="feature-icon-img" />
+          </div>
+          <span>Privacy Policy</span>
+        </div>
+      </div>
+
+      <div class="card-divider"></div>
+
+      <div class="option-item" (click)="openTerms()">
+        <div class="option-left">
+          <div class="icon-box">
+              <img src="assets/images/term.png" alt="Swap Task" class="feature-icon-img" />
+          </div>
+          <span>Terms and Conditions</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- EDIT MODE BUTTONS -->
+    <div *ngIf="isEdit" class="edit-btns">
+      <div class="cancel" (click)="cancelEdit()">Cancel</div>
+      <div class="save" (click)="save()">Save</div>
+    </div>
+
+    <!-- VERSION INFORMATION -->
+    <div class="version-text">
+      Version 2.4.0 (Premium)
+    </div>
+
+  </div>
+</ion-content>
+
+<!-- BOTTOM NAVIGATION TABS -->
+<!-- <div class="custom-bottom-tabs">
+  <div class="tab-item" [class.active]="activeTab === 'chats'" (click)="goToChats()">
+    <img [src]="activeTab === 'chats' ? 'assets/images/chat.active.png' : 'assets/images/chat.png'" alt="Chats" class="feature-icon-img" />
+    <span>Chats</span>
+  </div>
+  
+  <div class="tab-item" [class.active]="activeTab === 'contacts'" (click)="goToContacts()">
+    <img [src]="activeTab === 'contacts' ? 'assets/images/contact.active.png' : 'assets/images/contact.png'" alt="Contacts" class="feature-icon-img" />
+    <span>Contacts</span>
+  </div>
+
+  <div class="tab-item" [class.active]="activeTab === 'settings'" (click)="goToProfile()">
+    <img [src]="activeTab === 'settings' ? 'assets/images/setting.active.png' : 'assets/images/setting.png'" alt="Settings" class="feature-icon-img" />
+    <span>Settings</span>
+  </div>
+</div> -->
+
+
 <!-- <ion-header class="profile-header">
   <ion-toolbar>
     <ion-icon name="chevron-back-outline" class="back" (click)="onBack()"></ion-icon>
     <div class="title">Profile</div>
   </ion-toolbar>
 </ion-header> -->
-<ion-header class="profile-header" mode="md">
+<!-- <ion-header class="profile-header" mode="md">
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-button fill="clear" (click)="onBack()">
@@ -13,22 +143,20 @@
     </ion-buttons>
     <ion-title>Profile</ion-title>
   </ion-toolbar>
-</ion-header>
+</ion-header> -->
 
-<ion-content>
+<!-- <ion-content> -->
   <!-- PROFILE IMAGE -->
-  <div class="profile-top">
+  <!-- <div class="profile-top"> -->
     <!-- <img src="assets/images/Prasenjit_Chanda.png" class="profile-img" *ngIf="!selectedImage.name"> -->
-    <img [src]="currentUser.BUSINESS_LOGO" class="profile-img" *ngIf="!selectedImage.name">
+    <!-- <img [src]="currentUser.BUSINESS_LOGO" class="profile-img" *ngIf="!selectedImage.name">
     <img [src]="selectedImage.data" alt="" class="profile-img" *ngIf="selectedImage.name">
     <div class="edit-text" (click)="changeProfilePicture()">
       Select Photo
-    </div>
+    </div> -->
     
-  </div>
-  <!-- GAP -->
+  <!-- </div>
   <div class="gap"></div>
-  <!-- DETAILS -->
   <div class="details">
     <div class="field">
       <label>Full Name</label>
@@ -43,17 +171,17 @@
     </div>
    
   </div>
-</ion-content>
+</ion-content> -->
 
 <!-- FOOTER BUTTONS -->
-<div class="footer">
+<!-- <div class="footer"> -->
   <!-- VIEW MODE -->
-  <div *ngIf="!isEdit" class="logout-btn" (click)="logout()">
-    Logout
-  </div>
+  <!-- <div *ngIf="!isEdit" class="logout-btn" (click)="logout()"> -->
+    <!-- Logout
+  </div> -->
   <!-- EDIT MODE -->
-  <div *ngIf="isEdit" class="edit-btns">
+  <!-- <div *ngIf="isEdit" class="edit-btns">
     <div class="cancel" (click)="cancelEdit()">Cancel</div>
     <div class="save" (click)="save()">Save</div>
   </div>
-</div>
+</div> -->
