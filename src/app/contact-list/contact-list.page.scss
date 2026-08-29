@@ -2,22 +2,21 @@
 
 .chat-detail-header {
   background: #ffffff !important;
-  padding-top: env(safe-area-inset-top, 0px);
+  // padding-top: env(safe-area-inset-top, 0px);
   border: none !important;
   border-bottom: none !important;
   box-shadow: none !important;
-  position: sticky;
-  top: 0;
+  position: relative;
   z-index: 100;
 }
 
 .search-container {
-  padding: 10px 16px;
+  padding: 12px 16px;
   background: #fff;
   border-bottom: 1px solid #edf0f2;
-  position: sticky;
-  top: env(safe-area-inset-top, 0px);
+  position: relative;
   z-index: 10;
+  width: 100%;
 
   .input-container {
     display: flex;
@@ -32,7 +31,7 @@
 
     ion-icon {
       font-size: 18px;
-      color: #fff !important;
+      color: #8e8e93 !important;
       min-width: 18px;
     }
 
@@ -43,7 +42,7 @@
       background: transparent;
       font-size: 14px;
       color: #111b21;
-      
+
       &::placeholder {
         color: #8e8e93;
       }
@@ -52,10 +51,11 @@
 }
 
 .contacts-list-wrapper {
-  padding: 8px 12px calc(20px + env(safe-area-inset-bottom, 0px)) 12px;
+  padding: 12px 12px calc(20px + env(safe-area-inset-bottom, 0px)) 12px;
   display: flex;
   flex-direction: column;
   gap: 8px;
+  overflow-y: auto;
 }
 
 .contact-card {
@@ -143,7 +143,7 @@
   flex-shrink: 0;
 }
 
-/* Styled Action Icon Buttons matching the design */
+/* Icon-only action buttons — no circle background, no shadow */
 .action-icon-btn {
   display: flex;
   align-items: center;
@@ -154,27 +154,34 @@
   border-radius: 50%;
   border: none;
   cursor: pointer;
-  transition: background 0.15s ease, transform 0.1s ease;
+  background: transparent !important;
+  box-shadow: none !important;
+  transition: transform 0.1s ease, opacity 0.15s ease;
 
-  &.call-btn {
-    background: #f0f7ff;
-
-    &:hover {
-      background: #e0efff;
-    }
-  }
-
+  &.call-btn,
   &.message {
-    background: #eafbf3;
+    background: transparent !important;
 
     &:hover {
-      background: #d8f7e7;
+      background: transparent !important;
+      opacity: 0.7;
     }
   }
 
   &:active {
     transform: scale(0.92);
   }
+}
+
+/* The <img> icons inside the buttons — replaces old inline styles */
+.action-icon-img {
+  width: 18px;
+  height: 18px;
+  min-width: 18px;
+  min-height: 18px;
+  object-fit: contain;
+  background: transparent;
+  display: block;
 }
 
 .empty-state {
@@ -189,7 +196,6 @@
   }
 }
 
-/* Responsive adjustments for smaller mobile viewports (e.g. iPhone SE / Galaxy Fold) */
 @media (max-width: 360px) {
   .contact-card {
     padding: 8px 10px;
@@ -207,6 +213,13 @@
     width: 34px;
     height: 34px;
     min-width: 34px;
+  }
+
+  .action-icon-img {
+    width: 16px;
+    height: 16px;
+    min-width: 16px;
+    min-height: 16px;
   }
 
   .contact-name {

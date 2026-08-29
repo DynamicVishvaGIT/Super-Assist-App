@@ -254,7 +254,7 @@ export class HomePage implements OnInit {
     this.applyFilters();
   }
 
-  goToChatDetails(chat: any) {
+  goToChatDetails(chat: any) { console.log(chat)
     this.router.navigate(['/chat-details'], {
       state: { chat: chat }
     });

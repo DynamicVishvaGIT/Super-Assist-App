@@ -22,6 +22,12 @@
     color: #17479E;
   }
 }
+ion-tab-bar {
+  --background: #fff;
+  --border: none;
+  height: 60px;
+  padding: 10px 12px;
+}
 
 /* Profile */
 
@@ -215,12 +221,6 @@
  
 }
 
-ion-tab-bar {
-  --background: #fff;
-  --border: none;
-  height: 45px;
-  padding: 8px 12px;
-}
 
 ion-tab-button {
   --background: transparent;
@@ -229,6 +229,7 @@ ion-tab-button {
   margin: 0 6px;
   --color: #94A3B8;
   --color-selected: #00cb82;
+   --padding-bottom: 10px;
 
   .footer-icon {
     filter: grayscale(100%) opacity(60%);

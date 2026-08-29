@@ -135,35 +135,73 @@ readonly emojiList: string[] = [
   constructor(private router: Router, private modalCtrl: ModalController,private actionSheetCtrl: ActionSheetController,private alertCtrl: AlertController,
     private toastCtrl: ToastController, private userService: User, private commonService: Common, private apiService: Api) { 
     this._unsubscribeAll = new Subject();
-    const nav = this.router.getCurrentNavigation();
-    this.chat = nav?.extras?.state?.['chat'];
-    if(this.chat){
-      this.contactName = this.chat.contacts__name ||''  ;
-    }
-    console.log(this.chat);
-    this.checkConversationWindow(this.chat.last_in_message_at);
+    // const nav = this.router.getCurrentNavigation();
+    // this.chat = nav?.extras?.state?.['chat'];
+    // if(this.chat){
+    //   this.contactName = this.chat.contacts__name ||''  ;
+    // }
+    // console.log(this.chat);
+    // this.checkConversationWindow(this.chat.last_in_message_at);
   }
 
   ngOnInit() {
-    this.userService.currentUser$.subscribe(user => {
-      if (user) {
-        this.currentUser = user;
-        console.log('39',this.currentUser);
-      } 
-      else {
-        const storedUser = localStorage.getItem('currentUser');
-        if (storedUser) {
-          this.currentUser = JSON.parse(storedUser);
-          console.log('44',this.currentUser);
+    this.router.events.pipe(
+      filter((event): event is NavigationEnd => event instanceof NavigationEnd)
+    ).subscribe((event: NavigationEnd) => {
+      if (event.url === '/chat-details') {
+        const nav = this.router.getCurrentNavigation();
+        this.chat = nav?.extras?.state?.['chat'];
+        if(this.chat){
+          this.contactName = this.chat.contacts__name ||''  ;
         }
+        console.log(this.chat);
+        this.checkConversationWindow(this.chat.last_in_message_at);
+        this.userService.currentUser$.subscribe(user => {
+        if (user) {
+          this.currentUser = user;
+          console.log('39',this.currentUser);
+        } 
+        else {
+          const storedUser = localStorage.getItem('currentUser');
+          if (storedUser) {
+            this.currentUser = JSON.parse(storedUser);
+            console.log('44',this.currentUser);
+          }
+        }
+      });
+      this.get_message_list();
+      this.scrollToBottom();
       }
     });
-    this.get_message_list();
-    this.scrollToBottom();
+    // this.userService.currentUser$.subscribe(user => {
+    //   if (user) {
+    //     this.currentUser = user;
+    //     console.log('39',this.currentUser);
+    //   } 
+    //   else {
+    //     const storedUser = localStorage.getItem('currentUser');
+    //     if (storedUser) {
+    //       this.currentUser = JSON.parse(storedUser);
+    //       console.log('44',this.currentUser);
+    //     }
+    //   }
+    // });
+    // this.get_message_list();
+    // this.scrollToBottom();
   }
 openContactDetail(contact: any): void {
-  this.router.navigate(['/contact-detail']);
-  
+  if (!contact) {
+    return;
+  }
+
+  this.router.navigate(['/contact-detail'], {
+    state: {
+      contact: contact,
+      chat: this.chat,
+      contactName: this.contactName,
+      recipientNo: this.recipientNo
+    }
+  });
 }
 
   ngOnDestroy(): void {
@@ -448,7 +486,7 @@ openContactDetail(contact: any): void {
   }
 
   getStatusIcon(msg: ChatMessage): string {
-    console.log(msg);
+    // console.log(msg);
     switch ((msg.status || '').toLowerCase()) {
       case 'sent':
         return 'checkmark';
