@@ -1,117 +1,261 @@
 <ion-header class="contact-header">
   <div class="header-row">
     <ion-button fill="clear" (click)="onBack()">
-      <ion-icon name="arrow-back-outline" style="width: 24px !important; height: 24px !important; font-size: 24px !important; min-width: 24px !important; min-height: 24px !important; margin-left:  2px;"></ion-icon>
+      <ion-icon
+        name="arrow-back-outline"
+        style="
+          width: 24px !important;
+          height: 24px !important;
+          font-size: 24px !important;
+          min-width: 24px !important;
+          min-height: 24px !important;
+          margin-left: 2px;
+        "
+      ></ion-icon>
     </ion-button>
   </div>
 </ion-header>
 
+
 <ion-content class="contact-content">
+
   <div class="contact-container">
 
-    <!-- PROFILE -->
+    <!-- ================= PROFILE ================= -->
     <div class="profile-top-section">
+
       <div class="avatar-circle">
-        <span class="avatar-initials">{{ getInitials(contact.name) }}</span>
+        <span class="avatar-initials">
+          {{ getInitials(chat?.contacts__name) }}
+        </span>
       </div>
 
-      <h2 class="contact-name">{{ contact.name }}</h2>
-      <p class="contact-phone">{{ contact.phone }}</p>
+      <h2 class="contact-name">
+        {{ chat?.contacts__name }}
+      </h2>
 
-  <div class="action-buttons">
-  <button class="action-btn message-btn" (click)="sendMessage()">
-    <img src="assets/images/message.png" alt="Message" style="width: 20px !important; height: 20px !important; min-width: 20px !important; min-height: 20px !important; object-fit: contain !important;">
-  <span style="font-size: 16px !important; font-weight: 400 !important;">Message</span>
-  </button>
+      <p class="contact-phone">
+        {{ chat?.contacts__wa_id }}
+      </p>
 
-  <button class="action-btn call-btn" (click)="makeCall()">
-    <img src="assets/images/call.png" alt="Call" style="width: 20px !important; height: 20px !important; min-width: 20px !important; min-height: 20px !important; object-fit: contain !important;">
-  <span style="font-size: 16px !important; font-weight: 400 !important;">Call</span>
-  </button>
-</div>
-</div>
+
+      <!-- ACTION BUTTONS -->
+      <div class="action-buttons">
+
+        <button
+          class="action-btn message-btn"
+          title="Message"
+          type="button"
+          (click)="onBack()"
+        >
+
+          <img
+            src="assets/images/message.png"
+            alt="Message"
+            style="
+              width: 10px !important;
+              height: 10px !important;
+              min-width: 20px !important;
+              min-height: 20px !important;
+              object-fit: contain !important;
+            "
+          >
+
+          <span
+            style="
+              font-size: 16px !important;
+              font-weight: 400 !important;
+            "
+          >
+            Message
+          </span>
+
+        </button>
+
+      </div>
+
     </div>
+
 
     <div class="section-divider"></div>
 
-    <!-- GROUPS -->
+
+    <!-- ================= GROUPS ================= -->
     <div class="section-block">
-      <div class="section-title">GROUPS</div>
+
+      <div class="section-title">
+        GROUPS
+      </div>
 
       <div class="groups-chips">
-        <span class="group-chip" *ngFor="let group of contact.groups">
+
+        <span
+          class="group-chip"
+          *ngFor="let group of contact.groups"
+        >
           {{ group }}
         </span>
 
-        <span class="group-chip more-chip">+3 More</span>
+        <span class="group-chip more-chip">
+          +3 More
+        </span>
+
       </div>
+
     </div>
+
 
     <div class="section-divider"></div>
 
-    <!-- SHARED MEDIA -->
-    <div class="section-block">
-      <div class="media-header">
-        <span class="section-title">SHARED MEDIA</span>
 
-        <span class="view-all" (click)="viewAllMedia()">
-          View All &gt;
+    <!-- ================= SHARED MEDIA ================= -->
+    <div class="section-block">
+
+      <div class="media-header">
+
+        <span class="section-title">
+          SHARED MEDIA
         </span>
+
       </div>
 
+
       <div class="media-grid">
+
         <div
           *ngFor="let media of contact.media; let i = index"
           class="media-item"
           [class.large]="i === 0"
           [class.small]="i !== 0"
-          (click)="openMedia(media)"
+          (click)="openMedia(i)"
         >
-          <img [src]="media" alt="Shared Media">
+
+          <img
+            [src]="media"
+            alt="Shared Media"
+          >
+
         </div>
+
       </div>
+
     </div>
+
+  </div>
+
 </ion-content>
 
-<!-- FULL SCREEN IMAGE VIEWER -->
+
+<!-- ================================================= -->
+<!-- FULL SCREEN IMAGE VIEWER                          -->
+<!-- ================================================= -->
+
 <div
   class="image-viewer"
   *ngIf="selectedImage"
+
   (click)="closeMedia()"
+
+  (touchstart)="onTouchStart($event)"
+  (touchmove)="onTouchMove($event)"
+  (touchend)="onTouchEnd($event)"
 >
+
+
+  <!-- CLOSE -->
   <button
     class="image-viewer-close"
     type="button"
+    aria-label="Close image"
     (click)="closeMedia(); $event.stopPropagation()"
   >
+
     <ion-icon name="close-outline"></ion-icon>
+
   </button>
 
+
+  <!-- PREVIOUS -->
+  <button
+    *ngIf="contact.media.length > 1"
+    class="image-nav-btn prev-btn"
+    type="button"
+    aria-label="Previous image"
+    (click)="prevImage(); $event.stopPropagation()"
+  >
+
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+    >
+
+      <path
+        d="M15 6l-6 6 6 6"
+        stroke="currentColor"
+        stroke-width="2.2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+
+    </svg>
+
+  </button>
+
+
+  <!-- NEXT -->
+  <button
+    *ngIf="contact.media.length > 1"
+    class="image-nav-btn next-btn"
+    type="button"
+    aria-label="Next image"
+    (click)="nextImage(); $event.stopPropagation()"
+  >
+
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+    >
+
+      <path
+        d="M9 6l6 6-6 6"
+        stroke="currentColor"
+        stroke-width="2.2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+
+    </svg>
+
+  </button>
+
+
+  <!-- IMAGE -->
   <div
     class="image-viewer-content"
     (click)="$event.stopPropagation()"
   >
+
     <img
       [src]="selectedImage"
+      [class]="'full-screen-image ' + slideClass"
       alt="Shared Media Preview"
-      class="full-screen-image"
     >
-  </div>
-</div>
-<!-- BOTTOM NAVIGATION TABS (Contacts Active) -->
-<!-- <div class="custom-bottom-tabs">
-  <div class="tab-item" [class.active]="activeTab === 'chats'" (click)="goToChats()">
-    <img [src]="activeTab === 'chats' ? 'assets/images/chat.active.png' : 'assets/images/chat.png'" alt="Chats" class="feature-icon-img" />
-    <span>Chats</span>
-  </div>
-  
-  <div class="tab-item" [class.active]="activeTab === 'contacts'" (click)="goToContacts()">
-    <img [src]="activeTab === 'contacts' ? 'assets/images/contact.active.png' : 'assets/images/contact.png'" alt="Contacts" class="feature-icon-img" />
-    <span>Contacts</span>
+
   </div>
 
-  <div class="tab-item" [class.active]="activeTab === 'settings'" (click)="goToProfile()">
-    <img [src]="activeTab === 'settings' ? 'assets/images/setting.active.png' : 'assets/images/setting.png'" alt="Settings" class="feature-icon-img" />
-    <span>Settings</span>
+
+  <!-- COUNTER -->
+  <div
+    class="image-counter"
+    *ngIf="contact.media.length > 1"
+  >
+
+    {{ selectedIndex! + 1 }} / {{ contact.media.length }}
+
   </div>
-</div> -->
+
+</div>

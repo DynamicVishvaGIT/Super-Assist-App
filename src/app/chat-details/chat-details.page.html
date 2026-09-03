@@ -8,7 +8,7 @@
   (click)="onBack()"
   style="height: 20px;width:20px; color: #3C4A3D; cursor: pointer;">
 </ion-icon>
-<div class="avatar-circle" (click)="openContactDetail(contact)">
+<div class="avatar-circle" (click)="openContactDetail()">
   {{ getInitials(contactName) }}
 </div>
       <div class="chat-user">
@@ -20,9 +20,9 @@
           {{ recipientNo }}
         </div>
       </div>
-      <button class="action-btn call-btn" (click)="makeCall()">
-          <img src="assets/images/call.png" alt="Swap Task" class="feature-icon-img" />
-          </button>
+      <!-- <button class="action-btn call-btn" (click)="makeCall()" disabled>
+  <img src="assets/images/call.png" alt="Swap Task" class="feature-icon-img" />
+</button> -->
 <ion-button fill="clear" class="menu-dots-btn" style="--color: #6C7B6B;">
   <ion-icon name="ellipsis-vertical"></ion-icon>
 </ion-button>
@@ -812,7 +812,7 @@ class="template-footer"
 
 </div>
 
-<div class="meta small" style="margin-left: 4px; margin-top: 2px; display: flex; align-items: center; justify-content: flex-start;">
+<div class="meta small" style="margin-left: 4px; margin-top: 2px; display: flex; align-items: center; margin-bottom:  6px !important;justify-content: flex-start;">
   <span>{{ msg.time }}</span>
 </div>
 
@@ -823,7 +823,7 @@ class="template-footer"
 </ion-content>
 
 <ion-footer style="background: #ffffff; border: none !important; box-shadow: none !important;">
-  <div class="chat-footer" *ngIf="!showTemplateOnlyFooter" style="display: flex; align-items: center; padding: 6px 12px; width: 100%; background: #ffffff;">
+  <div class="chat-footer" *ngIf="!showTemplateOnlyFooter" style="display: flex; align-items: center; padding: 6px 12px; width: 100%; background: #ffffff; margin-bottom: 31px !important;">
     
     <div class="input-row" style="display: flex; align-items: center; gap: 8px; width: 100%;">
       

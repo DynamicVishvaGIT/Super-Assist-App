@@ -1,9 +1,9 @@
 <ion-header class="chat-detail-header">
   <ion-toolbar>
     <div class="header-chat-row">
-      <ion-icon name="arrow-back-outline" class="back" (click)="goBack()" style="font-size: 24px !important; color: #111b21 !important; cursor: pointer; margin-left: 16px; margin-top: -30px !important;"></ion-icon>
+      <ion-icon name="arrow-back-outline" class="back" (click)="goBack()" style="font-size: 24px !important; color: #111b21 !important; cursor: pointer; margin-left: 16px; margin-top: 18px !important;"></ion-icon>
       <div class="chat-user">
-        <h2 class="chat-user-name" style="color: #00A859 !important; font-weight: 600 !important; margin: 0; font-size: 25px; margin-left: 20px; margin-top: 2px;">Select Contact</h2>
+        <h2 class="chat-user-name" style="color: #00A859 !important; font-weight: 600 !important; margin: 0; font-size: 25px; margin-left: 20px; margin-top: 18px !important; margin-right: -8px !important;">Select Contact</h2>
       </div>
     </div>
   </ion-toolbar>
@@ -33,10 +33,10 @@
         <div class="contact-number">{{ contact.phone }}</div>
       </div>
       <div class="contact-actions-inline">
-        <button class="action-icon-btn call-btn" (click)="callContact(contact, $event)" title="Call">
-          <img src="assets/images/call.png" alt="Call" style="width: 18px !important; height: 18px !important; min-width: 20px !important; min-height: 20px !important; object-fit: contain !important; background-color: #f6f6f6 !important;">
-        </button>
-        <button class="action-icon-btn message message-btn" (click)="messageContact(contact, $event)" title="Message">
+       <!-- <button class="action-icon-btn call-btn" (click)="callContact(contact, $event)" title="Call" disabled>
+    <img src="assets/images/call.png" alt="Call" style="width: 18px !important; height: 18px !important; min-width: 20px !important; min-height: 20px !important; object-fit: contain !important; background-color: #f6f6f6 !important;">
+  </button> -->
+        <button class="action-icon-btn message-btn" (click)="openMessage('7029900582')" title="Message">
           <img src="assets/images/message.png" alt="Message" style="width: 18px !important; height: 18px !important; min-width: 20px !important; min-height: 20px !important; object-fit: contain !important;background-color: #f6f6f6!important;">
         </button>
       </div>

@@ -131,7 +131,26 @@ video {
   background: transparent;
   cursor: pointer;
 }
+/* Make the page fill the screen and stick the footer to the bottom */
+ion-page,
+.ion-page {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
 
+ion-content {
+  flex: 1 1 auto;
+  min-height: 0; /* prevents content from pushing the footer off-screen */
+}
+
+ion-footer {
+  flex: 0 0 auto;
+  position: relative;
+  z-index: 100;
+}
 .call-btn:hover,
 .menu-dots-btn:hover {
   background: #f5f6f5;
@@ -263,6 +282,7 @@ ion-content.chat-bg::part(scroll) {
   line-height: 20px;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
+  padding: 8px 0 0 8px;
 }
 
 .meta {
@@ -307,7 +327,7 @@ ion-content.chat-bg::part(scroll) {
   max-width: calc(100vw - 28px);
   padding: 5px;
   margin: 0;
-  border-radius: 18px !important;
+  border-radius: 12px !important;
   background: #F2F4F6 !important;
   overflow: hidden;
   box-shadow: none;
@@ -806,7 +826,7 @@ ion-footer ion-toolbar,
 /* EXPIRED */
 .expired-info {
   width: 100%;
-  margin-bottom: 4px !important;
+  margin-bottom: 2.5px !important;
   padding: 12px;
   border: 1px solid #f0d98a;
   border-radius: 12px;

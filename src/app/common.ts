@@ -9,7 +9,8 @@ import { throwError } from 'rxjs';
 })
 export class Common {
   
-  baseUrl = 'https://dvchat.dvworks.in/';
+  baseUrl = 'https://dvchat.dvworks.in/'; // for DV
+  // baseUrl = 'https://app.superassist.in/'; //For client
   fcm_token: string = 'fcm_token';
   platform_type:string='android';
   device_type: string = 'mobile';

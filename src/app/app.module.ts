@@ -13,13 +13,15 @@ import { Keyboard } from '@ionic-native/keyboard/ngx';
 import { Camera } from '@awesome-cordova-plugins/camera/ngx';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './interceptors/auth-interceptor';
+import { AppVersion } from '@awesome-cordova-plugins/app-version/ngx';
+import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser/ngx';
 
 
 @NgModule({
   schemas:[CUSTOM_ELEMENTS_SCHEMA],
   declarations: [AppComponent, ChatMenuComponent],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, ReactiveFormsModule,FormsModule, HttpClientModule],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, StatusBar, Keyboard, Camera,
+  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, StatusBar, Keyboard, Camera,AppVersion,InAppBrowser,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true } // 👈 add this
   ],
   bootstrap: [AppComponent],

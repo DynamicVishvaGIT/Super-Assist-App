@@ -11,10 +11,11 @@ interface Contact {
   selector: 'app-contact-list',
   templateUrl: './contact-list.page.html',
   styleUrls: ['./contact-list.page.scss'],
-  standalone:false
+  standalone: false
 })
 export class ContactListPage implements OnInit {
   searchQuery: string = '';
+  contactId: string | null = null;
 
   contacts: Contact[] = [
     { id: '1', name: 'Alex Thompson', phone: '+1 (555) 019-2834' },
@@ -70,7 +71,17 @@ export class ContactListPage implements OnInit {
   messageContact(contact: Contact, event: Event) {
     event.stopPropagation();
     console.log('Open chat with:', contact.name);
-    // Example navigation: this.router.navigate(['/chat', contact.id]);
+    // Navigates to the chat page with the contact's unique ID
+    this.router.navigate(['/chat', contact.id]);
+  }
+
+  openMessage(phoneNumber: string) {
+    // Standard SMS URI scheme. 
+    // You can also pre-fill text using: `sms:${phoneNumber}?body=Hello%20there`
+    // const smsUrl = `sms:${phoneNumber}`;
+    
+    // // Opens the native device messaging app
+    // window.open(smsUrl, '_system');
   }
 
   goBack() {

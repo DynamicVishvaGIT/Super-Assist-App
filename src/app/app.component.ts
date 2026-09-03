@@ -1,10 +1,14 @@
 import { Component, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { StatusBar } from '@awesome-cordova-plugins/status-bar/ngx';
-import { IonTabs, MenuController, ModalController, Platform, ToastController } from '@ionic/angular';
+import { AlertController, IonTabs, MenuController, ModalController, Platform, ToastController } from '@ionic/angular';
 import { User } from './user';
 import { Keyboard } from '@ionic-native/keyboard/ngx';
 import { Location } from '@angular/common';
+import { Api } from './api';
+import { Common } from './common';
+import { AppVersion } from '@awesome-cordova-plugins/app-version/ngx';
+import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser/ngx';
 
 @Component({
   selector: 'app-root',
@@ -32,11 +36,14 @@ export class AppComponent {
   loginStatus: boolean = false;
   displayProfileData = {first_name: '', last_name: '', email: '', avatar: ''};
   currentUser:any;
+  app_data:any;
+  verified_data:any;
+  device_type:any;
 
   
-  constructor(private platform: Platform,private userService: User,
-    public router:Router,public modalController: ModalController, private menuCtrl: MenuController, private statusBar: StatusBar,
-     private toastController: ToastController,private keyboard: Keyboard, private location: Location) {
+  constructor(private platform: Platform,private userService: User,private apiService:Api,private commonService:Common,private appVersion:AppVersion,
+    public router:Router,public modalController: ModalController, private menuCtrl: MenuController, private statusBar: StatusBar, private alertCtrl:AlertController,
+     private toastController: ToastController,private keyboard: Keyboard, private location: Location, private inAppBrowser:InAppBrowser) {
     this.selectedPath = window.location.pathname;
     console.log(this.selectedPath);
     this.keyboard.onKeyboardWillShow().subscribe(() => {
@@ -68,11 +75,16 @@ export class AppComponent {
     });
   }
 
+  
   initializeApp() {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
       this.statusBar.backgroundColorByHexString('#2c56fa');
       this.statusBar.overlaysWebView(false);
+
+      if (this.platform.is(this.apiService.device_type as 'android' | 'ios')) { //inapp update
+        this.checkAppVersion();
+      }
     });
     // this.userService.currentUser$.subscribe(user => {
     //   if (user) {
@@ -95,6 +107,91 @@ export class AppComponent {
   //   });
   //   return await modal.present();
   // }
+//inapp update
+
+  checkAppVersion() {
+    this.apiService.app_update().subscribe({
+      next: (res: any) => {
+        console.log('app_update', res);
+        // alert(JSON.stringify(res[0]))
+        this.app_data = res[0];
+        this.handleVersionCheck();
+        // this.versionAlert(this.app_data);
+      },
+      error: (error) => {
+        console.log(error);
+        this.commonService.dismissLoading();
+        this.commonService.showToastMessage(error, 'toast-error','', 4000);
+      }
+    });
+
+  }
+  async handleVersionCheck() { 
+    if (this.platform.is(this.apiService.device_type as 'android' | 'ios')) {
+      const latestVersion = this.app_data.app_version; // Assume API returns { "version": "1.2.0" }
+      const currentVersion = await this.appVersion.getVersionNumber();
+      console.log(`Latest Version: ${latestVersion}, Installed Version: ${currentVersion}`);
+      if (this.isVersionOutdated(currentVersion, latestVersion)) {
+        if(this.app_data.device_type==this.apiService.device_type){
+          this.versionAlert(this.app_data);
+        }
+      }
+    }
+  }
+  redirectToPlayStore(redirectUrl:string) {  
+    if (redirectUrl) {
+      (navigator as any).app.exitApp();
+      // this.inAppBrowser.create(redirectUrl, '_system'); // Opens in external browser
+      if(this.device_type=='android'){ 
+        this.inAppBrowser.create(redirectUrl, '_system');  //for mobile
+      }
+      else{ 
+        window.open(redirectUrl, '_system');
+      }
+    } 
+    else {
+      console.error('Invalid Play Store URL');
+    }
+  }
+  async versionAlert(app_data: any) {  
+    const buttons = [];
+    if (app_data.update_type === 'soft') {  
+      buttons.push({
+        text: 'Cancel',
+        cssClass: 'alert-button-no',
+        handler: () => {
+          console.log('Update skipped');
+          this.alertCtrl.dismiss();
+        }
+      });
+    }
+    buttons.push({
+      text: 'Update',
+      cssClass: 'alert-button-yes',
+      handler: () => {
+        this.redirectToPlayStore(app_data.redirect_url);
+      }
+    });
+    const confirm = await this.alertCtrl.create({
+      header: 'Update App',
+      message: app_data.message,
+      backdropDismiss: app_data.update_type === 'soft', // Prevent closing for 'hard' updates
+      buttons: buttons
+    });
+    await confirm.present();
+  }
+
+  isVersionOutdated(installed: string, latest: string): boolean {
+    const installedParts = installed.split('.').map(Number);
+    const latestParts = latest.split('.').map(Number);
+    for (let i = 0; i < latestParts.length; i++) {
+      if ((installedParts[i] || 0) < latestParts[i]) {
+        return true;
+      }
+    }
+    return false;
+  }
+///////////////
   ngOnInit() {
     this.menuCtrl.enable(false);
     this.checkLoginStatus();

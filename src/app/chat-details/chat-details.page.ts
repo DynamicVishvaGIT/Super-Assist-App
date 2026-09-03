@@ -189,20 +189,52 @@ readonly emojiList: string[] = [
     // this.get_message_list();
     // this.scrollToBottom();
   }
-openContactDetail(contact: any): void {
-  if (!contact) {
-    return;
-  }
-
+openContactDetail(): void {
   this.router.navigate(['/contact-detail'], {
-    state: {
-      contact: contact,
-      chat: this.chat,
-      contactName: this.contactName,
-      recipientNo: this.recipientNo
-    }
+      state: { chat: this.chat }
   });
+  // const currentName =
+  //   this.contactName ||
+  //   this.chat?.contacts__name ||
+  //   contact?.name ||
+  //   '';
+
+  // const currentPhone =
+  //   this.recipientNo ||
+  //   this.chat?.recipient_no ||
+  //   contact?.phone ||
+  //   '';
+
+  // const contactData = {
+  //   ...(contact || {}),
+  //   name: currentName,
+  //   phone: currentPhone,
+  //   groups: contact?.groups || [],
+  //   media: contact?.media || [],
+  //   avatar: contact?.avatar || contact?.profile_image || ''
+  // };
+
+  // console.log('Opening Contact Detail:', contactData);
+
+  // this.router.navigate(['/contact-detail'], {
+  //   state: {
+  //     contact: contactData,
+  //     chat: this.chat,
+  //     contactName: currentName,
+  //     recipientNo: currentPhone
+  //   }
+  // });
 }
+
+//   this.router.navigate(['/contact-detail'], {
+//     state: {
+//       contact: contact,
+//       chat: this.chat,
+//       contactName: this.contactName,
+//       recipientNo: this.recipientNo
+//     }
+//   });
+// }
 
   ngOnDestroy(): void {
     this._unsubscribeAll.next(null);
@@ -1677,9 +1709,18 @@ getImageUrl(path: string | null | undefined): string {
   return this.imgURL + path;
 }
  makeCall() {
-    // Existing call behavior intentionally left unchanged.
+  if (!this.recipientNo) {
+    this.commonService.showToastMessage(
+      'Contact number not available.',
+      'toast-error',
+      '',
+      2000
+    );
+    return;
   }
 
+  window.open(`tel:${this.recipientNo}`, '_system');
+}
   toggleEmojiPicker(): void {
     this.showEmojiPicker = !this.showEmojiPicker;
   }

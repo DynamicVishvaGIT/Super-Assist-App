@@ -10,6 +10,8 @@ export class Api {
   
   baseUrl = '';
 
+  device_type='android';
+
   constructor(public httpClient: HttpClient, public commonService: Common) { 
     this.baseUrl = this.commonService.getBaseURL();
     // this.headers = this.commonService.getHeaders();
@@ -17,6 +19,18 @@ export class Api {
 
   login(user:any) {
     return this.httpClient.post(this.baseUrl + 'login', user)
+    .pipe(
+      retry(1),
+      catchError(this.errorHandler)
+    )
+  }
+
+  app_update() {
+    let urlSearchParams = new URLSearchParams();
+    urlSearchParams.append('device', this.device_type);
+    // urlSearchParams.append('app_type', this.commonService.user_type);
+    console.log(urlSearchParams.toString());
+    return this.httpClient.get(this.baseUrl + 'app_update?'+urlSearchParams.toString())
     .pipe(
       retry(1),
       catchError(this.errorHandler)
@@ -117,6 +131,9 @@ export class Api {
     // Not Found
     else if (error.status === 404) {
       message = 'Requested information could not be found.';
+    }
+    else if (error.status === 412) {
+      message = error.error.message;
     }
     // Validation or API message
     else if (error.error?.error) {
