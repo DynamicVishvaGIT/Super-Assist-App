@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild, OnDestroy, ElementRef } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
-import { ActionSheetController, AlertController, IonContent, ModalController, ToastController } from '@ionic/angular';
+import { ActionSheetController, AlertController, IonContent, ModalController, Platform, ToastController } from '@ionic/angular';
 import { ChatMenuComponent } from '../chat-menu/chat-menu.component';
-import { filter, Subject, takeUntil } from 'rxjs';
+import { filter, Subject, Subscription, takeUntil } from 'rxjs';
 import { Api } from '../api';
 import { Common } from '../common';
 import { User } from '../user';
@@ -67,6 +67,7 @@ export interface ChatMessage {
 export class ChatDetailsPage implements OnInit, OnDestroy {
 
   private _unsubscribeAll: Subject<any>;
+  backButtonSub!: Subscription;
 
   // @ViewChild(IonContent) content!: IonContent;
   @ViewChild(IonContent,{static:false})
@@ -133,7 +134,7 @@ readonly emojiList: string[] = [
 
 
   constructor(private router: Router, private modalCtrl: ModalController,private actionSheetCtrl: ActionSheetController,private alertCtrl: AlertController,
-    private toastCtrl: ToastController, private userService: User, private commonService: Common, private apiService: Api) { 
+    private toastCtrl: ToastController, private userService: User, private commonService: Common, private apiService: Api, private platform: Platform) { 
     this._unsubscribeAll = new Subject();
     // const nav = this.router.getCurrentNavigation();
     // this.chat = nav?.extras?.state?.['chat'];
@@ -190,8 +191,14 @@ readonly emojiList: string[] = [
     // this.scrollToBottom();
   }
 openContactDetail(): void {
+  if (!this.chat) {
+    return;
+  }
+
   this.router.navigate(['/contact-detail'], {
-      state: { chat: this.chat }
+    state: {
+      chat: this.chat
+    }
   });
   // const currentName =
   //   this.contactName ||
@@ -1415,8 +1422,29 @@ changeWallpaper() {
 goToTemplate() {
   this.router.navigateByUrl('select-template');
 }
+
+ionViewDidEnter() {
+  this.backButtonSub = this.platform.backButton.subscribeWithPriority(9999, () => {
+    this.onBack();
+    // (navigator as any).app.exitApp();
+  });
+}
+
+ionViewWillLeave() {
+  if (this.backButtonSub) {
+    this.backButtonSub.unsubscribe();
+  }
+}
 onBack() {
-  this.router.navigateByUrl('home');
+  if(this.chat.routeURL=='contact'){
+    this.router.navigateByUrl('contact-list');
+  }
+  // else if(this.chat.routeURL=='contact-details'){
+  //   this.router.navigateByUrl('contact-detail');
+  // }
+  else{
+    this.router.navigateByUrl('home');
+  }
 }
 
 

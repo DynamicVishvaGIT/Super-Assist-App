@@ -45,6 +45,32 @@ export class Api {
     )
   }
 
+  load_contacts() {
+    return this.httpClient.get(this.baseUrl + 'load_contacts')
+    .pipe(
+      retry(1),
+      catchError(this.errorHandler)
+    )
+  }
+
+  open_contact_conversation(contact:any) {
+    return this.httpClient.post(this.baseUrl + 'open_contact_conversation', contact)
+    .pipe(
+      retry(1),
+      catchError(this.errorHandler)
+    )
+  } 
+
+  customer_details(conv_id:string) {
+    let urlSearchParams = new URLSearchParams();
+    urlSearchParams.append('conv_id', conv_id);
+    return this.httpClient.get(this.baseUrl + 'customer_details?'+urlSearchParams.toString())
+    .pipe(
+      retry(1),
+      catchError(this.errorHandler)
+    )
+  }
+
   message_list(conv_id:string) {
     let urlSearchParams = new URLSearchParams();
     urlSearchParams.append('conv_id', conv_id);

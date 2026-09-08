@@ -66,7 +66,7 @@ export class AppComponent {
       else if  (this.router.url.includes('register')) {
         this.router.navigate(['login'])
       }
-      else if  ((this.router.url.includes('my-profile')) ||(this.router.url.includes('chat-details')) ) {
+      else if  ((this.router.url.includes('my-profile')) ||(this.router.url.includes('chat-details')) ||(this.router.url.includes('contact-list')) ) {
         this.router.navigate(['home'])
       }
       else{

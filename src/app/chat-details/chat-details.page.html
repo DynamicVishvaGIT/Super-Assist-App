@@ -20,9 +20,7 @@
           {{ recipientNo }}
         </div>
       </div>
-      <!-- <button class="action-btn call-btn" (click)="makeCall()" disabled>
-  <img src="assets/images/call.png" alt="Swap Task" class="feature-icon-img" />
-</button> -->
+      
 <ion-button fill="clear" class="menu-dots-btn" style="--color: #6C7B6B;">
   <ion-icon name="ellipsis-vertical"></ion-icon>
 </ion-button>
@@ -42,7 +40,6 @@
 
   <div class="msg-row" [class.right]="msg.sender=='me'" [class.left]="msg.sender=='other'">
 
-<!-- OUTGOING MESSAGE -->
 
 <div *ngIf="msg.sender=='me'" style="display: flex; flex-direction: column; align-items: flex-end; width: 100%;">
 
@@ -388,7 +385,6 @@ class="template-footer"
 
 </div>
 
-<!-- INCOMING MESSAGE -->
 
 <div
   class="msg-container-outer other-outer"

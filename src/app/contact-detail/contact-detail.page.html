@@ -1,4 +1,510 @@
 <ion-header class="contact-header">
+
+  <div class="header-row">
+
+    <ion-button
+      fill="clear"
+      (click)="onBack()"
+    >
+
+      <ion-icon
+        name="arrow-back-outline"
+        style="
+          width: 24px !important;
+          height: 24px !important;
+          font-size: 24px !important;
+          min-width: 24px !important;
+          min-height: 24px !important;
+          margin-left: 2px;
+        "
+      ></ion-icon>
+
+    </ion-button>
+
+  </div>
+
+</ion-header>
+
+
+<ion-content class="contact-content">
+
+  <div class="contact-container">
+
+
+    <!-- ========================================= -->
+    <!-- PROFILE -->
+    <!-- ========================================= -->
+
+    <div class="profile-top-section">
+
+      <div class="avatar-circle">
+
+        <span class="avatar-initials">
+
+          {{ getInitials(contact?.name) }}
+
+        </span>
+
+      </div>
+
+
+      <h2 class="contact-name">
+
+        {{ contact?.name || 'Unknown Contact' }}
+
+      </h2>
+
+
+      <p class="contact-phone">
+
+        {{ contact?.mobile_no || 'Phone number not available' }}
+
+      </p>
+
+
+      <!-- ========================================= -->
+      <!-- MESSAGE BUTTON -->
+      <!-- ========================================= -->
+
+      <!-- <div class="action-buttons">
+
+        <button
+          class="action-btn message-btn"
+          title="Message"
+          type="button"
+          (click)="sendMessage()"
+        >
+
+          <img
+            src="assets/images/message.png"
+            alt="Message"
+            style="
+              width: 10px !important;
+              height: 10px !important;
+              min-width: 20px !important;
+              min-height: 20px !important;
+              object-fit: contain !important;
+            "
+          >
+
+          <span
+            style="
+              font-size: 16px !important;
+              font-weight: 400 !important;
+            "
+          >
+            Message
+          </span>
+
+        </button>
+
+      </div> -->
+
+    </div>
+
+
+    <!-- ========================================= -->
+    <!-- DIVIDER -->
+    <!-- ========================================= -->
+
+    <div class="section-divider"></div>
+
+
+    <!-- ========================================= -->
+    <!-- GROUPS -->
+    <!-- ========================================= -->
+
+    <div
+      class="section-block"
+      *ngIf="contact.groups?.length"
+    >
+
+      <div class="section-title">
+        GROUPS
+      </div>
+
+
+      <div class="groups-chips">
+
+        <span
+          class="group-chip"
+          *ngFor="let group of contact.groups"
+        >
+
+          {{ group }}
+
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <div
+      class="section-divider"
+      *ngIf="contact.groups?.length"
+    ></div>
+
+
+    <!-- ========================================= -->
+    <!-- SHARED MEDIA -->
+    <!-- ========================================= -->
+
+    <div
+      class="section-block"
+      *ngIf="contact.media?.length"
+    >
+
+      <div class="media-header">
+
+        <span class="section-title">
+          SHARED MEDIA
+        </span>
+
+      </div>
+
+
+      <!-- IMAGE MEDIA -->
+
+      <div
+        class="media-grid"
+        *ngIf="imageMedia.length"
+      >
+
+        <div
+          *ngFor="
+            let media of imageMedia;
+            let i = index
+          "
+          class="media-item"
+          [class.large]="i === 0"
+          [class.small]="i !== 0"
+          (click)="openMedia(i)"
+        >
+
+          <img
+            [src]="media.url"
+            alt="Shared Media"
+            loading="lazy"
+          >
+
+        </div>
+
+      </div>
+
+
+      <!-- VIDEO MEDIA -->
+
+      <div
+        class="media-list"
+        *ngIf="videoMedia.length"
+      >
+
+        <div
+          class="media-list-title"
+          *ngIf="imageMedia.length"
+        >
+          VIDEOS
+        </div>
+
+
+        <div
+          class="video-list-item"
+          *ngFor="let media of videoMedia"
+          (click)="openVideo(media.url)"
+        >
+
+          <div class="video-icon">
+
+            <ion-icon
+              name="play-circle-outline"
+            ></ion-icon>
+
+          </div>
+
+          <div class="video-details">
+
+            <div class="video-title">
+              Video
+            </div>
+
+            <div class="video-subtitle">
+              Tap to open
+            </div>
+
+          </div>
+
+          <ion-icon
+            name="chevron-forward-outline"
+            class="media-arrow"
+          ></ion-icon>
+
+        </div>
+
+      </div>
+
+
+      <!-- AUDIO MEDIA -->
+
+      <div
+        class="media-list"
+        *ngIf="audioMedia.length"
+      >
+
+        <div class="media-list-title">
+          AUDIO
+        </div>
+
+
+        <div
+          class="audio-list-item"
+          *ngFor="let media of audioMedia"
+        >
+
+          <audio
+            controls
+            [src]="media.url"
+          ></audio>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- ========================================= -->
+    <!-- DOCUMENTS -->
+    <!-- ========================================= -->
+
+    <div
+      class="section-divider"
+      *ngIf="contact.documents?.length"
+    ></div>
+
+
+    <div
+      class="section-block"
+      *ngIf="contact.documents?.length"
+    >
+
+      <div class="media-header">
+
+        <span class="section-title">
+          SHARED DOCUMENTS
+        </span>
+
+      </div>
+
+
+      <div class="documents-list">
+
+        <div
+          class="document-item"
+          *ngFor="let document of contact.documents"
+          (click)="
+            openDocument(
+              document.url,
+              getFileName(document.url)
+            )
+          "
+        >
+
+          <div class="document-left">
+
+            <div class="document-icon">
+
+              <ion-icon
+                name="document-text-outline"
+              ></ion-icon>
+
+            </div>
+
+
+            <div class="document-details">
+
+              <div class="document-name">
+
+                {{ getFileName(document.url) }}
+
+              </div>
+
+              <div class="document-type">
+
+                {{ document.mime_type }}
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <ion-icon
+            name="download-outline"
+            class="document-download"
+          ></ion-icon>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- ========================================= -->
+    <!-- NO MEDIA -->
+    <!-- ========================================= -->
+
+    <div
+      class="empty-media"
+      *ngIf="
+        !contact.media?.length &&
+        !contact.documents?.length
+      "
+    >
+
+      No shared media or documents
+
+    </div>
+
+
+  </div>
+
+</ion-content>
+
+
+<!-- ========================================= -->
+<!-- FULL SCREEN IMAGE VIEWER -->
+<!-- ========================================= -->
+
+<div
+  class="image-viewer"
+  *ngIf="selectedImage"
+
+  (click)="closeMedia()"
+
+  (touchstart)="onTouchStart($event)"
+  (touchmove)="onTouchMove($event)"
+  (touchend)="onTouchEnd($event)"
+>
+
+
+  <!-- CLOSE -->
+
+  <button
+    class="image-viewer-close"
+    type="button"
+    aria-label="Close image"
+    (click)="
+      closeMedia();
+      $event.stopPropagation()
+    "
+  >
+
+    <ion-icon
+      name="close-outline"
+    ></ion-icon>
+
+  </button>
+
+
+  <!-- PREVIOUS -->
+
+  <button
+    *ngIf="imageMedia.length > 1"
+    class="image-nav-btn prev-btn"
+    type="button"
+    aria-label="Previous image"
+    (click)="
+      prevImage();
+      $event.stopPropagation()
+    "
+  >
+
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+    >
+
+      <path
+        d="M15 6l-6 6 6 6"
+        stroke="currentColor"
+        stroke-width="2.2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+
+    </svg>
+
+  </button>
+
+
+  <!-- NEXT -->
+
+  <button
+    *ngIf="imageMedia.length > 1"
+    class="image-nav-btn next-btn"
+    type="button"
+    aria-label="Next image"
+    (click)="
+      nextImage();
+      $event.stopPropagation()
+    "
+  >
+
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+    >
+
+      <path
+        d="M9 6l6 6-6 6"
+        stroke="currentColor"
+        stroke-width="2.2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+
+    </svg>
+
+  </button>
+
+
+  <!-- IMAGE -->
+
+  <div
+    class="image-viewer-content"
+    (click)="$event.stopPropagation()"
+  >
+
+    <img
+      [src]="selectedImage"
+      [class]="'full-screen-image ' + slideClass"
+      alt="Shared Media Preview"
+    >
+
+  </div>
+
+
+  <!-- COUNTER -->
+
+  <div
+    class="image-counter"
+    *ngIf="imageMedia.length > 1"
+  >
+
+    {{ selectedIndex! + 1 }} /
+    {{ imageMedia.length }}
+
+  </div>
+
+</div>
+<!-- <ion-header class="contact-header">
   <div class="header-row">
     <ion-button fill="clear" (click)="onBack()">
       <ion-icon
@@ -21,7 +527,6 @@
 
   <div class="contact-container">
 
-    <!-- ================= PROFILE ================= -->
     <div class="profile-top-section">
 
       <div class="avatar-circle">
@@ -39,7 +544,6 @@
       </p>
 
 
-      <!-- ACTION BUTTONS -->
       <div class="action-buttons">
 
         <button
@@ -80,7 +584,6 @@
     <div class="section-divider"></div>
 
 
-    <!-- ================= GROUPS ================= -->
     <div class="section-block">
 
       <div class="section-title">
@@ -108,7 +611,6 @@
     <div class="section-divider"></div>
 
 
-    <!-- ================= SHARED MEDIA ================= -->
     <div class="section-block">
 
       <div class="media-header">
@@ -144,12 +646,6 @@
   </div>
 
 </ion-content>
-
-
-<!-- ================================================= -->
-<!-- FULL SCREEN IMAGE VIEWER                          -->
-<!-- ================================================= -->
-
 <div
   class="image-viewer"
   *ngIf="selectedImage"
@@ -162,7 +658,6 @@
 >
 
 
-  <!-- CLOSE -->
   <button
     class="image-viewer-close"
     type="button"
@@ -175,7 +670,6 @@
   </button>
 
 
-  <!-- PREVIOUS -->
   <button
     *ngIf="contact.media.length > 1"
     class="image-nav-btn prev-btn"
@@ -204,7 +698,6 @@
   </button>
 
 
-  <!-- NEXT -->
   <button
     *ngIf="contact.media.length > 1"
     class="image-nav-btn next-btn"
@@ -233,7 +726,6 @@
   </button>
 
 
-  <!-- IMAGE -->
   <div
     class="image-viewer-content"
     (click)="$event.stopPropagation()"
@@ -248,7 +740,6 @@
   </div>
 
 
-  <!-- COUNTER -->
   <div
     class="image-counter"
     *ngIf="contact.media.length > 1"
@@ -258,4 +749,4 @@
 
   </div>
 
-</div>
+</div> -->
