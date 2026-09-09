@@ -189,14 +189,20 @@ ion-footer {
 
 /* CHAT CONTENT */
 .chat-bg {
-  --background: #fff;
+  // --background: #fff;
   --padding-bottom: 0;
-  background: #fff;
+  // background: #fff;
 }
 
 ion-content.chat-bg::part(scroll) {
   padding: 0 0 10px;
-  background: #fff;
+  // background: #fff;
+  background:
+      #e9e3dc
+      url('/assets/images/whatsapp-bg.png')
+      repeat;
+
+  background-size: 420px;
   overflow-x: hidden;
 }
 

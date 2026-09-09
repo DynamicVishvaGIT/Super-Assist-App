@@ -1,0 +1,537 @@
+<div class="media-details-container">
+
+  <!-- Header -->
+  <header class="app-header">
+    <ng-container *ngIf="!searchOpen; else searchBar">
+
+      <button
+        class="icon-btn back-btn"
+        (click)="goBack()"
+        aria-label="Go back">
+
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+          stroke-linecap="round"
+          stroke-linejoin="round">
+
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+
+      </button>
+
+      <h1 class="page-title">Media Details</h1>
+
+      <button
+        class="icon-btn search-btn"
+        (click)="toggleSearch()"
+        aria-label="Search">
+
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+          stroke-linecap="round"
+          stroke-linejoin="round">
+
+          <circle cx="11" cy="11" r="8"></circle>
+          <line
+            x1="21"
+            y1="21"
+            x2="16.65"
+            y2="16.65">
+          </line>
+
+        </svg>
+
+      </button>
+
+    </ng-container>
+
+
+    <ng-template #searchBar>
+
+      <button
+        class="icon-btn back-btn"
+        (click)="toggleSearch()"
+        aria-label="Close search">
+
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+          stroke-linecap="round"
+          stroke-linejoin="round">
+
+          <polyline points="15 18 9 12 15 6"></polyline>
+
+        </svg>
+
+      </button>
+
+
+      <input
+        #searchInput
+        class="search-input"
+        type="text"
+        [ngModel]="searchQuery"
+        (ngModelChange)="onSearchInput($event)"
+        placeholder="Search {{ activeTab }}..."
+        aria-label="Search {{ activeTab }}" />
+
+
+      <button
+        class="icon-btn clear-btn"
+        *ngIf="searchQuery"
+        (click)="clearSearch()"
+        aria-label="Clear search">
+
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+          stroke-linecap="round"
+          stroke-linejoin="round">
+
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+
+        </svg>
+
+      </button>
+
+    </ng-template>
+
+  </header>
+
+
+  <!-- Tabs -->
+  <nav class="tabs-nav" role="tablist">
+
+    <button
+      role="tab"
+      [attr.aria-selected]="activeTab === 'documents'"
+      [class.active]="activeTab === 'documents'"
+      (click)="switchTab('documents')">
+
+      Document ({{ documents.length }})
+
+    </button>
+
+
+    <button
+      role="tab"
+      [attr.aria-selected]="activeTab === 'media'"
+      [class.active]="activeTab === 'media'"
+      (click)="switchTab('media')">
+
+      Media ({{ mediaItems.length }})
+
+    </button>
+
+
+    <button
+      role="tab"
+      [attr.aria-selected]="activeTab === 'links'"
+      [class.active]="activeTab === 'links'"
+      (click)="switchTab('links')">
+
+      Links ({{ links.length }})
+
+    </button>
+
+  </nav>
+
+
+  <!-- Content -->
+  <main class="tab-content-area">
+
+    <!-- DOCUMENTS -->
+    <section
+      *ngIf="activeTab === 'documents'"
+      class="tab-pane documents-pane"
+      role="tabpanel">
+
+      <div
+        class="doc-card"
+        *ngFor="let doc of filteredDocuments"
+        [class.selected]="doc.selected"
+        (click)="toggleDocSelection(doc)">
+
+        <div class="doc-icon-wrapper">
+
+          <svg
+            width="28"
+            height="28"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round">
+
+            <path
+              d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z">
+            </path>
+
+            <polyline points="14 2 14 8 20 8"></polyline>
+
+            <line
+              x1="16"
+              y1="13"
+              x2="8"
+              y2="13">
+            </line>
+
+            <line
+              x1="16"
+              y1="17"
+              x2="8"
+              y2="17">
+            </line>
+
+            <polyline points="10 9 9 9 8 9"></polyline>
+
+          </svg>
+
+        </div>
+
+
+        <div class="doc-info">
+
+          <h3 class="doc-name">
+            {{ doc.name }}
+          </h3>
+
+          <span class="doc-type">
+            {{ doc.type }}
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <div
+        class="empty-state"
+        *ngIf="filteredDocuments.length === 0">
+
+        No documents found{{ searchQuery ? ' for "' + searchQuery + '"' : '' }}.
+
+      </div>
+
+    </section>
+
+
+    <!-- MEDIA -->
+    <section
+      *ngIf="activeTab === 'media'"
+      class="tab-pane media-pane"
+      role="tabpanel">
+
+      <ng-container *ngIf="filteredMedia.length > 0; else noMedia">
+
+        <div class="media-grid">
+
+          <div
+            class="media-item"
+            *ngFor="let m of filteredMedia"
+            (click)="openLightbox(m.index)">
+
+            <!-- IMAGE -->
+            <img
+              *ngIf="m.item.type === 'image'"
+              [src]="m.item.url"
+              [alt]="m.item.date"
+              loading="lazy" />
+
+
+            <!-- VIDEO -->
+            <video
+              *ngIf="m.item.type === 'video'"
+              [src]="m.item.url"
+              preload="metadata"
+              muted>
+            </video>
+
+
+            <!-- AUDIO -->
+            <div
+              class="audio-thumbnail"
+              *ngIf="m.item.type === 'audio'">
+
+              <svg
+                width="42"
+                height="42"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round">
+
+                <path
+                  d="M9 18V5l12-2v13">
+                </path>
+
+                <circle
+                  cx="6"
+                  cy="18"
+                  r="3">
+                </circle>
+
+                <circle
+                  cx="18"
+                  cy="16"
+                  r="3">
+                </circle>
+
+              </svg>
+
+            </div>
+
+
+            <!-- DATE -->
+            <div class="media-date-overlay">
+
+              <span>
+                {{ m.item.created_at | date:'MMM dd, yyyy' }}
+              </span>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="pagination-footer">
+
+          <p>
+            Showing {{ filteredMedia.length }} of {{ mediaItems.length }}
+          </p>
+
+        </div>
+
+      </ng-container>
+
+
+      <ng-template #noMedia>
+
+        <div class="empty-state">
+
+          No media found{{ searchQuery ? ' for "' + searchQuery + '"' : '' }}.
+
+        </div>
+
+      </ng-template>
+
+    </section>
+
+
+    <!-- LINKS -->
+    <section
+      *ngIf="activeTab === 'links'"
+      class="tab-pane links-pane"
+      role="tabpanel">
+
+      <div
+        class="link-card"
+        *ngFor="let link of filteredLinks"
+        [class.selected]="link.selected"
+        (click)="toggleLinkSelection(link)">
+
+        <div class="link-info">
+
+          <h3 class="link-domain">
+            {{ getDomain(link.text) }}
+          </h3>
+
+          <a
+            *ngIf="link.text.startsWith('http')"
+            class="link-url"
+            [href]="link.text"
+            target="_blank"
+            rel="noopener noreferrer"
+            (click)="onLinkClick($event)">
+
+            {{ link.text }}
+
+          </a>
+
+
+          <span
+            *ngIf="!link.text.startsWith('http')"
+            class="link-url">
+
+            {{ link.text }}
+
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <div
+        class="empty-state"
+        *ngIf="filteredLinks.length === 0">
+
+        No links found{{ searchQuery ? ' for "' + searchQuery + '"' : '' }}.
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- LIGHTBOX -->
+  <div
+    class="lightbox-overlay"
+    *ngIf="lightboxOpen"
+    (click)="closeLightbox()">
+
+    <button
+      class="lightbox-close"
+      (click)="closeLightbox(); $event.stopPropagation()"
+      aria-label="Close viewer">
+
+      &times;
+
+    </button>
+
+
+    <button
+      class="lightbox-nav prev"
+      (click)="prevMedia(); $event.stopPropagation()"
+      aria-label="Previous media">
+
+      &#10094;
+
+    </button>
+
+
+    <div
+      class="lightbox-content"
+      (click)="$event.stopPropagation()"
+      (touchstart)="onLightboxTouchStart($event)"
+      (touchend)="onLightboxTouchEnd($event)">
+
+
+      <!-- IMAGE VIEWER -->
+      <img
+        *ngIf="mediaItems[currentMediaIndex]?.type === 'image'"
+        [src]="mediaItems[currentMediaIndex].url"
+        [alt]="mediaItems[currentMediaIndex].date"
+        [style.transform]="'scale(' + zoomLevel + ')'"
+        (click)="toggleZoom(); $event.stopPropagation()"
+        class="zoomable-image" />
+
+
+      <!-- VIDEO VIEWER -->
+      <video
+        *ngIf="mediaItems[currentMediaIndex]?.type === 'video'"
+        id="mediaPlayer"
+        [src]="mediaItems[currentMediaIndex].url"
+        controls
+        autoplay
+        playsinline
+        class="zoomable-image"
+        (click)="$event.stopPropagation()">
+      </video>
+
+
+      <!-- AUDIO VIEWER -->
+      <div
+        *ngIf="mediaItems[currentMediaIndex]?.type === 'audio'"
+        class="audio-viewer">
+
+        <svg
+          width="70"
+          height="70"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round">
+
+          <path d="M9 18V5l12-2v13"></path>
+
+          <circle
+            cx="6"
+            cy="18"
+            r="3">
+          </circle>
+
+          <circle
+            cx="18"
+            cy="16"
+            r="3">
+          </circle>
+
+        </svg>
+
+
+        <audio
+          id="mediaPlayer"
+          [src]="mediaItems[currentMediaIndex].url"
+          controls
+          autoplay
+          (click)="$event.stopPropagation()">
+        </audio>
+
+      </div>
+
+
+      <div class="lightbox-caption">
+
+        {{ mediaItems[currentMediaIndex].created_at | date:'MMM dd, yyyy' }}
+        ({{ currentMediaIndex + 1 }} of {{ mediaItems.length }})
+
+      </div>
+
+
+      <!-- STOP -->
+      <button
+        *ngIf="
+          mediaItems[currentMediaIndex]?.type === 'video' ||
+          mediaItems[currentMediaIndex]?.type === 'audio'
+        "
+        type="button"
+        class="media-stop-btn"
+        (click)="stopCurrentMedia(); $event.stopPropagation()">
+
+        Stop
+
+      </button>
+
+    </div>
+
+
+    <button
+      class="lightbox-nav next"
+      (click)="nextMedia(); $event.stopPropagation()"
+      aria-label="Next media">
+
+      &#10095;
+
+    </button>
+
+  </div>
+
+</div>

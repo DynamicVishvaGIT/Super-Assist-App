@@ -50,6 +50,10 @@ const routes: Routes = [
   {
     path: 'contact-list',
     loadChildren: () => import('./contact-list/contact-list.module').then( m => m.ContactListPageModule)
+  },
+  {
+    path: 'media-details',
+    loadChildren: () => import('./media-details/media-details.module').then( m => m.MediaDetailsPageModule)
   }
 ];
 

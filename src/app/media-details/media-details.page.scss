@@ -1,0 +1,1564 @@
+/* =========================================================
+   MEDIA DETAILS
+   Responsive Ionic / Angular Mobile Layout
+   Safe-area + Notch + Dynamic viewport support
+   ========================================================= */
+
+$primary-green: #00A859;
+$selected-green: #d5ffd5;
+$neutral-bg: #f8f9fa;
+$border-color: #e9ecef;
+$text-main: #111b21;
+$text-muted: #667781;
+
+
+/* =========================================================
+   GLOBAL
+   ========================================================= */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  width: 100%;
+  min-width: 0;
+  min-height: 100%;
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif;
+  color: $text-main;
+  background: #fff;
+}
+
+
+/* =========================================================
+   MAIN CONTAINER
+   ========================================================= */
+
+.media-details-container {
+  position: relative;
+
+  width: 100%;
+  max-width: 480px;
+
+  /*
+   * Fallback for older mobile browsers
+   */
+  height: 100vh;
+
+  /*
+   * Dynamic viewport height for modern browsers.
+   * Prevents address-bar expansion/collapse issues.
+   */
+  height: 100dvh;
+
+  min-height: 100svh;
+
+  margin: 0 auto;
+
+  display: flex;
+  flex-direction: column;
+
+  overflow: hidden;
+
+  background: #fff;
+
+  /*
+   * Prevent horizontal viewport movement.
+   */
+  overscroll-behavior-x: none;
+
+  /*
+   * Safe-area handling for devices with notch/home indicator.
+   */
+  padding-bottom: env(safe-area-inset-bottom);
+
+  /*
+   * Keep the container centered on larger screens.
+   */
+  @media (min-width: 768px) {
+    border-left: 1px solid $border-color;
+    border-right: 1px solid $border-color;
+
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.10);
+
+    /*
+     * Desktop devices do not need the mobile bottom inset.
+     */
+    padding-bottom: 0;
+  }
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.app-header {
+  position: relative;
+
+  flex: 0 0 auto;
+
+  min-height: 58px;
+
+  /*
+   * Safe area for iPhone notch / Dynamic Island.
+   */
+  padding-top: max(
+    10px,
+    env(safe-area-inset-top)
+  );
+
+  padding-right: max(
+    16px,
+    env(safe-area-inset-right)
+  );
+
+  padding-bottom: 10px;
+
+  padding-left: max(
+    16px,
+    env(safe-area-inset-left)
+  );
+
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  background: #fff;
+
+  border-bottom: 1px solid $border-color;
+
+  /*
+   * Prevent header contents from overflowing.
+   */
+  min-width: 0;
+
+  .page-title {
+    /*
+     * Center title independently of left/right buttons.
+     * This replaces the fixed margin-left approach.
+     */
+    position: absolute;
+
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    width: max-content;
+
+    max-width: calc(100% - 120px);
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+
+    margin: 0;
+
+    font-size: clamp(16px, 4vw, 18px);
+
+    line-height: 1.25;
+
+    font-weight: 700;
+
+    color: $text-main;
+
+    pointer-events: none;
+  }
+
+  .icon-btn {
+    width: 36px;
+    height: 36px;
+
+    min-width: 36px;
+    min-height: 36px;
+
+    padding: 8px;
+
+    border: 0;
+
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    background: transparent;
+
+    color: $text-main;
+
+    cursor: pointer;
+
+    /*
+     * Remove tap highlight on mobile.
+     */
+    -webkit-tap-highlight-color: transparent;
+
+    touch-action: manipulation;
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.05);
+    }
+
+    &:active {
+      background: rgba(0, 0, 0, 0.08);
+    }
+  }
+
+  .back-btn {
+    margin-left: 0;
+  }
+
+  .search-btn {
+    margin-left: auto;
+  }
+
+  .search-input {
+    flex: 1;
+
+    min-width: 0;
+
+    width: 100%;
+
+    height: 38px;
+
+    padding: 9px 16px;
+
+    border: 0;
+
+    outline: 0;
+
+    border-radius: 20px;
+
+    background: $neutral-bg;
+
+    color: $text-main;
+
+    font-size: 15px;
+
+    line-height: 20px;
+
+    /*
+     * Prevent iOS from zooming into the input.
+     */
+    -webkit-appearance: none;
+
+    &::placeholder {
+      color: $text-muted;
+      opacity: 1;
+    }
+  }
+}
+
+
+/* =========================================================
+   TABS
+   ========================================================= */
+
+.tabs-nav {
+  flex: 0 0 auto;
+
+  width: 100%;
+
+  display: flex;
+
+  background: #fff;
+
+  border-bottom: 1px solid $border-color;
+
+  min-width: 0;
+
+  button {
+    position: relative;
+
+    flex: 1 1 0;
+
+    min-width: 0;
+
+    height: 42px;
+
+    padding: 11px 4px;
+
+    border: 0;
+
+    background: transparent;
+
+    color: $text-muted;
+
+    font-size: clamp(12px, 3.5vw, 14px);
+
+    font-weight: 600;
+
+    line-height: 20px;
+
+    white-space: nowrap;
+
+    cursor: pointer;
+
+    -webkit-tap-highlight-color: transparent;
+
+    touch-action: manipulation;
+
+    &.active {
+      color: $primary-green;
+
+      &::after {
+        content: "";
+
+        position: absolute;
+
+        left: 0;
+        right: 0;
+        bottom: -1px;
+
+        height: 3px;
+
+        border-radius: 3px 3px 0 0;
+
+        background: $primary-green;
+      }
+    }
+
+    &:active {
+      opacity: 0.75;
+    }
+  }
+}
+
+
+/* =========================================================
+   CONTENT AREA
+   ========================================================= */
+
+.tab-content-area {
+  flex: 1 1 auto;
+
+  min-width: 0;
+  min-height: 0;
+
+  width: 100%;
+
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  /*
+   * Smooth native scrolling.
+   */
+  -webkit-overflow-scrolling: touch;
+
+  /*
+   * Prevent scroll chaining outside this container.
+   */
+  overscroll-behavior-y: contain;
+
+  padding-top: 16px;
+
+  padding-right: max(
+    16px,
+    env(safe-area-inset-right)
+  );
+
+  padding-bottom: max(
+    16px,
+    env(safe-area-inset-bottom)
+  );
+
+  padding-left: max(
+    16px,
+    env(safe-area-inset-left)
+  );
+
+  background: #fff;
+
+  /*
+   * Prevent accidental horizontal swipe.
+   */
+  touch-action: pan-y;
+}
+
+.empty-state {
+  width: 100%;
+
+  padding: 40px 16px;
+
+  text-align: center;
+
+  color: $text-muted;
+
+  font-size: 14px;
+
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   DOCUMENTS + LINKS STACK
+   ========================================================= */
+
+.documents-pane,
+.links-pane {
+  width: 100%;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 12px;
+
+  min-width: 0;
+}
+
+
+/* =========================================================
+   COMMON CARD
+   ========================================================= */
+
+.doc-card,
+.link-card {
+  width: 100%;
+
+  min-width: 0;
+
+  border: 1px solid transparent;
+
+  border-radius: 16px;
+
+  cursor: pointer;
+
+  background: $neutral-bg;
+
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+
+  -webkit-tap-highlight-color: transparent;
+
+  touch-action: manipulation;
+
+  &.selected {
+    background: $selected-green;
+
+    border-color: rgba(0, 128, 105, 0.15);
+  }
+}
+
+
+/* =========================================================
+   DOCUMENT CARD
+   ========================================================= */
+
+.doc-card {
+  display: flex;
+
+  align-items: center;
+
+  padding: 16px;
+
+  min-height: 76px;
+
+  &:hover {
+    background: #f1f3f5;
+  }
+
+  &:active {
+    transform: scale(0.995);
+  }
+
+  &.selected:hover {
+    background: $selected-green;
+  }
+
+  .doc-icon-wrapper {
+    width: 28px;
+    height: 28px;
+
+    margin-right: 16px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    color: $text-main;
+
+    pointer-events: none;
+
+    flex: 0 0 28px;
+  }
+
+  .doc-info {
+    flex: 1 1 auto;
+
+    min-width: 0;
+
+    width: 100%;
+
+    pointer-events: none;
+
+    overflow: hidden;
+
+    .doc-name {
+      margin-bottom: 4px;
+
+      /*
+       * Keep the full document name visible/wrapping.
+       * No document name is changed.
+       */
+      width: 100%;
+
+      font-size: 15px;
+
+      font-weight: 500;
+
+      line-height: 1.3;
+
+      color: #1c1c1c;
+
+      overflow-wrap: anywhere;
+
+      word-break: break-word;
+    }
+
+    .doc-type {
+      display: block;
+
+      font-size: 13px;
+
+      line-height: 18px;
+
+      color: $text-muted;
+    }
+  }
+
+  .download-action-hint {
+    width: 36px;
+    height: 36px;
+
+    min-width: 36px;
+    min-height: 36px;
+
+    padding: 8px;
+
+    margin-left: 8px;
+
+    border: 0;
+
+    border-radius: 50%;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex: 0 0 36px;
+
+    background: transparent;
+
+    color: $primary-green;
+
+    cursor: pointer;
+
+    opacity: 0.85;
+
+    -webkit-tap-highlight-color: transparent;
+
+    touch-action: manipulation;
+
+    &:hover {
+      opacity: 1;
+
+      background: rgba(0, 128, 105, 0.1);
+    }
+
+    &:active {
+      opacity: 1;
+
+      background: rgba(0, 128, 105, 0.15);
+
+      transform: scale(0.94);
+    }
+  }
+}
+
+
+/* =========================================================
+   MEDIA
+   ========================================================= */
+
+.media-pane {
+  width: 100%;
+
+  min-width: 0;
+
+  .media-grid {
+    width: 100%;
+
+    display: grid;
+
+    /*
+     * Always maintain the 3-column design.
+     */
+    grid-template-columns:
+      repeat(3, minmax(0, 1fr));
+
+    gap: clamp(6px, 2vw, 8px);
+
+    min-width: 0;
+  }
+
+  .media-item {
+    position: relative;
+
+    width: 100%;
+
+    min-width: 0;
+
+    aspect-ratio: 1 / 1;
+
+    overflow: hidden;
+
+    border-radius: 8px;
+
+    background: #000;
+
+    cursor: pointer;
+
+    /*
+     * Prevent image dragging and browser gestures.
+     */
+    touch-action: manipulation;
+
+    -webkit-tap-highlight-color: transparent;
+
+    img {
+      width: 100%;
+      height: 100%;
+
+      min-width: 0;
+
+      display: block;
+
+      object-fit: cover;
+
+      /*
+       * Prevent long-press image dragging.
+       */
+      -webkit-user-drag: none;
+
+      user-select: none;
+
+      -webkit-user-select: none;
+
+      -webkit-touch-callout: none;
+
+      transition: transform 0.3s ease;
+    }
+
+    &:hover img {
+      transform: scale(1.05);
+    }
+
+    &:active img {
+      transform: scale(1.02);
+    }
+  }
+
+  .media-date-overlay {
+    position: absolute;
+
+    right: 0;
+    bottom: 0;
+    left: 0;
+
+    width: 100%;
+
+    padding:
+      12px
+      6px
+      6px;
+
+    text-align: center;
+
+    background:
+      linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0.7),
+        transparent
+      );
+
+    pointer-events: none;
+
+    span {
+      display: block;
+
+      width: 100%;
+
+      overflow: hidden;
+
+      text-overflow: ellipsis;
+
+      white-space: nowrap;
+
+      color: #fff;
+
+      font-size: clamp(9px, 2.6vw, 10px);
+
+      font-weight: 500;
+
+      line-height: 14px;
+    }
+  }
+
+  .pagination-footer {
+    width: 100%;
+
+    padding:
+      24px
+      0
+      max(12px, env(safe-area-inset-bottom));
+
+    text-align: center;
+
+    color: $text-muted;
+
+    font-size: 13px;
+
+    line-height: 18px;
+  }
+}
+
+
+/* =========================================================
+   LINKS
+   ========================================================= */
+
+.link-card {
+  padding: 16px;
+
+  .link-info {
+    width: 100%;
+
+    min-width: 0;
+
+    overflow: hidden;
+
+    .link-domain {
+      width: 100%;
+
+      margin-bottom: 6px;
+
+      font-size: 15px;
+
+      font-weight: 700;
+
+      line-height: 20px;
+
+      color: #1c1c1c;
+
+      overflow-wrap: anywhere;
+
+      word-break: break-word;
+    }
+
+    .link-url {
+      width: 100%;
+
+      max-width: 100%;
+
+      display: block;
+
+      color: $primary-green;
+
+      font-size: 13px;
+
+      line-height: 18px;
+
+      text-decoration: none;
+
+      /*
+       * Preserve the complete URL.
+       */
+      overflow-wrap: anywhere;
+
+      word-break: break-all;
+
+      pointer-events: auto;
+
+      -webkit-tap-highlight-color: transparent;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+
+/* =========================================================
+   LIGHTBOX
+   ========================================================= */
+
+.lightbox-overlay {
+  position: fixed;
+
+  /*
+   * Safe-area aware full-screen overlay.
+   */
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+
+  z-index: 1000;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  /*
+   * Keep original appearance.
+   */
+  background: rgba(255, 255, 255, 0.72);
+
+  backdrop-filter: blur(3px);
+
+  -webkit-backdrop-filter: blur(3px);
+
+  /*
+   * Angular handles horizontal swipe.
+   */
+  touch-action: none;
+
+  overscroll-behavior: none;
+
+  /*
+   * Safe-area prevents controls from touching notch edges.
+   */
+  padding-top: env(safe-area-inset-top);
+
+  padding-right: env(safe-area-inset-right);
+
+  padding-bottom: env(safe-area-inset-bottom);
+
+  padding-left: env(safe-area-inset-left);
+}
+
+
+/* =========================================================
+   LIGHTBOX CLOSE
+   ========================================================= */
+
+.lightbox-close {
+  position: absolute;
+
+  /*
+   * Safe-area + normal spacing.
+   */
+  top: max(
+    16px,
+    calc(env(safe-area-inset-top) + 8px)
+  );
+
+  right: max(
+    16px,
+    calc(env(safe-area-inset-right) + 8px)
+  );
+
+  z-index: 1010;
+
+  width: 40px;
+  height: 40px;
+
+  padding: 0;
+
+  border: 0;
+
+  border-radius: 50%;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  background: transparent;
+
+  color: $text-main;
+
+  font-size: 36px;
+
+  line-height: 1;
+
+  cursor: pointer;
+
+  -webkit-tap-highlight-color: transparent;
+
+  touch-action: manipulation;
+
+  &:hover {
+    color: $primary-green;
+  }
+
+  &:active {
+    transform: scale(0.92);
+  }
+}
+
+
+/* =========================================================
+   LIGHTBOX NAVIGATION
+   ========================================================= */
+
+.lightbox-nav {
+  position: absolute;
+
+  top: 50%;
+
+  z-index: 1010;
+
+  width: 44px;
+  min-width: 44px;
+
+  min-height: 44px;
+
+  padding: 10px;
+
+  transform: translateY(-50%);
+
+  border: 1px solid $border-color;
+
+  border-radius: 6px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(248, 249, 250, 0.9);
+
+  color: $text-main;
+
+  font-size: 22px;
+
+  line-height: 1;
+
+  cursor: pointer;
+
+  -webkit-tap-highlight-color: transparent;
+
+  touch-action: manipulation;
+
+  &:hover {
+    background: $selected-green;
+
+    color: $primary-green;
+  }
+
+  &:active {
+    transform: translateY(-50%) scale(0.94);
+  }
+
+  &.prev {
+    left: max(
+      16px,
+      calc(env(safe-area-inset-left) + 8px)
+    );
+  }
+
+  &.next {
+    right: max(
+      16px,
+      calc(env(safe-area-inset-right) + 8px)
+    );
+  }
+}
+
+
+/* =========================================================
+   LIGHTBOX CONTENT
+   ========================================================= */
+
+.lightbox-content {
+  /*
+   * Never exceed safe mobile viewport.
+   */
+  width: min(
+    90vw,
+    calc(100vw - 32px)
+  );
+
+  max-width: 90vw;
+
+  max-height:
+    calc(
+      85dvh
+      - env(safe-area-inset-top)
+      - env(safe-area-inset-bottom)
+    );
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  min-width: 0;
+
+  /*
+   * Angular handles swipe.
+   */
+  touch-action: pan-y;
+
+  user-select: none;
+
+  -webkit-user-select: none;
+
+  -webkit-touch-callout: none;
+
+  .zoomable-image {
+    /*
+     * Responsive image dimensions.
+     */
+    width: auto;
+
+    max-width: 100%;
+
+    max-height:
+      min(
+        75vh,
+        75dvh
+      );
+
+    object-fit: contain;
+
+    border-radius: 8px;
+
+    cursor: zoom-in;
+
+    transition:
+      transform 0.2s ease;
+
+    /*
+     * Image itself must not trigger browser gestures.
+     */
+    touch-action: none;
+
+    user-select: none;
+
+    -webkit-user-select: none;
+
+    -webkit-touch-callout: none;
+
+    -webkit-user-drag: none;
+  }
+
+  .lightbox-caption {
+    width: 100%;
+
+    max-width: 100%;
+
+    margin-top: 16px;
+
+    padding:
+      0
+      8px
+      max(0px, env(safe-area-inset-bottom));
+
+    color: $text-main;
+
+    font-size: 14px;
+
+    font-weight: 500;
+
+    line-height: 20px;
+
+    text-align: center;
+
+    overflow-wrap: anywhere;
+  }
+}
+
+
+/* =========================================================
+   MOBILE — STANDARD
+   ========================================================= */
+
+@media (max-width: 767px) {
+
+  .media-details-container {
+    max-width: 100%;
+
+    /*
+     * Make sure the application always fills
+     * the actual visible mobile viewport.
+     */
+    height: 100vh;
+    height: 100dvh;
+    min-height: 100svh;
+
+    margin: 0;
+
+    border: 0;
+
+    box-shadow: none;
+  }
+
+  .app-header {
+    min-height: 58px;
+
+    padding-top: max(
+      10px,
+      env(safe-area-inset-top)
+    );
+
+    padding-right: max(
+      12px,
+      env(safe-area-inset-right)
+    );
+
+    padding-left: max(
+      12px,
+      env(safe-area-inset-left)
+    );
+  }
+
+  .tab-content-area {
+    padding-top: 12px;
+
+    padding-right: max(
+      12px,
+      env(safe-area-inset-right)
+    );
+
+    padding-left: max(
+      12px,
+      env(safe-area-inset-left)
+    );
+  }
+
+  .lightbox-content {
+    width: calc(100vw - 32px);
+
+    max-width: calc(100vw - 32px);
+
+    max-height:
+      calc(
+        86dvh
+        - env(safe-area-inset-top)
+        - env(safe-area-inset-bottom)
+      );
+
+    .zoomable-image {
+      max-width: calc(100vw - 32px);
+
+      max-height:
+        calc(
+          76dvh
+          - env(safe-area-inset-top)
+          - env(safe-area-inset-bottom)
+        );
+    }
+  }
+}
+
+
+/* =========================================================
+   SMALL PHONES — 360px AND BELOW
+   ========================================================= */
+
+@media (max-width: 360px) {
+
+  .app-header {
+    min-height: 56px;
+
+    padding-top: max(
+      8px,
+      env(safe-area-inset-top)
+    );
+
+    padding-right: max(
+      10px,
+      env(safe-area-inset-right)
+    );
+
+    padding-left: max(
+      10px,
+      env(safe-area-inset-left)
+    );
+
+    .icon-btn {
+      width: 34px;
+      height: 34px;
+
+      min-width: 34px;
+      min-height: 34px;
+
+      padding: 7px;
+    }
+
+    .page-title {
+      max-width: calc(100% - 100px);
+
+      font-size: 17px;
+    }
+  }
+
+  .tabs-nav {
+    button {
+      height: 40px;
+
+      padding: 10px 2px;
+
+      font-size: 13px;
+    }
+  }
+
+  .tab-content-area {
+    padding-top: 12px;
+
+    padding-right: max(
+      10px,
+      env(safe-area-inset-right)
+    );
+
+    padding-left: max(
+      10px,
+      env(safe-area-inset-left)
+    );
+  }
+
+  .documents-pane,
+  .links-pane {
+    gap: 10px;
+  }
+
+  .doc-card,
+  .link-card {
+    border-radius: 15px;
+
+    padding: 14px;
+  }
+
+  .doc-card {
+    .doc-icon-wrapper {
+      margin-right: 12px;
+    }
+
+    .doc-info {
+      .doc-name {
+        font-size: 14px;
+      }
+
+      .doc-type {
+        font-size: 12px;
+      }
+    }
+
+    .download-action-hint {
+      width: 34px;
+      height: 34px;
+
+      min-width: 34px;
+      min-height: 34px;
+
+      flex-basis: 34px;
+
+      padding: 7px;
+    }
+  }
+
+  .media-pane {
+    .media-grid {
+      gap: 6px;
+    }
+
+    .media-date-overlay {
+      padding:
+        10px
+        4px
+        5px;
+    }
+  }
+
+  .lightbox-nav {
+    width: 40px;
+    min-width: 40px;
+
+    min-height: 40px;
+
+    padding: 8px;
+
+    &.prev {
+      left: max(
+        8px,
+        calc(env(safe-area-inset-left) + 4px)
+      );
+    }
+
+    &.next {
+      right: max(
+        8px,
+        calc(env(safe-area-inset-right) + 4px)
+      );
+    }
+  }
+
+  .lightbox-content {
+    width: calc(100vw - 24px);
+
+    max-width: calc(100vw - 24px);
+
+    .zoomable-image {
+      max-width: calc(100vw - 24px);
+
+      max-height:
+        calc(
+          72dvh
+          - env(safe-area-inset-top)
+          - env(safe-area-inset-bottom)
+        );
+    }
+
+    .lightbox-caption {
+      margin-top: 12px;
+
+      font-size: 13px;
+
+      line-height: 18px;
+    }
+  }
+}
+
+
+/* =========================================================
+   VERY SMALL PHONES — 320px AND BELOW
+   ========================================================= */
+
+@media (max-width: 320px) {
+
+  .app-header {
+    padding-right: max(
+      8px,
+      env(safe-area-inset-right)
+    );
+
+    padding-left: max(
+      8px,
+      env(safe-area-inset-left)
+    );
+
+    .icon-btn {
+      width: 32px;
+      height: 32px;
+
+      min-width: 32px;
+      min-height: 32px;
+
+      padding: 6px;
+    }
+
+    .page-title {
+      max-width: calc(100% - 92px);
+
+      font-size: 16px;
+    }
+  }
+
+  .tabs-nav {
+    button {
+      font-size: 12px;
+
+      padding-right: 2px;
+      padding-left: 2px;
+    }
+  }
+
+  .tab-content-area {
+    padding-top: 10px;
+
+    padding-right: max(
+      8px,
+      env(safe-area-inset-right)
+    );
+
+    padding-left: max(
+      8px,
+      env(safe-area-inset-left)
+    );
+  }
+
+  .media-pane {
+    .media-grid {
+      gap: 5px;
+    }
+  }
+
+  /*
+   * On extremely narrow screens the side buttons
+   * are hidden so the image gets maximum width.
+   */
+  .lightbox-nav {
+    display: none;
+  }
+
+  .lightbox-close {
+    width: 36px;
+    height: 36px;
+
+    top: max(
+      10px,
+      calc(env(safe-area-inset-top) + 4px)
+    );
+
+    right: max(
+      8px,
+      calc(env(safe-area-inset-right) + 4px)
+    );
+
+    font-size: 32px;
+  }
+
+  .lightbox-content {
+    width: calc(100vw - 16px);
+
+    max-width: calc(100vw - 16px);
+
+    .zoomable-image {
+      max-width: calc(100vw - 16px);
+
+      max-height:
+        calc(
+          72dvh
+          - env(safe-area-inset-top)
+          - env(safe-area-inset-bottom)
+        );
+    }
+  }
+}
+
+
+/* =========================================================
+   LANDSCAPE MOBILE
+   ========================================================= */
+
+@media (max-width: 767px) and (orientation: landscape) {
+
+  .app-header {
+    min-height: 52px;
+
+    padding-top: max(
+      6px,
+      env(safe-area-inset-top)
+    );
+
+    padding-bottom: 6px;
+  }
+
+  .tabs-nav {
+    button {
+      height: 38px;
+
+      padding-top: 8px;
+      padding-bottom: 8px;
+    }
+  }
+
+  .tab-content-area {
+    padding-top: 10px;
+  }
+
+  .lightbox-content {
+    max-height:
+      calc(
+        92dvh
+        - env(safe-area-inset-top)
+        - env(safe-area-inset-bottom)
+      );
+
+    .zoomable-image {
+      max-height:
+        calc(
+          82dvh
+          - env(safe-area-inset-top)
+          - env(safe-area-inset-bottom)
+        );
+    }
+
+    .lightbox-caption {
+      margin-top: 8px;
+    }
+  }
+}
+
+
+/* =========================================================
+   DEVICES WITH SAFE AREA / NOTCH
+   ========================================================= */
+
+/*
+ * iPhone / Android devices with display cutouts.
+ * These declarations intentionally use env() instead
+ * of device-specific pixel values.
+ */
+
+@supports (padding-top: env(safe-area-inset-top)) {
+
+  .media-details-container {
+    padding-bottom:
+      env(safe-area-inset-bottom);
+  }
+
+  .app-header {
+    padding-top:
+      max(
+        10px,
+        env(safe-area-inset-top)
+      );
+  }
+
+  .tab-content-area {
+    padding-bottom:
+      max(
+        16px,
+        env(safe-area-inset-bottom)
+      );
+  }
+}
+
+
+/* =========================================================
+   TOUCH / ACCESSIBILITY
+   ========================================================= */
+
+button,
+a,
+.media-item {
+  -webkit-tap-highlight-color: transparent;
+}
+
+img {
+  -webkit-user-drag: none;
+}
+
+button {
+  font-family: inherit;
+}

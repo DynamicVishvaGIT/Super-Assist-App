@@ -139,18 +139,38 @@
 
     </div>
 
+ <div class="section-divider"></div>
+  <div class="section-block">
+  <div class="media-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+    <span class="section-title" style="font-weight: 600; letter-spacing: 0.5px;">
+      SHARED MEDIA
+    </span>
+    <span class="view-all-btn" (click)="viewAllMedia()" style="color: #10b981; font-weight: 500; font-size: 17px; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+      View All &gt;
+    </span>
+  </div>
 
+  <div class="media-grid">
     <div
-      class="section-divider"
-      *ngIf="contact.groups?.length"
-    ></div>
+      *ngFor="let media of imageMedia; let i = index"
+      class="media-item"
+      [class.large]="i === 0"
+      [class.small]="i !== 0"
+      (click)="openMedia(i)"
+    >
+      <img
+        [src]="media.url"
+        alt="Shared Media"
+      >
+    </div>
+  </div>
+</div>
+
+  </div>
 
 
-    <!-- ========================================= -->
-    <!-- SHARED MEDIA -->
-    <!-- ========================================= -->
 
-    <div
+    <!-- <div
       class="section-block"
       *ngIf="contact.media?.length"
     >
@@ -164,7 +184,6 @@
       </div>
 
 
-      <!-- IMAGE MEDIA -->
 
       <div
         class="media-grid"
@@ -193,7 +212,6 @@
       </div>
 
 
-      <!-- VIDEO MEDIA -->
 
       <div
         class="media-list"
@@ -244,7 +262,6 @@
       </div>
 
 
-      <!-- AUDIO MEDIA -->
 
       <div
         class="media-list"
@@ -273,9 +290,6 @@
     </div>
 
 
-    <!-- ========================================= -->
-    <!-- DOCUMENTS -->
-    <!-- ========================================= -->
 
     <div
       class="section-divider"
@@ -352,9 +366,6 @@
     </div>
 
 
-    <!-- ========================================= -->
-    <!-- NO MEDIA -->
-    <!-- ========================================= -->
 
     <div
       class="empty-media"
@@ -369,7 +380,7 @@
     </div>
 
 
-  </div>
+  </div> -->
 
 </ion-content>
 

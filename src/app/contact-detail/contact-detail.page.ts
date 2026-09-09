@@ -45,6 +45,7 @@ export class ContactDetailPage implements OnInit, OnDestroy {
   backButtonSub!: Subscription;
 
   currentUser: any;
+  customer_data:any;
 
   // =================================================
   // CHAT
@@ -219,6 +220,7 @@ export class ContactDetailPage implements OnInit, OnDestroy {
       .subscribe({
         next: (response: any) => {
           console.log('Customer Details Response:',response);
+          this.customer_data=response;
           this.loading = false;
           this.commonService.dismissLoading();
           const data = response?.data || response;
@@ -344,6 +346,9 @@ export class ContactDetailPage implements OnInit, OnDestroy {
     );
 
   }
+
+
+  
 
   // =================================================
   // MESSAGE BUTTON
@@ -890,7 +895,15 @@ export class ContactDetailPage implements OnInit, OnDestroy {
     this._unsubscribeAll.complete();
 
   }
+  viewAllMedia() {
+    // this.router.navigate(['/media-details']);
+    this.router.navigate(['/media-details'], {
+  queryParams: {
+    data: JSON.stringify(this.customer_data)
+  }
+});
 
+}
 }
 // import {
 //   Component,
