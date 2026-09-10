@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.dvchat.superassist" version="0.0.2" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.dvchat.superassist" version="0.0.3" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>Super Assist App</name>
     <description>DV Chat Super Assist App is an app by DV Tech.</description>
     <author email="prasenjit@dynamicvishva.in" href="http://ionicframework.com/">Dynamic Vishva Technology Sollution Pvt. Ltd.</author>
