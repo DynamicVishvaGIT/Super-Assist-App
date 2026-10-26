@@ -1,0 +1,96 @@
+<ion-header class="pdf-header">
+
+  <ion-toolbar>
+
+    <!-- Always visible custom back button -->
+    <ion-buttons slot="start">
+      <ion-button
+        fill="clear"
+        class="back-button"
+        (click)="goBack()">
+
+        <ion-icon
+          slot="icon-only"
+          name="arrow-back-outline">
+        </ion-icon>
+
+      </ion-button>
+    </ion-buttons>
+
+
+    <!-- PDF title -->
+    <ion-title>
+      <div class="pdf-title">
+        {{ fileName }}
+      </div>
+    </ion-title>
+
+  </ion-toolbar>
+
+</ion-header>
+
+
+<ion-content
+  [scrollEvents]="true"
+  class="pdf-content">
+
+  <!-- Loading -->
+  <div
+    *ngIf="loading"
+    class="loading-container">
+
+    <div class="loader-card">
+
+      <ion-spinner name="crescent"></ion-spinner>
+
+      <div class="loading-title">
+        Opening PDF
+      </div>
+
+      <div class="loading-subtitle">
+        Please wait...
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- PDF -->
+  <div
+    #pdfContainer
+    class="pdf-container">
+  </div>
+
+
+  <!-- Error -->
+  <div
+    *ngIf="errorMessage"
+    class="error-container">
+
+    <div class="error-card">
+
+      <ion-icon
+        name="document-outline"
+        class="error-icon">
+      </ion-icon>
+
+      <div class="error-title">
+        Unable to open PDF
+      </div>
+
+      <div class="error-message">
+        {{ errorMessage }}
+      </div>
+
+      <ion-button
+        (click)="loadPdf()"
+        expand="block">
+        Try Again
+      </ion-button>
+
+    </div>
+
+  </div>
+
+</ion-content>

@@ -276,7 +276,7 @@
 
           <div
             class="media-item"
-            *ngFor="let m of filteredMedia"
+            *ngFor="let m of filteredMedia; trackBy: trackByMediaIndex"
             (click)="openLightbox(m.index)">
 
             <!-- IMAGE -->

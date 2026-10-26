@@ -816,6 +816,16 @@ class="template-footer"
 
 </div>
 </div>
+<div class="typing-indicator" *ngIf="isOtherTyping">
+  <div class="typing-bubble">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+  <span class="typing-text">
+    {{ contactName }} is typing...
+  </span>
+</div>
 </ion-content>
 
 <ion-footer style="background: #ffffff; border: none !important; box-shadow: none !important;">
@@ -834,7 +844,7 @@ class="template-footer"
           (keyup.enter)="send_messages()"
           placeholder="Message"
           autocomplete="off"
-          aria-label="Message">
+          aria-label="Message" (input)="onTyping()">
       </div>
 
       <button type="button" class="camera-btn" (click)="openCamera()" aria-label="Camera">

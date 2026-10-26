@@ -9,6 +9,7 @@ import { Api } from './api';
 import { Common } from './common';
 import { AppVersion } from '@awesome-cordova-plugins/app-version/ngx';
 import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser/ngx';
+import { ChatWebsocket } from './chat-websocket';
 
 @Component({
   selector: 'app-root',
@@ -43,7 +44,7 @@ export class AppComponent {
   
   constructor(private platform: Platform,private userService: User,private apiService:Api,private commonService:Common,private appVersion:AppVersion,
     public router:Router,public modalController: ModalController, private menuCtrl: MenuController, private statusBar: StatusBar, private alertCtrl:AlertController,
-     private toastController: ToastController,private keyboard: Keyboard, private location: Location, private inAppBrowser:InAppBrowser) {
+     private toastController: ToastController,private keyboard: Keyboard, private location: Location, private inAppBrowser:InAppBrowser, private chatWebSocket: ChatWebsocket) {
     this.selectedPath = window.location.pathname;
     console.log(this.selectedPath);
     this.keyboard.onKeyboardWillShow().subscribe(() => {
@@ -206,8 +207,22 @@ export class AppComponent {
     console.log('118',currentUser);
     if (Object.keys(currentUser).length != 0) {
       this.userService.setCurrentUser(currentUser);  // Update via UserService
+      // Get token according to your actual login response
+      const token = currentUser.SESSION_ID;
+      // Start global WebSocket
+      this.chatWebSocket.connect(token);
+      // Optional connection monitoring
+      this.chatWebSocket.connection$.subscribe((connected) => {
+        console.log(
+          'Chat WebSocket status:',
+          connected ? 'CONNECTED' : 'DISCONNECTED'
+        );
+      });
       this.router.navigateByUrl('/home');  // Navigate to home page after login
-    } else {
+    } 
+    else {
+      // Make sure socket is disconnected
+      this.chatWebSocket.disconnect();
       this.router.navigate(['/login']);
     }
   }

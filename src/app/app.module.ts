@@ -15,17 +15,17 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './interceptors/auth-interceptor';
 import { AppVersion } from '@awesome-cordova-plugins/app-version/ngx';
 import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser/ngx';
-import { File as CordovaFile } from '@awesome-cordova-plugins/file/ngx';
 import { FileOpener } from '@awesome-cordova-plugins/file-opener/ngx';
 import { SocialSharing } from '@awesome-cordova-plugins/social-sharing/ngx';
 import { FileTransfer } from '@awesome-cordova-plugins/file-transfer/ngx';
+import { File } from '@awesome-cordova-plugins/file/ngx';
 
 
 @NgModule({
   schemas:[CUSTOM_ELEMENTS_SCHEMA],
   declarations: [AppComponent, ChatMenuComponent],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, ReactiveFormsModule,FormsModule, HttpClientModule],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, StatusBar, Keyboard, Camera,AppVersion,InAppBrowser,CordovaFile,FileOpener,SocialSharing,FileTransfer,
+  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, StatusBar, Keyboard, Camera,AppVersion,InAppBrowser,FileOpener,SocialSharing,FileTransfer,File,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true } // 👈 add this
   ],
   bootstrap: [AppComponent],

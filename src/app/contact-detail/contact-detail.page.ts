@@ -191,7 +191,12 @@ export class ContactDetailPage implements OnInit, OnDestroy {
 
   ionViewDidEnter() {
     this.backButtonSub = this.platform.backButton.subscribeWithPriority(9999, () => {
-      this.onBack();
+      if(this.selectedImage){
+        this.closeMedia();
+      }
+      else{
+        this.onBack();
+      }
       // (navigator as any).app.exitApp();
     });
   }
@@ -335,7 +340,7 @@ export class ContactDetailPage implements OnInit, OnDestroy {
   // =================================================
 
   onBack(): void {
-
+    // this.chat.routeURL= 'contact-details';
     this.router.navigate(
       ['/chat-details'],
       {

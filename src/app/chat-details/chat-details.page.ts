@@ -6,6 +6,7 @@ import { filter, Subject, Subscription, takeUntil } from 'rxjs';
 import { Api } from '../api';
 import { Common } from '../common';
 import { User } from '../user';
+import { ChatWebsocket } from '../chat-websocket';
 
 export interface ChatButton {
   d?: number;
@@ -14,6 +15,7 @@ export interface ChatButton {
   label: string;
 }
 export interface ChatTemplate {
+  
   id?: number;
   header_type?: string;
   header_text?: string;
@@ -112,9 +114,12 @@ export class ChatDetailsPage implements OnInit, OnDestroy {
   imgURL = 'https://dvchat.dvworks.in';
 
  
-// Local UI only. No API/service behavior is changed.
-showEmojiPicker = false;
-messageText: string = ''; // Your bound message string variable
+  // Local UI only. No API/service behavior is changed.
+  showEmojiPicker = false;
+  messageText: string = ''; // Your bound message string variable
+  private typingTimer: any;
+  private isTypingSent = false;
+  isOtherTyping = false;
 
 readonly emojiList: string[] = [
   // Faces & Expressions
@@ -134,7 +139,8 @@ readonly emojiList: string[] = [
 
 
   constructor(private router: Router, private modalCtrl: ModalController,private actionSheetCtrl: ActionSheetController,private alertCtrl: AlertController,
-    private toastCtrl: ToastController, private userService: User, private commonService: Common, private apiService: Api, private platform: Platform) { 
+    private toastCtrl: ToastController, private userService: User, private commonService: Common, private apiService: Api, private platform: Platform,
+    private chatWebSocket: ChatWebsocket) { 
     this._unsubscribeAll = new Subject();
     // const nav = this.router.getCurrentNavigation();
     // this.chat = nav?.extras?.state?.['chat'];
@@ -146,6 +152,8 @@ readonly emojiList: string[] = [
   }
 
   ngOnInit() {
+    // Subscribe once
+    this.subscribeToWebSocket();
     this.router.events.pipe(
       filter((event): event is NavigationEnd => event instanceof NavigationEnd)
     ).subscribe((event: NavigationEnd) => {
@@ -154,6 +162,8 @@ readonly emojiList: string[] = [
         this.chat = nav?.extras?.state?.['chat'];
         if(this.chat){
           this.contactName = this.chat.contacts__name ||''  ;
+          this.isOtherTyping = false;
+          this.isTypingSent = false;
         }
         console.log(this.chat);
         this.checkConversationWindow(this.chat.last_in_message_at);
@@ -190,67 +200,194 @@ readonly emojiList: string[] = [
     // this.get_message_list();
     // this.scrollToBottom();
   }
-openContactDetail(): void {
-  if (!this.chat) {
-    return;
+  onTyping(): void {
+    if (!this.chat?.id) {
+      return;
+    }
+    if (!this.isTypingSent) {
+      this.isTypingSent = true;
+      this.chatWebSocket.send({
+        event: 'typing',
+        chat_id: this.chat.id,
+        typing: true
+      });
+    }
+    clearTimeout(
+      this.typingTimer
+    );
+    this.typingTimer = setTimeout(() => {
+      this.isTypingSent = false;
+      this.chatWebSocket.send({
+        event: 'typing',
+        chat_id: this.chat.id,
+        typing: false
+      });
+    }, 1200);
+  }
+  private subscribeToWebSocket(): void {
+    this.chatWebSocket.messages$
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe((event: any) => {
+        console.log('ChatDetails WebSocket event:', event);
+        this.handleWebSocketEvent(event);
+      });
   }
 
-  this.router.navigate(['/contact-detail'], {
-    state: {
-      chat: this.chat
+
+private handleWebSocketEvent(event: any): void {
+  if (!event) {
+    return;
+  }
+  console.log('Incoming WebSocket event:', event);
+  // INBOX UPDATE: Fetch the latest messages from the API
+  if (event.type === 'INBOX_UPDATE') {
+    if (this.chat?.id) {
+      console.log('Inbox updated. Refreshing messages...');
+      this.get_message_list(false);
     }
-  });
-  // const currentName =
-  //   this.contactName ||
-  //   this.chat?.contacts__name ||
-  //   contact?.name ||
-  //   '';
-
-  // const currentPhone =
-  //   this.recipientNo ||
-  //   this.chat?.recipient_no ||
-  //   contact?.phone ||
-  //   '';
-
-  // const contactData = {
-  //   ...(contact || {}),
-  //   name: currentName,
-  //   phone: currentPhone,
-  //   groups: contact?.groups || [],
-  //   media: contact?.media || [],
-  //   avatar: contact?.avatar || contact?.profile_image || ''
-  // };
-
-  // console.log('Opening Contact Detail:', contactData);
-
-  // this.router.navigate(['/contact-detail'], {
-  //   state: {
-  //     contact: contactData,
-  //     chat: this.chat,
-  //     contactName: currentName,
-  //     recipientNo: currentPhone
-  //   }
-  // });
+    return;
+  }
+  // TYPING EVENT
+  if (event.event === 'typing') {
+    this.handleTypingEvent(event);
+    return;
+  }
+  // DIRECT MESSAGE EVENT, if the backend sends one
+  if (event.event === 'message' || event.message || event.data) {
+    this.handleIncomingMessage(event);
+  }
 }
 
-//   this.router.navigate(['/contact-detail'], {
-//     state: {
-//       contact: contact,
-//       chat: this.chat,
-//       contactName: this.contactName,
-//       recipientNo: this.recipientNo
-//     }
-//   });
-// }
+  // private handleWebSocketEvent(event: any): void {
+  //   if (!event) {
+  //     return;
+  //   }
+  //   console.log('Incoming WebSocket event:',event);
+  //   // -----------------------------
+  //   // TYPING EVENT
+  //   // -----------------------------
+  //   if (event.event === 'typing') {
+  //     this.handleTypingEvent(event);
+  //     return;
+  //   }
+  //   // -----------------------------
+  //   // MESSAGE EVENT
+  //   // -----------------------------
+  //   if (event.event === 'message' || event.message || event.data) {
+  //     // const messageData = event.message || event.data || event;
+  //     // if (!messageData) {
+  //     //   return;
+  //     // }
+  //     // if (!messageData.id || !messageData.direction) {
+  //     //   return;
+  //     // }
+  //     this.handleIncomingMessage(event);
+  //   }
+  // }
+  private handleTypingEvent(event: any): void {
+    // Make sure typing event belongs
+    // to currently opened conversation
+    if (event.chat_id !== undefined && Number(event.chat_id) !== Number(this.chat?.id)) {
+      return;
+    }
+    this.isOtherTyping = event.typing === true;
+    console.log('Other user typing:',this.isOtherTyping);
+  }
+  private handleIncomingMessage(event: any): void {
+    if (!event) {
+      return;
+    }
+    // Check current conversation
+    if (event.chat_id !== undefined && Number(event.chat_id) !== Number(this.chat?.id)) {
+      return;
+    }
+    // Extract actual message
+    const item = event.message || event.data || event;
+    if (!item) {
+      return;
+    }
+    // Only incoming messages
+    if (item.direction !== 'IN') {
+      return;
+    }
+    // Prevent duplicate messages
+    const exists = this.messages.some(msg => Number(msg.id) === Number(item.id));
+    if (exists) {
+      console.log('Message already exists:',item.id);
+      return;
+    }
+    const message = this.mapMessage(item);
+    this.messages = [...this.messages,message];
+    this.groupDateLabels(this.messages);
+    this.scrollToBottom();
+    console.log('New message added:',message);
+  }
+
+  openContactDetail(): void {
+    if (!this.chat) {
+      return;
+    }
+
+    this.router.navigate(['/contact-detail'], {
+      state: {
+        chat: this.chat
+      }
+    });
+    // const currentName =
+    //   this.contactName ||
+    //   this.chat?.contacts__name ||
+    //   contact?.name ||
+    //   '';
+
+    // const currentPhone =
+    //   this.recipientNo ||
+    //   this.chat?.recipient_no ||
+    //   contact?.phone ||
+    //   '';
+
+    // const contactData = {
+    //   ...(contact || {}),
+    //   name: currentName,
+    //   phone: currentPhone,
+    //   groups: contact?.groups || [],
+    //   media: contact?.media || [],
+    //   avatar: contact?.avatar || contact?.profile_image || ''
+    // };
+
+    // console.log('Opening Contact Detail:', contactData);
+
+    // this.router.navigate(['/contact-detail'], {
+    //   state: {
+    //     contact: contactData,
+    //     chat: this.chat,
+    //     contactName: currentName,
+    //     recipientNo: currentPhone
+    //   }
+    // });
+  }
+
+  //   this.router.navigate(['/contact-detail'], {
+  //     state: {
+  //       contact: contact,
+  //       chat: this.chat,
+  //       contactName: this.contactName,
+  //       recipientNo: this.recipientNo
+  //     }
+  //   });
+  // }
 
   ngOnDestroy(): void {
+    clearTimeout(this.typingTimer);
+    this.isOtherTyping = false;
     this._unsubscribeAll.next(null);
     this._unsubscribeAll.complete();
   }
 
-  get_message_list() {
-    this.loading = true;
-    this.commonService.presentLoading();
+  get_message_list(showLoader: boolean = true) {
+    if (showLoader) {
+      this.loading = true;
+      this.commonService.presentLoading();
+    }
     this.apiService.message_list(this.chat.id)
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe({next: (response: any) => {
@@ -1435,13 +1572,18 @@ ionViewWillLeave() {
     this.backButtonSub.unsubscribe();
   }
 }
-onBack() {
-  if(this.chat.routeURL=='contact'){
-    this.router.navigateByUrl('contact-list');
+onBack() {console.log(this.chat);
+  if(this.chat!==null){
+    if(this.chat.routeURL=='contact'){
+      this.router.navigateByUrl('contact-list');
+    }
+    // else if(this.chat.routeURL=='contact-details'){
+    //   this.router.navigateByUrl('contact-detail');
+    // }
+    else{
+      this.router.navigateByUrl('home');
+    }
   }
-  // else if(this.chat.routeURL=='contact-details'){
-  //   this.router.navigateByUrl('contact-detail');
-  // }
   else{
     this.router.navigateByUrl('home');
   }

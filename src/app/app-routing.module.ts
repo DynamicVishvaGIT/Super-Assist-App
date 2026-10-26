@@ -54,6 +54,10 @@ const routes: Routes = [
   {
     path: 'media-details',
     loadChildren: () => import('./media-details/media-details.module').then( m => m.MediaDetailsPageModule)
+  },
+  {
+    path: 'pdf-viewer',
+    loadChildren: () => import('./pdf-viewer/pdf-viewer.module').then( m => m.PdfViewerPageModule)
   }
 ];
 

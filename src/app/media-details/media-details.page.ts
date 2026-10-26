@@ -1,10 +1,11 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ActionSheetController, AlertController, ToastController } from '@ionic/angular';
-import { File as CordovaFile } from '@awesome-cordova-plugins/file/ngx';
+import { ActionSheetController, AlertController, Platform, ToastController } from '@ionic/angular';
+import { File as CordovaFile, File } from '@awesome-cordova-plugins/file/ngx';
 import { FileOpener } from '@awesome-cordova-plugins/file-opener/ngx';
 import { SocialSharing } from '@awesome-cordova-plugins/social-sharing/ngx';
 import { FileTransfer } from '@awesome-cordova-plugins/file-transfer/ngx';
+import { Subscription } from 'rxjs';
 
 interface DocumentItem {
   name: string;
@@ -35,6 +36,8 @@ interface LinkItem {
   standalone: false
 })
 export class MediaDetailsPage implements OnInit {
+
+  backButtonSub!: Subscription;
 
   private isCordova(): boolean {
     return !!(
@@ -69,8 +72,8 @@ export class MediaDetailsPage implements OnInit {
     private actionSheetController: ActionSheetController,private cordovaFile: CordovaFile,private fileTransfer: FileTransfer,
     private alertController: AlertController,
     private toastController: ToastController,
-    private fileOpener: FileOpener,
-    private socialSharing: SocialSharing
+    private fileOpener: FileOpener,private platform: Platform,
+    private socialSharing: SocialSharing,private file: File,
   ) {}
 
   ngOnInit(): void {
@@ -89,6 +92,29 @@ export class MediaDetailsPage implements OnInit {
         console.error('Error parsing data:', error);
       }
     });
+  }
+
+  ionViewDidEnter() {
+    this.backButtonSub = this.platform.backButton.subscribeWithPriority(9999, () => {
+      if(this.lightboxOpen){
+        this.closeLightbox();
+      }
+      else{
+        this.goBack();
+      }
+      // (navigator as any).app.exitApp();
+    });
+  }
+
+  ionViewWillLeave() {
+    if (this.backButtonSub) {
+      this.backButtonSub.unsubscribe();
+    }
+  }
+
+  // Add this method inside the MediaDetailsPage class
+  trackByMediaIndex(index: number, m: { item: MediaItem; index: number }): number {
+    return m.index;
   }
 
   private async downloadRemoteFile(
@@ -181,6 +207,25 @@ export class MediaDetailsPage implements OnInit {
 
     item.duration =
       `${minutes}:${seconds.toString().padStart(2, '0')}`;
+      // Force mobile WebView to decode & paint the first frame as a thumbnail.
+      // (Desktop Chrome does this automatically with preload="metadata",
+      // but Android WebView often needs an actual play/pause cycle.)
+      video.play()
+      .then(() => {
+        requestAnimationFrame(() => {
+          video.pause();
+          video.currentTime = 0;
+        });
+      })
+      .catch(() => {
+        // Autoplay blocked — fall back to a tiny seek, which is enough
+        // on some WebView versions to force a frame decode.
+        try {
+          video.currentTime = 0.1;
+        } catch {
+          // ignore if video isn't seekable yet
+        }
+      });
   }
 
   // =========================================================
@@ -458,62 +503,6 @@ export class MediaDetailsPage implements OnInit {
     }
   }
 
-  // private async saveToSuperAssistFolder(
-  //   url: string,
-  //   fileName: string
-  // ): Promise<string> {
-  
-  //   if (!(window as any).cordova) {
-  //     throw new Error('Cordova is not available');
-  //   }
-  
-  //   const root =
-  //     this.cordovaFile.externalRootDirectory;
-  
-  //   const downloadPath =
-  //     root + 'Download/';
-  
-  //   console.log('Android root:', root);
-  //   console.log('Download path:', downloadPath);
-  
-  //   const downloadDir =
-  //     await this.cordovaFile.resolveDirectoryUrl(
-  //       downloadPath
-  //     );
-  
-  //   const superAssistDir =
-  //     await this.cordovaFile.getDirectory(
-  //       downloadDir,
-  //       'Super Assist',
-  //       {
-  //         create: true,
-  //         exclusive: false
-  //       }
-  //     );
-  
-  //   const targetPath =
-  //     superAssistDir.nativeURL + fileName;
-  
-  //   console.log('FINAL TARGET:', targetPath);
-  
-  //   const transfer =
-  //     this.fileTransfer.create();
-  
-  //   const result =
-  //     await transfer.download(
-  //       url,
-  //       targetPath,
-  //       true
-  //     );
-  
-  //   console.log(
-  //     'FILE DOWNLOADED:',
-  //     result.toURL()
-  //   );
-  
-  //   return result.toURL();
-  // }
-
   async downloadMedia(
     item: MediaItem,
     event?: Event
@@ -633,92 +622,57 @@ export class MediaDetailsPage implements OnInit {
     event?: Event
   ): Promise<void> {
   
-    if (event) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
+    event?.preventDefault();
+    event?.stopPropagation();
   
     if (!doc?.fileUrl) {
-      await this.showToast(
-        'Document URL not available'
-      );
-      return;
-    }
-  
-    if (!this.isCordova()) {
-      window.open(
-        doc.fileUrl,
-        '_system'
-      );
+      await this.showToast('Document URL not available');
       return;
     }
   
     try {
-  
       this.isDownloading = true;
   
-      const extension =
-        this.getDocumentExtension(doc);
+      const extension = this.getDocumentExtension(doc);
+      let fileName = doc.name || `document_${Date.now()}.pdf`;
+      fileName = this.ensureExtension(fileName, extension);
+      fileName = this.sanitizeFileName(fileName);
   
-      let fileName =
-        doc.name ||
-        `document_${Date.now()}`;
+      const mimeType = this.getDocumentMimeType(doc);
   
-      fileName =
-        this.ensureExtension(
-          fileName,
-          extension
-        );
+      const localFilePath = await this.downloadRemoteFile(doc.fileUrl, fileName);
   
-      fileName =
-        this.sanitizeFileName(fileName);
+      console.log('PDF downloaded:', localFilePath);
   
-      const filePath =
-        await this.downloadRemoteFile(
-          doc.fileUrl,
-          fileName
-        );
-  
-      const mimeType =
-        this.getDocumentMimeType(doc);
-  
-      console.log(
-        'Opening:',
-        filePath
-      );
-  
-      console.log(
-        'MIME:',
-        mimeType
-      );
-  
-      await this.fileOpener.open(
-        filePath,
-        mimeType
-      );
+      // Open immediately — no intermediate alert
+      await this.openWithFileOpener(localFilePath, mimeType);
   
     } catch (error: any) {
-  
-      console.error(
-        'OPEN DOCUMENT ERROR:',
-        error
-      );
-  
-      console.error(
-        'CODE:',
-        error?.code
-      );
-  
-      await this.showOpenFileOptions(
-        error?.target || '',
-        doc.name || 'Document',
-        this.getDocumentMimeType(doc)
-      );
-  
+      console.error('PDF download/open failed:', error);
+      await this.showToast('Unable to open document');
     } finally {
-  
       this.isDownloading = false;
+    }
+  }
+
+  private async openWithFileOpener(
+    filePath: string,
+    mimeType: string
+  ): Promise<void> {
+    try {
+      // Normalize the path — FileOpener2 wants a plain filesystem path,
+      // not a file:// URI, on most platforms.
+      const cleanPath = filePath.startsWith('file://')
+        ? filePath.replace('file://', '')
+        : filePath;
   
+      await this.fileOpener.open(cleanPath, mimeType);
+  
+    } catch (error: any) {
+      console.error('FileOpener error:', error);
+      console.error('Code:', error?.code);
+      console.error('Message:', error?.message);
+      await this.showToast('No application found to open this document');
     }
   }
 
@@ -1176,32 +1130,41 @@ export class MediaDetailsPage implements OnInit {
     const alert =
       await this.alertController.create({
   
-        header: 'File Downloaded',
-  
-        message:
-          `${fileName} has been saved to ` +
-          `Download/Super Assist/.`,
+        header: 'Open Document',
   
         buttons: [
   
           {
-            text: 'Share',
+            text: 'Open',
   
             handler: async () => {
   
               try {
   
-                await this.socialSharing.share(
-                  '',
-                  fileName,
+                console.log(
+                  'Opening PDF:',
                   filePath
                 );
   
-              } catch (error) {
+                console.log(
+                  'MIME:',
+                  mimeType
+                );
+  
+                await this.fileOpener.open(
+                  filePath,
+                  mimeType
+                );
+  
+              } catch (error: any) {
   
                 console.error(
-                  'Share failed:',
+                  'FileOpener error:',
                   error
+                );
+  
+                await this.showToast(
+                  'No application found to open this document'
                 );
   
               }
@@ -1211,7 +1174,7 @@ export class MediaDetailsPage implements OnInit {
           },
   
           {
-            text: 'OK',
+            text: 'Cancel',
             role: 'cancel'
           }
   
@@ -1331,67 +1294,63 @@ export class MediaDetailsPage implements OnInit {
     link.selected = !selected;
   }
 
-  // =========================================================
-  // DOCUMENT OPTIONS POPUP
-  // =========================================================
-
+  
   async openDocumentActions(
     doc: DocumentItem,
     event?: Event
   ): Promise<void> {
-
+  
     event?.preventDefault();
     event?.stopPropagation();
-
+  
     const buttons: any[] = [];
-
-    // PDF gets OPEN option
+  
     if (this.isPdf(doc)) {
-
-      // buttons.push({
-      //   text: 'Open',
-      //   icon: 'document-outline',
-
-      //   handler: () => {
-      //     void this.openDocument(doc);
-      //   }
-      // });
-
+      buttons.push({
+        text: 'Open',
+        icon: 'document-outline',
+        handler: () => {
+          void this.openPdfFile(doc); // goes straight to download+open now
+        }
+      });
     }
-
-    // DOWNLOAD
+  
     buttons.push({
       text: 'Download',
       icon: 'download-outline',
-
       handler: () => {
         void this.downloadDocument(doc);
       }
     });
-
-    // SHARE
-    // buttons.push({
-    //   text: 'Share',
-    //   icon: 'share-social-outline',
-
-    //   handler: () => {
-    //     void this.shareDocument(doc);
-    //   }
-    // });
-
-    // CANCEL
+  
     buttons.push({
       text: 'Cancel',
       role: 'cancel'
     });
-
-    const sheet =
-      await this.actionSheetController.create({
-        header: doc.name,
-        buttons
-      });
-
+  
+    const sheet = await this.actionSheetController.create({
+      header: doc.name,
+      buttons
+    });
+  
     await sheet.present();
+  }
+
+  async openPdfFile(doc: DocumentItem): Promise<void> {
+
+    if (!doc.fileUrl) {
+      console.error('PDF URL is missing');
+      return;
+    }
+  
+    await this.router.navigate(
+      ['/pdf-viewer'],
+      {
+        queryParams: {
+          url: doc.fileUrl
+        }
+      }
+    );
   }
 
   // =========================================================
@@ -1540,37 +1499,23 @@ export class MediaDetailsPage implements OnInit {
   // =========================================================
 
   openLightbox(index: number): void {
-
     this.currentMediaIndex = index;
-
     this.zoomLevel = 1;
-
     this.lightboxOpen = true;
-
     this.touchStartX = 0;
-
     this.touchStartY = 0;
-
     this.suppressNextImageClick = false;
-
     document.body.style.overflow =
       'hidden';
-
     setTimeout(() => {
-
       this.playCurrentMedia();
-
     }, 100);
   }
 
   closeLightbox(): void {
-
     this.stopCurrentMedia();
-
     this.lightboxOpen = false;
-
     this.zoomLevel = 1;
-
     document.body.style.overflow = '';
   }
 

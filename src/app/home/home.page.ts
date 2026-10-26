@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { User } from '../user';
 import { filter, Subject, Subscription, takeUntil } from 'rxjs';
@@ -6,6 +6,7 @@ import { Common } from '../common';
 import { Api } from '../api';
 import { Platform } from '@ionic/angular';
 import { Location } from '@angular/common';
+import { ChatWebsocket } from '../chat-websocket';
 
 @Component({
   selector: 'app-home',
@@ -13,7 +14,7 @@ import { Location } from '@angular/common';
   styleUrls: ['./home.page.scss'],
   standalone: false,
 })
-export class HomePage implements OnInit {
+export class HomePage implements OnInit, OnDestroy {
   public activeTab: string = 'chats';
 
   backButtonSub!: Subscription;
@@ -43,7 +44,7 @@ export class HomePage implements OnInit {
     private commonService: Common, 
     private apiService: Api, 
     private platform: Platform, 
-    private location: Location
+    private location: Location, private chatWebSocket: ChatWebsocket
   ) { 
     this._unsubscribeAll = new Subject();
   }
@@ -59,6 +60,8 @@ export class HomePage implements OnInit {
         }
       }
     });
+    // WebSocket subscription
+    this.subscribeToWebSocket();
 
     this.router.events.pipe(
       filter((event): event is NavigationEnd => event instanceof NavigationEnd)
@@ -74,6 +77,27 @@ export class HomePage implements OnInit {
     }, 1200);
     this.allChats = [...this.chats];
     this.filteredChats = [...this.chats];
+  }
+
+  private subscribeToWebSocket(): void {
+    this.chatWebSocket.messages$
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe((event: any) => {
+        console.log('Home WebSocket event:', event);
+        this.handleWebSocketEvent(event);
+      });
+  }
+
+  private handleWebSocketEvent(event: any): void {
+    if (!event) {
+      return;
+    }
+    console.log('Home WebSocket event:', event);
+    if (event.type === 'INBOX_UPDATE') {
+      console.log('Inbox updated. Refreshing conversation list...');
+      this.get_conversation_list(false);
+      return;
+    }
   }
 
   ionViewDidEnter() {
@@ -103,8 +127,11 @@ export class HomePage implements OnInit {
       });
   }
 
-  get_conversation_list() {
-    this.commonService.presentLoading();
+  get_conversation_list(showLoader: boolean = true) {
+    if (showLoader) {
+      this.commonService.presentLoading();
+    }
+    // this.commonService.presentLoading();
     this.apiService.conversation_list()
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((response: any) => {console.log(response)
@@ -121,6 +148,11 @@ export class HomePage implements OnInit {
         this.commonService.dismissLoading();
         this.commonService.showToastMessage(respError, 'toast-error', '', 4000);
       });
+  }
+
+  ngOnDestroy(): void {
+    this._unsubscribeAll.next(null);
+    this._unsubscribeAll.complete();
   }
 
   setFilter(filterType: string) {
@@ -255,6 +287,7 @@ export class HomePage implements OnInit {
   }
 
   goToChatDetails(chat: any) { console.log(chat)
+    chat['routeURL']= 'home';
     this.router.navigate(['/chat-details'], {
       state: { chat: chat }
     });
