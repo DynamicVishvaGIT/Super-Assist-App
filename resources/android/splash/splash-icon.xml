@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Native (Android 12+) launch icon = first frame of the custom HTML splash.
+  Same paths as the SVG in src/index.html (viewBox 120).
+  Splash icon canvas is 240dp; viewport 277 => 1 unit = 0.8667dp, which equals
+  the HTML icon (104px for 120 units), so both line up exactly on hand-off.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="240dp"
+    android:height="240dp"
+    android:viewportWidth="277"
+    android:viewportHeight="277">
+    <group android:translateX="78.5" android:translateY="78.5">
+        <!-- grey bubble -->
+        <path
+            android:pathData="M58 18 H86 A14 14 0 0 1 100 32 V66 L91 59 Q88 56 83 56 H58 A14 14 0 0 1 44 42 V32 A14 14 0 0 1 58 18 Z"
+            android:fillColor="#00000000"
+            android:strokeColor="#808285"
+            android:strokeWidth="7"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round" />
+        <path android:fillColor="#56B952" android:pathData="M58,37 a4,4 0 1,0 8,0 a4,4 0 1,0 -8,0 Z" />
+        <path android:fillColor="#56B952" android:pathData="M68,37 a4,4 0 1,0 8,0 a4,4 0 1,0 -8,0 Z" />
+        <path android:fillColor="#56B952" android:pathData="M78,37 a4,4 0 1,0 8,0 a4,4 0 1,0 -8,0 Z" />
+        <!-- green bubble -->
+        <path
+            android:pathData="M34 64 H62 A14 14 0 0 1 76 78 V86 A14 14 0 0 1 62 100 H37 Q32 100 29 103 L20 110 V78 A14 14 0 0 1 34 64 Z"
+            android:fillColor="#00000000"
+            android:strokeColor="#56B952"
+            android:strokeWidth="7"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round" />
+        <path android:fillColor="#808285" android:pathData="M34,82 a4,4 0 1,0 8,0 a4,4 0 1,0 -8,0 Z" />
+        <path android:fillColor="#808285" android:pathData="M44,82 a4,4 0 1,0 8,0 a4,4 0 1,0 -8,0 Z" />
+        <path android:fillColor="#808285" android:pathData="M54,82 a4,4 0 1,0 8,0 a4,4 0 1,0 -8,0 Z" />
+    </group>
+</vector>

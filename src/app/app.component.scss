@@ -22,12 +22,13 @@
     color: #17479E;
   }
 }
-ion-tab-bar {
-  --background: #fff;
-  --border: none;
-  height: 60px;
-  padding: 10px 12px;
-}
+// OLD tab bar styles - replaced by .tb-* styles at the bottom of this file
+// ion-tab-bar {
+//   --background: #fff;
+//   --border: none;
+//   height: 60px;
+//   padding: 10px 12px;
+// }
 
 /* Profile */
 
@@ -197,59 +198,201 @@ ion-tab-bar {
     letter-spacing: .7px;
   }
 }
-.footer-icon {
-  width: 18px;
-  height: 18px;
-   margin-top: 5px;
-  filter: grayscale(100%) opacity(60%);
-  transition: all 0.25s ease;
+// OLD tab bar styles - replaced by .tb-* styles below
+// .footer-icon {
+//   width: 18px;
+//   height: 18px;
+//    margin-top: 5px;
+//   filter: grayscale(100%) opacity(60%);
+//   transition: all 0.25s ease;
+// }
+//
+// .footer-label {
+//   font-size: 9px;
+//   font-weight: 700;
+//   letter-spacing: 0.9px;
+//   text-transform: camelcase;
+//   font-family: Nimbus Sans;
+//   color: #94A3B8;
+//   transition: color 0.25s ease;
+// }
+//
+// .icon-size {
+//   height: 16px;
+//   width: 16px;
+//
+// }
+//
+//
+// ion-tab-button {
+//   --background: transparent;
+//   background: transparent;
+//   border-radius: 0;
+//   margin: 0 6px;
+//   --color: #94A3B8;
+//   --color-selected: #00cb82;
+//    --padding-bottom: 10px;
+//
+//   .footer-icon {
+//     filter: grayscale(100%) opacity(60%);
+//   }
+// }
+//
+// ion-tab-button.tab-selected {
+//   --background: transparent;
+//   background: transparent;
+//   border-radius: 0;
+//   height: auto;
+//   width: auto;
+//
+//   .footer-label {
+//     color: #00cb82 !important;
+//     font-weight: 800;
+//   }
+//
+//   .footer-icon {
+//     filter: brightness(0) saturate(100%) invert(56%) sepia(87%) saturate(452%) hue-rotate(117deg) brightness(96%) contrast(92%) !important;
+//     transform: scale(1.15);
+//   }
+// }
+
+
+/* =========================================================
+   BOTTOM TAB BAR - modern, WhatsApp / Material 3 style
+   ========================================================= */
+
+$tb-green: #00a95b;
+$tb-green-tint: rgba(0, 169, 91, 0.14);
+$tb-muted: #6b7280;
+$tb-ease: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+ion-tab-bar.tb-bar {
+  --background: rgba(255, 255, 255, 0.96);
+  --border: 0;
+  height: calc(66px + env(safe-area-inset-bottom, 0px));
+  padding: 0 8px env(safe-area-inset-bottom, 0px);
+  border-top: 1px solid #edf0ee;
+  box-shadow: 0 -6px 20px rgba(17, 24, 39, 0.06);
+  backdrop-filter: saturate(180%) blur(12px);
+  -webkit-backdrop-filter: saturate(180%) blur(12px);
+  animation: tb-bar-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-.footer-label {
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 0.9px;
-  text-transform: camelcase;
-  font-family: Nimbus Sans;
-  color: #94A3B8;
-  transition: color 0.25s ease;
-}
-
-.icon-size {
-  height: 16px;
-  width: 16px;
- 
-}
-
-
-ion-tab-button {
+ion-tab-button.tb-btn {
   --background: transparent;
-  background: transparent;
-  border-radius: 0;
-  margin: 0 6px;
-  --color: #94A3B8;
-  --color-selected: #00cb82;
-   --padding-bottom: 10px;
+  --background-focused: transparent;
+  --color: #{$tb-muted};
+  --color-selected: #{$tb-green};
+  --ripple-color: #{$tb-green};
+  --padding-top: 0;
+  --padding-bottom: 0;
+  --padding-start: 0;
+  --padding-end: 0;
+  flex: 1;
+  max-width: 140px;
+  margin: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  -webkit-tap-highlight-color: transparent;
+}
 
-  .footer-icon {
-    filter: grayscale(100%) opacity(60%);
+/* Pill indicator behind the icon */
+.tb-pill {
+  position: relative;
+  width: 60px;
+  height: 32px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0; right: 0; bottom: 0; left: 0;
+    border-radius: inherit;
+    background: $tb-green-tint;
+    transform: scaleX(0.3);
+    opacity: 0;
+    transition: transform 0.35s $tb-ease, opacity 0.25s ease;
   }
 }
 
-ion-tab-button.tab-selected {
-  --background: transparent;
-  background: transparent;
-  border-radius: 0;
-  height: auto;
-  width: auto;
+.tb-icon {
+  position: relative;
+  font-size: 22px;
+  color: $tb-muted;
+  transition: color 0.25s ease, transform 0.3s ease, opacity 0.2s ease;
+}
 
-  .footer-label {
-    color: #00cb82 !important;
-    font-weight: 800;
+/* Outline icon when idle, filled icon when selected (stacked, cross-fade) */
+.tb-icon--on {
+  position: absolute;
+  color: $tb-green;
+  opacity: 0;
+  transform: scale(0.6);
+}
+
+.tb-label {
+  margin: 0;
+  font-size: 11.5px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.2px;
+  color: $tb-muted;
+  transition: color 0.25s ease, font-weight 0.25s ease;
+}
+
+/* ---------- Selected ---------- */
+
+ion-tab-button.tb-btn.tab-selected {
+  .tb-pill::before {
+    transform: scaleX(1);
+    opacity: 1;
   }
 
-  .footer-icon {
-    filter: brightness(0) saturate(100%) invert(56%) sepia(87%) saturate(452%) hue-rotate(117deg) brightness(96%) contrast(92%) !important;
-    transform: scale(1.15);
+  .tb-icon--off {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+
+  .tb-icon--on {
+    opacity: 1;
+    transform: scale(1);
+    animation: tb-icon-bounce 0.45s $tb-ease;
+  }
+
+  .tb-label {
+    color: $tb-green;
+    font-weight: 700;
+  }
+}
+
+/* Press feedback */
+ion-tab-button.tb-btn:active .tb-pill {
+  transform: scale(0.92);
+  transition: transform 0.1s ease;
+}
+
+@keyframes tb-bar-in {
+  from { transform: translateY(100%); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+
+@keyframes tb-icon-bounce {
+  0% { transform: scale(0.6) translateY(4px); }
+  60% { transform: scale(1.15) translateY(-2px); }
+  100% { transform: scale(1) translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ion-tab-bar.tb-bar,
+  ion-tab-bar.tb-bar * {
+    animation: none !important;
+    transition: none !important;
   }
 }

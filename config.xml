@@ -13,13 +13,16 @@
     <allow-intent href="geo:*" />
     <preference name="ScrollEnabled" value="false" />
     <preference name="BackupWebStorage" value="none" />
-    <preference name="SplashMaintainAspectRatio" value="true" />
-    <preference name="FadeSplashScreenDuration" value="300" />
+    <preference name="SplashScreen" value="none" />
+    <preference name="AutoHideSplashScreen" value="true" />
+    <preference name="FadeSplashScreen" value="false" />
+    <preference name="FadeSplashScreenDuration" value="0" />
+    <preference name="ShowSplashScreenSpinner" value="false" />
     <preference name="SplashShowOnlyFirstTime" value="false" />
-    <preference name="SplashScreen" value="screen" />
-    <preference name="SplashScreenDelay" value="3000" />
+    <preference name="BackgroundColor" value="0xffffffff" />
     <preference name="StatusBarOverlaysWebView" value="false" />
     <preference name="StatusBarStyle" value="default" />
+    <preference name="StatusBarBackgroundColor" value="#ffffff" />
     <platform name="android">
         <preference name="Scheme" value="http" />
         <preference name="android-minSdkVersion" value="24" />
@@ -39,7 +42,12 @@
         <icon density="xhdpi" src="resources/android/icon/drawable-xhdpi-icon.png" />
         <icon density="xxhdpi" src="resources/android/icon/drawable-xxhdpi-icon.png" />
         <icon density="xxxhdpi" src="resources/android/icon/drawable-xxxhdpi-icon.png" />
-        <preference name="AndroidWindowSplashScreenAnimatedIcon" value="resources/splash.png" />
+        <preference name="AndroidWindowSplashScreenAnimatedIcon" value="resources/android/splash/splash-icon.xml" />
+        <preference name="AndroidWindowSplashScreenBackground" value="#FFFFFF" />
+        <preference name="AndroidWindowSplashScreenIconBackgroundColor" value="#FFFFFF" />
+        <preference name="AndroidWindowSplashScreenAnimationDuration" value="0" />
+        <preference name="AndroidPostSplashScreenTheme" value="@style/Theme.SuperAssist.NoActionBar" />
+        <resource-file src="resources/android/values/super_assist_theme.xml" target="app/src/main/res/values/super_assist_theme.xml" />
         <splash density="land-ldpi" src="resources/android/splash/drawable-land-ldpi-screen.png" />
         <splash density="land-mdpi" src="resources/android/splash/drawable-land-mdpi-screen.png" />
         <splash density="land-hdpi" src="resources/android/splash/drawable-land-hdpi-screen.png" />
@@ -104,7 +112,6 @@
     </platform>
     <plugin name="cordova-plugin-statusbar" spec="2.4.2" />
     <plugin name="cordova-plugin-device" spec="2.0.2" />
-    <plugin name="cordova-plugin-splashscreen" spec="5.0.2" />
     <plugin name="cordova-plugin-ionic-webview" spec="^5.0.0" />
     <plugin name="cordova-plugin-ionic-keyboard" spec="^2.0.5" />
 </widget>

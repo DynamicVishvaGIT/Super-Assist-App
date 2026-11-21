@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, OnDestroy, ElementRef } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { ActionSheetController, AlertController, IonContent, ModalController, Platform, ToastController } from '@ionic/angular';
+import { environment } from '../../environments/environment';
 import { ChatMenuComponent } from '../chat-menu/chat-menu.component';
 import { filter, Subject, Subscription, takeUntil } from 'rxjs';
 import { Api } from '../api';
@@ -1555,6 +1556,249 @@ changeWallpaper() {
 //     this.selectedMessages = this.selectedMessages.filter(m => m !== msg);
 //   }
 // }
+
+// =========================================================
+// VIEW HELPERS (Phase 1 design) - presentation only, no behaviour change
+// =========================================================
+
+/** Keeps message rows from being rebuilt on every update (no flicker / scroll jump) */
+trackMsg(index: number, msg: ChatMessage) {
+  return msg?.id ?? index;
+}
+
+/** First message of a run from the same sender (or after a date label) gets the bubble tail */
+isGroupStart(index: number): boolean {
+  const list = this.messages || [];
+  const msg = list[index];
+  const prev = list[index - 1];
+  return !prev || !msg || prev.sender !== msg.sender || !!msg.showDate;
+}
+
+/** Media bubbles get a fixed comfortable width; text bubbles size to their content */
+isMediaType(type: string): boolean {
+  return ['image', 'video', 'document', 'audio', 'voice', 'location', 'contacts'].indexOf(type) > -1;
+}
+
+/** Date label: Today / Yesterday / weekday (last 7 days), otherwise the existing "19 Nov 2026" format */
+friendlyDate(msg: ChatMessage): string {
+  const date = new Date(msg?.created_at);          // same parsing as mapMessage()
+  if (!msg?.created_at || isNaN(date.getTime())) { return msg?.displayDate || ''; }
+  const now = new Date();
+  const startOf = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+  const days = Math.round((startOf(now) - startOf(date)) / 86400000);
+  if (days === 0) { return 'Today'; }
+  if (days === 1) { return 'Yesterday'; }
+  if (days > 1 && days < 7) {
+    return ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][date.getDay()];
+  }
+  return msg.displayDate;
+}
+
+/** Message box grows with the text (up to ~5 lines) */
+autoGrow(el: HTMLTextAreaElement | null) {
+  if (!el) { return; }
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+
+/** Shrink the message box back after sending */
+resetComposer(el: HTMLTextAreaElement | null) {
+  setTimeout(() => this.autoGrow(el), 0);
+}
+
+// =========================================================
+// VIEW HELPERS (Phase 2 design) - UI only, no API / data changes
+// =========================================================
+
+// ---------- Scroll-to-latest button ----------
+showScrollDown = false;
+private seenCount = 0;
+
+/** New messages that arrived while the user was scrolled up */
+get newBelowCount(): number {
+  return this.showScrollDown ? Math.max(0, (this.messages?.length || 0) - this.seenCount) : 0;
+}
+
+async onChatScroll() {
+  const el = await this.content?.getScrollElement();
+  if (!el) { return; }
+  const distance = el.scrollHeight - el.scrollTop - el.clientHeight;
+  const away = distance > 280;
+  if (!away) { this.seenCount = this.messages?.length || 0; }
+  if (away !== this.showScrollDown) { this.showScrollDown = away; }
+}
+
+jumpToLatest() {
+  this.seenCount = this.messages?.length || 0;
+  this.scrollToBottom();
+}
+
+// ---------- Emoji picker categories (built from the existing emojiList) ----------
+emojiTab = 0;
+private _emojiCategories: { icon: string; label: string; items: string[] }[] | null = null;
+
+get emojiCategories() {
+  if (!this._emojiCategories) {
+    const list = this.emojiList;
+    const g = list.indexOf('👋');
+    const h = list.indexOf('❤️');
+    const faces = g > 0 ? list.slice(0, g) : list;
+    const gestures = g > 0 && h > g ? list.slice(g, h) : [];
+    const symbols = h > 0 ? list.slice(h) : [];
+    this._emojiCategories = [
+      { icon: '😀', label: 'Smileys', items: faces },
+      { icon: '👋', label: 'Gestures', items: gestures },
+      { icon: '❤️', label: 'Symbols', items: symbols },
+    ].filter(c => c.items.length);
+  }
+  return this._emojiCategories;
+}
+
+// ---------- Custom audio / voice player ----------
+mediaState: { [key: string]: { playing: boolean; current: number; duration: number } } = {};
+private activeAudio: HTMLAudioElement | null = null;
+
+private stateFor(key: string) {
+  if (!this.mediaState[key]) { this.mediaState[key] = { playing: false, current: 0, duration: 0 }; }
+  return this.mediaState[key];
+}
+
+toggleAudio(el: HTMLAudioElement, key: string) {
+  if (!el) { return; }
+  if (el.paused) {
+    if (this.activeAudio && this.activeAudio !== el) { this.activeAudio.pause(); }   // one at a time
+    this.activeAudio = el;
+    el.play().catch(() => {});
+  } else {
+    el.pause();
+  }
+}
+
+onAudioState(el: HTMLAudioElement, key: string) {
+  const st = this.stateFor(key);
+  st.playing = !el.paused && !el.ended;
+  st.current = el.currentTime || 0;
+  st.duration = isFinite(el.duration) ? el.duration : st.duration;
+}
+
+onAudioEnded(el: HTMLAudioElement, key: string) {
+  const st = this.stateFor(key);
+  st.playing = false;
+  st.current = 0;
+  el.currentTime = 0;
+}
+
+seekAudio(el: HTMLAudioElement, key: string, event: any) {
+  const value = Number(event?.target?.value || 0);
+  if (el && isFinite(el.duration)) {
+    el.currentTime = (value / 100) * el.duration;
+    this.onAudioState(el, key);
+  }
+}
+
+audioProgress(key: string): number {
+  const st = this.mediaState[key];
+  return st && st.duration ? (st.current / st.duration) * 100 : 0;
+}
+
+/** Shows elapsed time while playing/paused mid-way, otherwise the total length */
+audioTimeLabel(key: string): string {
+  const st = this.mediaState[key];
+  if (!st) { return '0:00'; }
+  return this.formatDuration(st.playing || st.current ? st.current : st.duration);
+}
+
+formatDuration(seconds: number): string {
+  if (!seconds || !isFinite(seconds)) { return '0:00'; }
+  const m = Math.floor(seconds / 60);
+  const sec = Math.floor(seconds % 60);
+  return m + ':' + (sec < 10 ? '0' : '') + sec;
+}
+
+// ---------- Video: clean poster with a play button, native controls after tap ----------
+videoStarted: { [key: string]: boolean } = {};
+
+playVideo(el: HTMLVideoElement, key: string) {
+  if (!el) { return; }
+  this.videoStarted[key] = true;
+  if (this.activeAudio) { this.activeAudio.pause(); }
+  el.play().catch(() => {});
+}
+
+// =========================================================
+// PHASE 3 HELPERS - long-press menu + map URL (no API / data changes)
+// =========================================================
+
+/** Same Static Maps URL as before; the key now comes from environment.ts */
+getStaticMapUrl(lat: number | undefined, lng: number | undefined): string {
+  return 'https://maps.googleapis.com/maps/api/staticmap?center=' +
+    lat + ',' + lng +
+    '&zoom=16&size=600x260' +
+    '&markers=color:red|' +
+    lat + ',' + lng +
+    '&key=' + environment.googleMapsStaticKey;
+}
+
+// ---------- Long-press on a message -> action sheet (Copy) ----------
+pressedMsgId: number | null = null;
+private pressTimer: any = null;
+private pressFired = false;
+private sheetOpen = false;
+
+/** Text that can be copied from a message (template body or plain text) */
+private copyableText(msg: ChatMessage): string {
+  const text = msg?.message_type === 'template' ? msg?.renderedBody : msg?.text;
+  return (text || '').toString().trim();
+}
+
+pressStart(msg: ChatMessage) {
+  this.pressFired = false;
+  clearTimeout(this.pressTimer);
+  this.pressTimer = setTimeout(() => {
+    this.pressFired = true;
+    this.openMessageActions(msg);
+  }, 450);
+}
+
+pressEnd(event?: Event) {
+  clearTimeout(this.pressTimer);
+  if (this.pressFired && event?.cancelable) {
+    event.preventDefault();   // don't also "tap" the image / button under the finger
+  }
+}
+
+pressCancel() {
+  clearTimeout(this.pressTimer);
+}
+
+/** Right-click on desktop, and the long-press menu event on some phones */
+onMessageContext(msg: ChatMessage, event: Event) {
+  event.preventDefault();
+  if (this.pressFired) { return; }   // already opened by the touch long-press
+  this.openMessageActions(msg);
+}
+
+async openMessageActions(msg: ChatMessage) {
+  const text = this.copyableText(msg);
+  if (!text || this.sheetOpen) { return; }
+  this.sheetOpen = true;
+  this.pressedMsgId = msg.id;
+  try { (navigator as any).vibrate?.(12); } catch (e) { /* not supported */ }
+
+  const sheet = await this.actionSheetCtrl.create({
+    cssClass: 'cd-action-sheet',
+    buttons: [
+      { text: 'Copy', icon: 'copy-outline', handler: () => this.copyMessage(text) },
+      { text: 'Cancel', icon: 'close', role: 'cancel' },
+    ],
+  });
+  sheet.onDidDismiss().then(() => {
+    this.sheetOpen = false;
+    this.pressedMsgId = null;
+    this.pressFired = false;
+  });
+  await sheet.present();
+}
 
 goToTemplate() {
   this.router.navigateByUrl('select-template');

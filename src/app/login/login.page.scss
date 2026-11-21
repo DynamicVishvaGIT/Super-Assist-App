@@ -1,1125 +1,2481 @@
 /* =========================================================
-   LOGIN PAGE
+   LOGIN PAGE (v4) - clean left-aligned layout
+   Input fields, validation, forgot link, button and footer
+   styles are carried over unchanged from v3 (see below).
    ========================================================= */
 
-.login-page {
-  --background: #f2f8f5;
+$green: #00a95b;
+$green-light: #56b952;
+$green-deep: #008a4b;
+$grey: #808285;
+$ink: #111827;
+$muted: #6b7280;
+$border: #e3e8e5;
+$heading: #0f3d26;          /* deep brand green for the heading */
+$ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+$ease-back: cubic-bezier(0.34, 1.56, 0.64, 1);
 
-  background:
-    radial-gradient(
-      circle at 8% 18%,
-      rgba(207, 244, 224, 0.72) 0%,
-      rgba(207, 244, 224, 0) 32%
-    ),
-    radial-gradient(
-      circle at 94% 84%,
-      rgba(208, 245, 226, 0.72) 0%,
-      rgba(208, 245, 226, 0) 34%
-    ),
-    linear-gradient(
-      180deg,
-      #f5faf8 0%,
-      #edf8f3 100%
-    );
-
+ion-content.login-page {
+  // --background: #ffffff;
+  --background: #f1f6ef;      /* soft mint / sage tint like the reference */
   --padding-start: 0;
   --padding-end: 0;
   --padding-top: 0;
   --padding-bottom: 0;
-
-  width: 100%;
-  height: 100%;
-}
-.ture-icon-img {
-  width: 20px !important;
-  height: 18px !important;
-  object-fit: contain;
 }
 
+// OLD (near-white background)
+// ion-content.login-page::part(background) {
+//   background:
+//     radial-gradient(circle at 100% 0%, rgba(86, 185, 82, 0.16) 0%, rgba(86, 185, 82, 0) 38%),
+//     radial-gradient(circle at 0% 100%, rgba(0, 169, 91, 0.12) 0%, rgba(0, 169, 91, 0) 40%),
+//     linear-gradient(180deg, #ffffff 0%, #f6fbf8 100%);
+// }
 
-/* =========================================================
-   ION CONTENT
-   ========================================================= */
-
-ion-content.login-page {
-  --background: transparent;
+// OLD v4 (point 7: pale mint at the top didn't meet the white status bar)
+// ion-content.login-page::part(background) {
+//   background:
+//     radial-gradient(circle at 100% 0%, rgba(86, 185, 82, 0.20) 0%, rgba(86, 185, 82, 0) 40%),
+//     radial-gradient(circle at 0% 100%, rgba(86, 185, 82, 0.18) 0%, rgba(86, 185, 82, 0) 42%),
+//     linear-gradient(180deg, #f5f9f3 0%, #eef5ec 55%, #e7f1e5 100%);
+// }
+ion-content.login-page::part(background) {
+  background:
+    radial-gradient(circle at 0% 100%, rgba(86, 185, 82, 0.18) 0%, rgba(86, 185, 82, 0) 42%),
+    linear-gradient(180deg, #ffffff 0%, #f5f9f3 22%, #eef5ec 60%, #e7f1e5 100%);
 }
 
 ion-content.login-page::part(scroll) {
   min-height: 100%;
-
   display: flex;
   flex-direction: column;
-
-  box-sizing: border-box;
 }
 
 
 /* =========================================================
-   MAIN PAGE WRAPPER
+   BACKGROUND GLOWS (replace the leaves in the reference)
    ========================================================= */
 
-.page-wrapper {
+.lg-glow {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(8px);
+  z-index: 0;
+}
+.lg-glow--1 {
+  width: 210px; height: 210px;
+  // top: -70px; right: -60px;
+  top: 70px; right: -90px;     /* point 7: kept away from the status bar edge */
+  background: radial-gradient(circle, rgba(86, 185, 82, 0.22) 0%, rgba(86, 185, 82, 0) 70%);
+  animation: lg-drift 14s ease-in-out infinite alternate;   /* point 8: slower (was 9s) */
+}
+.lg-glow--2 {
+  width: 170px; height: 170px;
+  bottom: -50px; left: -60px;
+  background: radial-gradient(circle, rgba(0, 169, 91, 0.18) 0%, rgba(0, 169, 91, 0) 70%);
+  animation: lg-drift 16s ease-in-out 1s infinite alternate-reverse;   /* point 8: slower (was 11s) */
+}
+.lg-glow--3 {
+  width: 90px; height: 90px;
+  top: 34%; right: -30px;
+  background: radial-gradient(circle, rgba(128, 130, 133, 0.10) 0%, rgba(128, 130, 133, 0) 70%);
+  animation: none;   /* point 8: third glow stays still (was drifting) */
+}
+
+
+/* =========================================================
+   WRAPPER
+   ========================================================= */
+
+.lg-wrapper {
+  position: relative;
+  z-index: 1;
+  flex: 1;
   width: 100%;
-  min-height: 100%;
-
+  max-width: 440px;
+  margin: 0 auto;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  align-items: center;
-
-  box-sizing: border-box;
-
-  padding-top: env(safe-area-inset-top, 0px);
-  padding-bottom: env(safe-area-inset-bottom, 0px);
+  // padding: calc(48px + env(safe-area-inset-top, 0px)) 24px env(safe-area-inset-bottom, 0px);
+  padding: 48px 24px env(safe-area-inset-bottom, 0px);   /* ion-app already adds the notch space */
+  transition: padding 0.35s ease;
 }
 
 
 /* =========================================================
-   TOP SECTION
+   BRAND ROW
    ========================================================= */
 
-.top-wrapper {
-  width: 100%;
-  max-width: 900px;
-
-  box-sizing: border-box;
-
-  text-align: center;
-
-  padding: 76px 24px 58px;
-
+.lg-brand {
   display: flex;
-  flex-direction: column;
   align-items: center;
+  gap: 12px;
+  margin-bottom: 34px;
+  animation: lg-slide-in 0.65s $ease-out 0.1s backwards;
 }
 
-
-/* =========================================================
-   LOGO CONTAINER
-   ========================================================= */
-
-.brand-container {
-  width: 278px;
-  height: 49px;
-
+.lg-logo {
+  flex: 0 0 auto;
+  width: 54px;
+  height: 54px;
+  border-radius: 16px;
+  background: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
-
-  position: relative;
-
-  margin: 0 auto 52px;
-
-  flex-shrink: 0;
+  box-shadow: 0 8px 20px rgba(0, 110, 55, 0.12), 0 1px 3px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(227, 232, 229, 0.8);
+  animation: lg-pop 0.6s $ease-back 0.15s backwards;
 }
 
+.lg-icon {
+  width: 40px;
+  height: 40px;
+  overflow: visible;
 
-/* =========================================================
-   ACTUAL SUPER ASSIST LOGO
-   ========================================================= */
+  * { transform-box: fill-box; }
+}
 
-.brand-logo {
-  width: 278px;
-  height: 49px;
+.lg-bubble path {
+  fill: none;
+  stroke-width: 7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+.lg-bubble--grey path { stroke: $grey; animation: lg-draw 0.8s ease-out 0.35s forwards; }
+.lg-bubble--green path { stroke: $green-light; animation: lg-draw 0.8s ease-out 0.6s forwards; }
 
+.lg-dot { transform-origin: center; transform: scale(0); }
+.lg-dot--g { fill: $green-light; }
+.lg-dot--k { fill: $grey; }
+.lg-dot.d1 { animation: lg-dot-pop 0.35s ease-out 1.0s forwards, lg-typing 1.3s ease-in-out 1.5s 3; }   /* point 8: types 3x then rests (was infinite) */
+.lg-dot.d2 { animation: lg-dot-pop 0.35s ease-out 1.1s forwards, lg-typing 1.3s ease-in-out 1.65s 3; }   /* point 8: types 3x then rests (was infinite) */
+.lg-dot.d3 { animation: lg-dot-pop 0.35s ease-out 1.2s forwards, lg-typing 1.3s ease-in-out 1.8s 3; }   /* point 8: types 3x then rests (was infinite) */
+.lg-dot.d4 { animation: lg-dot-pop 0.35s ease-out 1.15s forwards, lg-typing 1.3s ease-in-out 2.1s 3; }   /* point 8: types 3x then rests (was infinite) */
+.lg-dot.d5 { animation: lg-dot-pop 0.35s ease-out 1.25s forwards, lg-typing 1.3s ease-in-out 2.25s 3; }   /* point 8: types 3x then rests (was infinite) */
+.lg-dot.d6 { animation: lg-dot-pop 0.35s ease-out 1.35s forwards, lg-typing 1.3s ease-in-out 2.4s 3; }   /* point 8: types 3x then rests (was infinite) */
+
+.lg-brand-text {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.lg-wordmark {
   display: block;
+  width: 148px;
+  height: auto;
+}
 
-  object-fit: contain;
-
-  opacity: 1;
-
-  margin: 0;
-  padding: 0;
+.lg-card-caption {
+  margin: 4px 0 0 2px;
+  color: $muted;
+  font-size: 12.5px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
 }
 
 
 /* =========================================================
-   PAGE TITLE
+   HEADING
    ========================================================= */
 
-.title {
+.lg-title {
   margin: 0;
-
-  color: #111515;
-
-  font-size: 57px;
-  line-height: 1.08;
-
-  font-weight: 700;
-
-  letter-spacing: -2px;
-
-  text-align: center;
-}
-
-
-/* =========================================================
-   SUBTITLE
-   ========================================================= */
-
-.subtitle {
-  margin: 20px 0 0;
-
-  color: #4c5750;
-
+  color: $heading;
   font-size: 30px;
+  line-height: 1.15;
+  font-weight: 800;
+  letter-spacing: -0.6px;
+  animation: lp-rise 0.6s $ease-out 0.3s backwards;
+}
 
-  line-height: 1.35;
+.lg-subtitle {
+  margin: 8px 0 28px;
+  color: $muted;
+  font-size: 15px;
+  line-height: 1.45;
+  max-height: 60px;
+  overflow: hidden;
+  animation: lp-rise 0.6s $ease-out 0.4s backwards;
+  transition: opacity 0.25s ease, max-height 0.35s ease, margin 0.35s ease;
+}
 
-  font-weight: 400;
-
-  letter-spacing: -0.5px;
-
-  text-align: center;
+.lg-form {
+  width: 100%;
 }
 
 
 /* =========================================================
-   FORM CARD
+   KEYBOARD OPEN - tighten the top so the form stays visible
    ========================================================= */
 
-.form-wrapper {
-  width: calc(100% - 68px);
-  max-width: 830px;
+.lg-keyboard-open {
+  // &.lg-wrapper { padding-top: calc(20px + env(safe-area-inset-top, 0px)); }
+  &.lg-wrapper { padding-top: 20px; }
+  .lg-brand { margin-bottom: 18px; }
+  .lg-subtitle { opacity: 0; max-height: 0; margin: 0 0 16px; }
+  .lp-footer { display: none; }
+}
 
-  box-sizing: border-box;
 
-  background: rgba(255, 255, 255, 0.97);
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
 
-  border-radius: 38px;
+@media (max-width: 360px) {
+  .lg-wrapper { padding-left: 18px; padding-right: 18px; padding-top: 32px; } // was calc(32px + env(safe-area-inset-top, 0px))
+  .lg-title { font-size: 26px; }
+  .lg-subtitle { font-size: 14px; }
+  .lg-wordmark { width: 130px; }
+  .lp-input, .lp-btn { height: 50px; }
+}
 
-  padding: 78px 40px 48px;
+@media (min-height: 760px) {
+  // .lg-wrapper { padding-top: calc(10vh + env(safe-area-inset-top, 0px)); }
+  .lg-wrapper { padding-top: 10vh; }
+}
 
-  margin: 0 auto 48px;
+@media (min-width: 600px) {
+  .lg-wrapper { max-width: 460px; }
+  .lg-title { font-size: 34px; }
+  .lg-wordmark { width: 170px; }
+}
 
-  border: 1px solid rgba(226, 232, 228, 0.9);
 
-  box-shadow:
-    0 2px 4px rgba(0, 0, 0, 0.025),
-    0 10px 35px rgba(24, 63, 45, 0.055);
+/* =========================================================
+   KEYFRAMES (layout)
+   ========================================================= */
 
+@keyframes lg-slide-in { from { transform: translateX(-24px); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes lg-pop { from { transform: scale(0.5) rotate(-10deg); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes lg-draw { to { stroke-dashoffset: 0; } }
+@keyframes lg-dot-pop { 0% { transform: scale(0); } 70% { transform: scale(1.35); } 100% { transform: scale(1); } }
+@keyframes lg-typing { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-4px); } }
+@keyframes lg-drift { from { transform: translate(0, 0) scale(1); } to { transform: translate(-14px, 18px) scale(1.12); } }
+
+/* shared with the carried-over v3 styles */
+@keyframes lp-rise { from { transform: translateY(14px); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes lp-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes lp-shine { 0% { left: -75%; } 35%, 100% { left: 130%; } }
+@keyframes lp-nudge { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(4px); } }
+
+
+/* =========================================================
+   CARRIED OVER FROM v3 (unchanged): fields, validation,
+   forgot password, login button, footer
+   ========================================================= */
+
+/* Stagger the form rows */
+.lp-stagger-1 { animation: lp-rise 0.55s $ease-out 0.75s backwards; }
+.lp-stagger-2 { animation: lp-rise 0.55s $ease-out 0.85s backwards; }
+.lp-stagger-3 { animation: lp-rise 0.55s $ease-out 0.95s backwards; }
+.lp-stagger-4 { animation: lp-rise 0.55s $ease-out 1.05s backwards; }
+
+/* ---------- Fields ---------- */
+
+.lp-field {
+  margin-bottom: 16px;
+
+  label {
+    display: block;
+    margin: 0 0 7px 4px;
+    color: #374151;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+    transition: color 0.2s ease;
+  }
+
+  &:focus-within label { color: $green; }
+}
+
+.lp-input {
   position: relative;
-}
-
-
-/* =========================================================
-   FIELD
-   ========================================================= */
-
-.field {
-  width: 100%;
-
-  margin: 0 0 54px;
-}
-
-
-/* Password field */
-
-.password-field {
-  margin-bottom: 0;
-}
-
-
-/* =========================================================
-   LABEL
-   ========================================================= */
-
-.field label {
-  display: block;
-
-  margin: 0 0 22px 10px;
-
-  color: #171b1a;
-
-  font-size: 29px;
-
-  line-height: 1.2;
-
-  font-weight: 400;
-
-  letter-spacing: -0.5px;
-}
-
-
-/* =========================================================
-   INPUT WRAPPER
-   ========================================================= */
-
-.input-wrapper {
-  width: 100%;
-  height: 132px;
-
-  box-sizing: border-box;
-
+  height: 54px;
   display: flex;
   align-items: center;
+  gap: 12px;
+  padding: 0 14px;
+  background: #f7f9f8;
+  border: 1.5px solid $border;
+  border-radius: 14px;
+  transition: border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
 
-  padding: 0 34px;
+  /* animated underline that grows from the center on focus */
+  &::after {
+    content: "";
+    position: absolute;
+    left: 14px;
+    right: 14px;
+    bottom: -1.5px;
+    height: 2px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, $green-light, $green);
+    transform: scaleX(0);
+    transition: transform 0.35s $ease-out;
+  }
 
-  gap: 28px;
+  &:focus-within {
+    background: #fff;
+    border-color: rgba(0, 169, 91, 0.55);
+    box-shadow: 0 0 0 4px rgba(0, 169, 91, 0.10), 0 6px 16px rgba(0, 169, 91, 0.08);
+    // transform: translateY(-1px);  // removed: lifting the field hid the caret on some WebViews
 
-  background: #ffffff;
+    &::after { transform: scaleX(1); }
 
-  border: 2px solid #b9cbbd;
-
-  border-radius: 37px;
-
-  transition:
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
+    .lp-input-icon {
+      color: $green;
+      transform: scale(1.12);
+    }
+  }
 }
 
-
-/* =========================================================
-   INPUT ICON
-   ========================================================= */
-
-.input-icon {
+.lp-input-icon {
   flex: 0 0 auto;
-
-  width: 43px;
-  height: 43px;
-
-  font-size: 43px;
-
-  color: #718074;
+  font-size: 20px;
+  color: #9aa5a0;
+  transition: color 0.25s ease, transform 0.3s $ease-back;
 }
-
-
-/* =========================================================
-   ION INPUT
-   ========================================================= */
 
 ion-input {
   --background: transparent;
-
-  --color: #202522;
-
-  --placeholder-color: #c7cdca;
-
+  --color: #{$ink};
+  // --placeholder-color: #b4bcb8;
+  --placeholder-color: #87928d;   /* point 9: readable contrast */
   --placeholder-opacity: 1;
-
   --padding-start: 0;
   --padding-end: 0;
   --padding-top: 0;
   --padding-bottom: 0;
-
   --highlight-color-focused: transparent;
   --highlight-color-valid: transparent;
   --highlight-color-invalid: transparent;
-
-  flex: 1;
-
-  width: 100%;
-  min-width: 0;
-
-  font-size: 29px;
-
-  font-weight: 400;
-
-  color: #202522;
-
   --border-width: 0;
+  flex: 1;
+  min-width: 0;
+  // min-height: 100% !important;
+  height: 100%;
+  min-height: 0 !important;
+  display: flex;
+  align-items: center;
+  font-size: 15.5px;
+  line-height: normal;
+  caret-color: $green;
 }
-
-
-/* Remove Ionic default input highlight */
 
 ion-input::part(native) {
   border: none !important;
-
   outline: none !important;
-
   box-shadow: none !important;
 }
 
-
-/* =========================================================
-   INPUT FOCUS & BLINKING EFFECT (FORCED)
-========================================================= */
-
-.input-wrapper:focus-within {
-  border-color: #54b85a !important;
-  animation: greenInputBlink 1.4s ease-in-out infinite !important;
-  transition: none !important;
-}
-
-@keyframes greenInputBlink {
-  0% {
-    border-color: #54b85a;
-    box-shadow: 0 0 0 3px rgba(75, 189, 85, 0.08), 0 0 8px rgba(75, 189, 85, 0.05);
-  }
-  50% {
-    border-color: #2eb837;
-    box-shadow: 0 0 0 6px rgba(75, 189, 85, 0.25), 0 0 20px rgba(75, 189, 85, 0.3);
-  }
-  100% {
-    border-color: #54b85a;
-    box-shadow: 0 0 0 3px rgba(75, 189, 85, 0.08), 0 0 8px rgba(75, 189, 85, 0.05);
-  }
-}
-
-
-/* =========================================================
-   PASSWORD WRAPPER
-   ========================================================= */
-
-.password-wrapper {
-  position: relative;
-
-  padding-right: 30px;
-}
-
-
-/* =========================================================
-   EYE ICON
-   ========================================================= */
-
-.eye {
-  flex: 0 0 auto;
-
-  width: 45px;
-  height: 45px;
-
-  font-size: 45px;
-
-  color: #718074;
-
-  cursor: pointer;
-
-  transition: color 0.2s ease;
-}
-
-.eye:active {
-  color: #4bbd55;
-}
-
-
-/* =========================================================
-   FORGOT PASSWORD ROW
-   ========================================================= */
-
-.row {
-  width: 100%;
-
+/* Ionic's inner wrappers: stretch to the field height and centre the text */
+ion-input ::ng-deep .input-wrapper,
+ion-input ::ng-deep .native-wrapper {
+  height: 100%;
+  min-height: 0 !important;
   display: flex;
-
-  justify-content: flex-end;
-
   align-items: center;
-
-  margin: 27px 0 54px;
 }
 
-
-/* =========================================================
-   FORGOT PASSWORD
-   ========================================================= */
-
-.forgot {
-  color: #00a95b;
-
-  font-size: 29px;
-
-  line-height: 1.2;
-
-  font-weight: 500;
-
-  letter-spacing: -0.3px;
-
-  cursor: pointer;
-
-  user-select: none;
-
-  transition: opacity 0.2s ease;
-}
-
-.forgot:active {
-  opacity: 0.7;
-}
-
-
-/* =========================================================
-   LOGIN BUTTON
-   ========================================================= */
-
-.login-btn {
-  width: 100%;
-
-  height: 126px;
-
-  border-radius: 36px;
-
-  background: #05ae61;
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: center;
-
-  gap: 24px;
-
-  box-sizing: border-box;
-
-  color: #ffffff;
-
-  font-size: 29px;
-
-  line-height: 1;
-
-  font-weight: 700;
-
-  letter-spacing: -0.5px;
-
-  cursor: pointer;
-
-  user-select: none;
-
-  box-shadow:
-    0 13px 28px rgba(0, 174, 97, 0.22);
-
-  transition:
-    transform 0.15s ease,
-    opacity 0.15s ease,
-    box-shadow 0.15s ease;
-}
-
-
-/* =========================================================
-   LOGIN BUTTON ARROW
-   ========================================================= */
-
-.login-btn ion-icon {
-  width: 45px;
-  height: 45px;
-
-  font-size: 45px;
-
-  flex: 0 0 auto;
-}
-
-
-/* =========================================================
-   BUTTON PRESS
-   ========================================================= */
-
-.login-btn:active {
-  transform: scale(0.985);
-
-  opacity: 0.94;
-
-  box-shadow:
-    0 7px 18px rgba(0, 174, 97, 0.18);
-}
-
-
-/* =========================================================
-   MOBILE - 600px AND BELOW
-   ========================================================= */
-
-@media (max-width: 600px) {
-
-  .top-wrapper {
-    padding: 42px 20px 34px;
-  }
-
-  .brand-container {
-    width: 278px;
-    max-width: 100%;
-
-    height: 49px;
-
-    margin-bottom: 34px;
-  }
-
-  .brand-logo {
-    width: 278px;
-    max-width: 100%;
-
-    height: 49px;
-
-    object-fit: contain;
-  }
-
-  .title {
-    font-size: 34px;
-
-    letter-spacing: -1px;
-
-    line-height: 1.1;
-  }
-
-  .subtitle {
-    margin-top: 12px;
-
-    font-size: 18px;
-
-    line-height: 1.42;
-  }
-
-  .form-wrapper {
-    width: calc(100% - 34px);
-
-    max-width: none;
-
-    border-radius: 30px;
-
-    padding: 38px 26px 30px;
-
-    margin-bottom: 30px;
-  }
-
-  .field {
-    margin-bottom: 31px;
-  }
-
-  .field label {
-    font-size: 19px;
-
-    margin: 0 0 13px 8px;
-
-    line-height: 1.2;
-  }
-
-  .input-wrapper {
-    height: 62px;
-
-    border-radius: 22px;
-
-    padding: 0 18px;
-
-    gap: 14px;
-
-    border-width: 1.5px;
-  }
-
-  .input-icon {
-    width: 25px;
-    height: 25px;
-
-    font-size: 25px;
-  }
-
-  ion-input {
-    font-size: 18px;
-  }
-
-  .password-wrapper {
-    padding-right: 17px;
-  }
-
-  .eye {
-    width: 27px;
-    height: 27px;
-
-    font-size: 27px;
-  }
-
-  .row {
-    margin: 15px 0 30px;
-  }
-
-  .forgot {
-    font-size: 18px;
-  }
-
-  .login-btn {
-    height: 69px;
-
-    border-radius: 22px;
-
-    font-size: 18px;
-
-    gap: 11px;
-  }
-
-  .login-btn ion-icon {
-    width: 28px;
-    height: 28px;
-
-    font-size: 28px;
-  }
-}
-
-
-/* =========================================================
-   SMALL MOBILE - 390px AND BELOW
-   ========================================================= */
-
-@media (max-width: 390px) {
-
-  .top-wrapper {
-    padding-top: 32px;
-  }
-
-  .brand-container {
-    width: 278px;
-    max-width: 100%;
-
-    height: 49px;
-
-    margin-bottom: 30px;
-  }
-
-  .brand-logo {
-    width: 278px;
-    max-width: 100%;
-
-    height: 49px;
-    margin-top: 85px;
-  }
-
-  .title {
-    font-size: 31px;
-    margin-top: 45px;
-  }
-
-  .subtitle {
-    font-size: 16px;
-  }
-
-  .form-wrapper {
-    width: calc(100% - 24px);
-
-    padding: 32px 20px 25px;
-  }
-
-  .field label {
-    font-size: 18px;
-  }
-
-  .input-wrapper {
-    height: 62px;
-
-    border-radius: 16px;
-
-    padding: 0 15px;
-
-    gap: 11px;
-  }
-
-  .input-icon {
-    width: 24px;
-    height: 24px;
-
-    font-size: 24px;
-  }
-
-  ion-input {
-    font-size: 16px;
-  }
-
-  .forgot {
-    font-size: 16px;
-  }
-
-  .login-btn {
-    height: 56px;
-
-    border-radius: 16px;
-
-    font-size: 16px;
-  }
-
-  .login-btn ion-icon {
-    width: 26px;
-    height: 26px;
-
-    font-size: 26px;
-  }
-}
-
-
-/* =========================================================
-   TABLET
-   ========================================================= */
-
-@media (min-width: 601px) and (max-width: 1024px) {
-
-  .top-wrapper {
-    padding-top: 60px;
-
-    padding-bottom: 45px;
-  }
-
-  .brand-container {
-    width: 278px;
-    height: 49px;
-
-    margin-bottom: 42px;
-  }
-
-  .brand-logo {
-    width: 278px;
-    height: 49px;
-  }
-
-  .title {
-    font-size: 46px;
-  }
-
-  .subtitle {
-    font-size: 24px;
-  }
-
-  .form-wrapper {
-    width: calc(100% - 60px);
-
-    max-width: 760px;
-
-    padding: 55px 36px 40px;
-
-    border-radius: 34px;
-  }
-
-  .field label {
-    font-size: 25px;
-  }
-
-  .input-wrapper {
-    height: 105px;
-
-    border-radius: 31px;
-
-    padding: 0 28px;
-
-    gap: 22px;
-  }
-
-  .input-icon {
-    width: 36px;
-    height: 36px;
-
-    font-size: 36px;
-  }
-
-  ion-input {
-    font-size: 25px;
-  }
-
-  .eye {
-    width: 38px;
-    height: 38px;
-
-    font-size: 38px;
-  }
-
-  .forgot {
-    font-size: 24px;
-  }
-
-  .login-btn {
-    height: 102px;
-
-    border-radius: 30px;
-
-    font-size: 25px;
-  }
-
-  .login-btn ion-icon {
-    width: 38px;
-    height: 38px;
-
-    font-size: 38px;
-  }
-}
-
-
-/* =========================================================
-   DESKTOP / LAPTOP
-   ========================================================= */
-
-@media (min-width: 1025px) {
-
-  .top-wrapper {
-    padding-top: 76px;
-
-    padding-bottom: 58px;
-  }
-
-  .form-wrapper {
-    max-width: 830px;
-  }
-}
-
-
-/* =========================================================
-   LARGE DESKTOP
-   ========================================================= */
-
-@media (min-width: 1200px) {
-
-  .top-wrapper {
-    padding-top: 90px;
-
-    padding-bottom: 64px;
-  }
-
-  .form-wrapper {
-    max-width: 830px;
-  }
-}
-
-
-/* =========================================================
-   PASSWORD EYE BUTTON
-   ========================================================= */
-
-.eye-btn {
-  width: 45px;
-  height: 45px;
-
-  padding: 0;
+ion-input ::ng-deep input.native-input {
+  height: 100%;
+  padding: 0 !important;
   margin: 0;
+  line-height: normal;
+  caret-color: $green !important;
+}
 
+/* Show / hide password */
+.lp-eye {
+  flex: 0 0 auto;
+  width: 36px;
+  height: 36px;
+  margin-right: -6px;
+  padding: 0;
   border: 0;
-  outline: 0;
-
+  border-radius: 50%;
   background: transparent;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
-  color: #718074;
-
+  color: #9aa5a0;
   cursor: pointer;
-
-  flex: 0 0 auto;
-
   -webkit-tap-highlight-color: transparent;
+  transition: background 0.2s ease, color 0.2s ease;
+
+  ion-icon {
+    font-size: 20px;
+    pointer-events: none;
+    transition: transform 0.3s $ease-back;
+  }
+
+  &:active { background: rgba(0, 169, 91, 0.10); }
+
+  &--on {
+    color: $green;
+
+    ion-icon { transform: rotate(-12deg) scale(1.08); }
+  }
 }
 
-.eye-btn ion-icon {
-  width: 45px;
-  height: 45px;
 
-  font-size: 45px;
+/* ---------- Inline validation ---------- */
 
-  color: #718074;
+$error: #e5383b;
 
-  pointer-events: none;
+.lp-req {
+  color: $error;
+  font-weight: 700;
 }
 
-.eye-btn:active ion-icon {
-  color: #4bbd55;
+/* green tick when the field is valid */
+.lp-valid-icon {
+  flex: 0 0 auto;
+  font-size: 20px;
+  color: $green;
+  opacity: 0;
+  transform: scale(0);
+  width: 0;
+  transition: opacity 0.2s ease, transform 0.3s $ease-back, width 0.2s ease;
+}
+
+.lp-field--valid {
+  .lp-input { border-color: rgba(0, 169, 91, 0.45); }
+  .lp-valid-icon { opacity: 1; transform: scale(1); width: 20px; }
+}
+
+.lp-field--error {
+  label { color: $error !important; }
+
+  .lp-input,
+  .lp-input:focus-within {
+    background: #fff8f8;
+    border-color: $error;
+    box-shadow: 0 0 0 4px rgba(229, 56, 59, 0.10);
+
+    &::after { background: $error; }
+
+    .lp-input-icon { color: $error; }
+  }
+}
+
+.lp-error {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 7px 0 0 4px;
+  color: $error;
+  font-size: 12.5px;
+  font-weight: 500;
+  line-height: 1.3;
+  animation: lp-error-in 0.3s $ease-out both;
+
+  ion-icon {
+    flex: 0 0 auto;
+    font-size: 15px;
+  }
+}
+
+.lp-shake { animation: lp-shake 0.45s ease-in-out; }
+
+@keyframes lp-error-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes lp-shake {
+  0%, 100% { transform: translateX(0); }
+  15%, 55% { transform: translateX(-7px); }
+  35%, 75% { transform: translateX(7px); }
+  90% { transform: translateX(-2px); }
+}
+
+
+/* ---------- Forgot password ---------- */
+
+.lp-row {
+  display: flex;
+  justify-content: flex-end;
+  margin: 2px 0 22px;
+}
+
+.lp-forgot {
+  position: relative;
+  color: $green;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+  padding: 4px 2px;
+
+  &::after {
+    content: "";
+    position: absolute;
+    left: 2px;
+    right: 2px;
+    bottom: 1px;
+    height: 1.5px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s ease;
+  }
+
+  &:active::after,
+  &:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+}
+
+
+/* ---------- Login button ---------- */
+
+.lp-btn {
+  /* point 1/6: now a real <button> - reset browser defaults */
+  width: 100%;
+  border: 0;
+  padding: 0;
+  font-family: inherit;
+  -webkit-appearance: none;
+  appearance: none;
+  position: relative;
+  overflow: hidden;
+  height: 54px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: #fff;
+  font-size: 15.5px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  background: linear-gradient(135deg, $green-light 0%, $green 60%, $green-deep 100%);
+  background-size: 200% 200%;
+  box-shadow: 0 10px 22px rgba(0, 169, 91, 0.28);
+  transition: transform 0.15s ease, box-shadow 0.2s ease;
+
+  span, ion-icon { position: relative; z-index: 1; }
+
+  ion-icon {
+    font-size: 20px;
+    // animation: lp-nudge 1.8s ease-in-out 2s infinite;
+    animation: lp-nudge 1.8s ease-in-out 2s 2;   /* point 8: nudges twice, then rests */
+  }
+
+  /* shine sweep */
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -75%;
+    width: 50%;
+    background: linear-gradient(100deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.35) 50%, rgba(255, 255, 255, 0) 100%);
+    transform: skewX(-20deg);
+    // animation: lp-shine 3.6s ease-in-out 1.8s infinite;
+    animation: lp-shine-slow 7s ease-in-out 1.8s infinite;   /* point 8: one sweep every 7s */
+  }
+
+  &:active {
+    transform: scale(0.97);
+    box-shadow: 0 5px 12px rgba(0, 169, 91, 0.22);
+  }
 }
 
 
 /* =========================================================
-   MOBILE EYE BUTTON
-========================================================= */
+   FOOTER
+   ========================================================= */
 
-@media (max-width: 600px) {
+.lp-footer {
+  margin-top: auto;
+  flex-shrink: 0;
+  padding: 28px 0 22px;
+  text-align: center;
+  animation: lp-fade 0.6s ease 1.2s both;
 
-  .eye-btn {
-    width: 27px;
-    height: 27px;
-
-    flex: 0 0 27px;
+  small {
+    display: block;
+    color: #9aa5a0;
+    font-size: 11.5px;
+    letter-spacing: 0.4px;
   }
 
-  .eye-btn ion-icon {
-    width: 27px;
-    height: 27px;
-
-    font-size: 27px;
-  }
-}
-
-
-/* =========================================================
-   TABLET EYE BUTTON
-========================================================= */
-
-@media (min-width: 601px) and (max-width: 1024px) {
-
-  .eye-btn {
-    width: 38px;
-    height: 38px;
-
-    flex: 0 0 38px;
-  }
-
-  .eye-btn ion-icon {
-    width: 38px;
-    height: 38px;
-
-    font-size: 38px;
+  strong {
+    display: block;
+    margin-top: 2px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    background: linear-gradient(90deg, $green, $green-light);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
   }
 }
 
 
 /* =========================================================
-   REDUCE MOTION
-========================================================= */
+   REDUCED MOTION
+   ========================================================= */
 
 @media (prefers-reduced-motion: reduce) {
-
-  .input-wrapper,
-  .eye,
-  .forgot,
-  .login-btn {
-    transition: none;
-  }
-
-  .input-wrapper:focus-within {
-    animation: none;
+  .lg-wrapper *,
+  .lg-wrapper *::before,
+  .lg-wrapper *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
 
-.password-eye {
-  font-size: 25px;
-  color: #818181;
-  cursor: pointer;
-  margin-top: 18px;
+
+
+// =====================================================================
+
+
+/* =========================================================
+   v5 REVIEW FIXES
+   ========================================================= */
+
+/* point 11: brand tagline under the wordmark (same as the splash) */
+.lg-tagline {
+  margin: 5px 0 0 2px;
+  color: #6b7280;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  animation: lp-fade 0.6s ease 0.5s backwards;
+}
+
+/* point 6: loading state inside the button */
+.lp-btn--loading,
+.lp-btn:disabled {
+  cursor: default;
+  box-shadow: 0 6px 14px rgba(0, 169, 91, 0.20);
+
+  &::before { animation: none; opacity: 0; }
+}
+
+.lp-btn ion-spinner {
+  position: relative;
+  z-index: 1;
+  width: 20px;
+  height: 20px;
+  color: #ffffff;
+  animation: lp-fade 0.2s ease;
+}
+
+.lp-btn--loading span {
+  animation: lp-breathe 1.4s ease-in-out infinite;
+}
+
+/* point 8: one quick sweep, then a long rest */
+@keyframes lp-shine-slow {
+  0% { left: -75%; }
+  18%, 100% { left: 130%; }
+}
+
+@keyframes lp-breathe {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
 }
 
 
-
-// .login-page {
-//     --background: #eefdf8;
-//   }
-  
-//   /* ⭐⭐ VERY IMPORTANT FIX FOR LAPTOP JUMP ISSUE */
-//   ion-content.login-page::part(scroll) {
-//     display: flex;
-//     flex-direction: column;
-//     min-height: 100%;
-//   }
-  
-//   /* FULL PAGE FLEX LAYOUT */
-//   .page-wrapper {
-//     flex: 1;
-//     display: flex;
-//     flex-direction: column;
-//     justify-content: space-between;
-  
-//     /* ⭐ remove vh dependency */
-//     min-height: 100%;
-//   }
-  
-//   /* TOP AREA */
-//   .top-wrapper {
-//     text-align: center;
-//     padding-top: calc(constant(safe-area-inset-top) + 20px);
-//     padding-top: calc(env(safe-area-inset-top) + 20px);
-//     padding-bottom: 20px;
-//     transition:.3s;
-//   }
-//   .hide-top + .form-wrapper{
-//     min-height:100vh;
-//     border-radius:30px 30px 0 0;
-//   }
-//   /* FORM CARD */
-//   .form-wrapper {
-//     min-height:42vh;
-//     background: white;
-//     border-top-left-radius: 35px;
-//     border-top-right-radius: 35px;
-//     padding: 25px 20px 35px;
-//     box-shadow: 0 -4px 12px rgba(0,0,0,0.06);
-//   }
-  
-//   .logo {
-//     width: 55px;
-//     height: 55px;
-//     border-radius: 50%;
-//     margin-top: 30px;
-//   }
-  
-//   .title {
-//     font-size: 22px;
-//     font-weight: 600;
-//     margin-top: 10px;
-//   }
-  
-//   .subtitle {
-//     color: #6b7280;
-//     font-size: 14px;
-//   }
-  
-//   .illustration {
-//     width: 260px;
-//     margin-top: 8px;
-//   }
-  
-//   /* FIELD */
-//   .field {
-//     margin-bottom: 18px;
-//   }
-  
-//   .field label {
-//     font-size: 13px;
-//     margin-bottom: 6px;
-//     display: block;
-//   }
-  
-//   /* INPUT BOX */
-//   .input-wrapper {
-//     background: #f9fafb;
-//     border: 1.5px solid #e5e7eb;
-//     border-radius: 12px;
-//     height: 50px;
-  
-//     display: flex;
-//     align-items: center;
-//     padding: 0 14px;
-  
-//     transition: 0.25s;
-//   }
-  
-//   ion-input {
-//     --highlight-color-focused: transparent;
-//     --padding-start: 0;
-//   }
-  
-//   .input-wrapper:focus-within {
-//     border: 2px solid #009866;
-//     box-shadow: 0 0 0 3px rgba(0,152,102,0.08);
-//   }
-  
-//   .password-wrapper {
-//     position: relative;
-//   }
-  
-//   .eye {
+// OLD LOGIN STYLES (v3 - green hero + card) - commented out, replaced by v4 above.
+// =====================================================================
+// /* =========================================================
+//    LOGIN PAGE - modern animated design (mobile first)
+//    ========================================================= */
+//
+// $green: #00a95b;
+// $green-light: #56b952;
+// $green-deep: #008a4b;
+// $grey: #808285;
+// $ink: #111827;
+// $muted: #6b7280;
+// $border: #e3e8e5;
+// $ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+// $ease-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+//
+// ion-content.login-page {
+//   --background: #f4f8f6;
+//   --padding-start: 0;
+//   --padding-end: 0;
+//   --padding-top: 0;
+//   --padding-bottom: 0;
+// }
+//
+// ion-content.login-page::part(scroll) {
+//   min-height: 100%;
+//   display: flex;
+//   flex-direction: column;
+// }
+//
+// .lp-wrapper {
+//   flex: 1;
+//   min-height: 100%;
+//   display: flex;
+//   flex-direction: column;
+//   align-items: center;
+//   padding-bottom: env(safe-area-inset-bottom, 0px);
+// }
+//
+//
+// /* =========================================================
+//    HERO
+//    ========================================================= */
+//
+// .lp-hero {
+//   position: relative;
+//   width: 100%;
+//   padding: 44px 24px 92px;
+//   text-align: center;
+//   overflow: hidden;
+//   color: #fff;
+//   flex-shrink: 0;
+//   box-sizing: border-box;
+//   background:
+//     radial-gradient(circle at 85% 15%, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0) 40%),
+//     linear-gradient(145deg, $green-light 0%, $green 55%, $green-deep 100%);
+//   animation: lp-hero-in 0.7s $ease-out backwards;
+//   transition: padding 0.35s ease;
+// }
+//
+// /* Decorative soft circles */
+// .lp-shape {
+//   position: absolute;
+//   border-radius: 50%;
+//   background: rgba(255, 255, 255, 0.09);
+//   pointer-events: none;
+// }
+// .lp-shape--1 { width: 220px; height: 220px; top: -90px; left: -70px; animation: lp-drift 10s ease-in-out infinite alternate; }
+// .lp-shape--2 { width: 140px; height: 140px; top: 30px; right: -50px; animation: lp-drift 8s ease-in-out 1s infinite alternate-reverse; }
+// .lp-shape--3 { width: 70px; height: 70px; bottom: 50px; left: 18%; background: rgba(255, 255, 255, 0.07); animation: lp-drift 7s ease-in-out 0.5s infinite alternate; }
+//
+// /* Small chat bubbles floating upward */
+// .lp-float {
+//   position: absolute;
+//   bottom: 30px;
+//   width: 22px;
+//   height: 15px;
+//   border-radius: 8px;
+//   border: 2px solid rgba(255, 255, 255, 0.45);
+//   opacity: 0;
+//   pointer-events: none;
+//   animation: lp-float-up 7s ease-in infinite;
+//
+//   &::after {
+//     content: "";
 //     position: absolute;
-//     right: 12px;
-//     font-size: 22px;
-//     z-index: 10;   /* 🔥 IMPORTANT */
-//     color: #009866;
+//     bottom: -6px;
+//     left: 3px;
+//     border: 4px solid transparent;
+//     border-top-color: rgba(255, 255, 255, 0.45);
 //   }
-  
-//   .row {
-//     display: flex;
-//     justify-content: space-between;
-//     align-items: center;
-//     margin: 10px 0 16px;
-//   }
-  
-//   .remember {
-//     display: flex;
-//     align-items: center;
-//     gap: 6px;
-//   }
-  
-//   .forgot {
-//     color: #009866;
-//     font-weight: 500;
-//     font-size: 14px;
-//   }
-  
-//   .login-btn {
-//     height: 52px;
-//     border-radius: 14px;
-//     background: linear-gradient(90deg,#00b36b,#009866);
-//     display: flex;
-//     justify-content: center;
-//     align-items: center;
-//     color: white;
+// }
+// .lp-float--1 { left: 10%; animation-delay: 0.8s; }
+// .lp-float--2 { left: 82%; animation-delay: 3s; width: 16px; height: 11px; }
+// .lp-float--3 { left: 62%; animation-delay: 5s; width: 19px; height: 13px; }
+//
+//
+// /* ---------- Logo badge ---------- */
+//
+// .lp-badge {
+//   position: relative;
+//   width: 88px;
+//   height: 88px;
+//   margin: 0 auto 18px;
+//   border-radius: 28px;
+//   background: #fff;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   box-shadow: 0 14px 30px rgba(0, 70, 35, 0.25);
+//   animation: lp-pop 0.7s $ease-back 0.25s both;
+//   transition: width 0.35s ease, height 0.35s ease, border-radius 0.35s ease, margin 0.35s ease;
+// }
+//
+// .lp-badge-ring {
+//   position: absolute;
+//   top: -2px; right: -2px; bottom: -2px; left: -2px;
+//   border-radius: inherit;
+//   border: 2px solid rgba(255, 255, 255, 0.6);
+//   animation: lp-ring 2.6s ease-out 1.2s infinite;
+// }
+//
+// .lp-icon {
+//   width: 66px;
+//   height: 66px;
+//   overflow: visible;
+//
+//   * { transform-box: fill-box; }
+// }
+//
+// .lp-bubble path {
+//   fill: none;
+//   stroke-width: 7;
+//   stroke-linecap: round;
+//   stroke-linejoin: round;
+//   stroke-dasharray: 1;
+//   stroke-dashoffset: 1;
+// }
+// .lp-bubble--grey path { stroke: $grey; animation: lp-draw 0.8s ease-out 0.55s forwards; }
+// .lp-bubble--green path { stroke: $green-light; animation: lp-draw 0.8s ease-out 0.8s forwards; }
+// .lp-bubble--grey { animation: lp-bob 3s ease-in-out 1.8s infinite; }
+// .lp-bubble--green { animation: lp-bob 3s ease-in-out 2.2s infinite reverse; }
+//
+// .lp-dot { transform-origin: center; transform: scale(0); }
+// .lp-dot--g { fill: $green-light; }
+// .lp-dot--k { fill: $grey; }
+// .lp-dot.d1 { animation: lp-dot-pop 0.35s ease-out 1.2s forwards, lp-typing 1.3s ease-in-out 1.7s infinite; }
+// .lp-dot.d2 { animation: lp-dot-pop 0.35s ease-out 1.3s forwards, lp-typing 1.3s ease-in-out 1.85s infinite; }
+// .lp-dot.d3 { animation: lp-dot-pop 0.35s ease-out 1.4s forwards, lp-typing 1.3s ease-in-out 2.0s infinite; }
+// .lp-dot.d4 { animation: lp-dot-pop 0.35s ease-out 1.35s forwards, lp-typing 1.3s ease-in-out 2.3s infinite; }
+// .lp-dot.d5 { animation: lp-dot-pop 0.35s ease-out 1.45s forwards, lp-typing 1.3s ease-in-out 2.45s infinite; }
+// .lp-dot.d6 { animation: lp-dot-pop 0.35s ease-out 1.55s forwards, lp-typing 1.3s ease-in-out 2.6s infinite; }
+//
+//
+// /* ---------- Title ---------- */
+//
+// .lp-title {
+//   margin: 0;
+//   font-size: 28px;
+//   line-height: 1.15;
+//   font-weight: 700;
+//   letter-spacing: -0.5px;
+//   animation: lp-rise 0.6s $ease-out 0.45s both;
+// }
+//
+// .lp-subtitle {
+//   margin: 8px auto 0;
+//   max-width: 280px;
+//   font-size: 15px;
+//   line-height: 1.45;
+//   color: rgba(255, 255, 255, 0.88);
+//   animation: lp-rise 0.6s $ease-out 0.55s both;
+//   transition: opacity 0.25s ease, max-height 0.35s ease, margin 0.35s ease;
+//   max-height: 60px;
+//   overflow: hidden;
+// }
+//
+// /* Curved bottom edge */
+// .lp-wave {
+//   position: absolute;
+//   left: 0;
+//   bottom: -1px;
+//   width: 100%;
+//   height: 56px;
+//
+//   path { fill: #f4f8f6; }
+// }
+//
+//
+// /* =========================================================
+//    CARD
+//    ========================================================= */
+//
+// .lp-card {
+//   position: relative;
+//   z-index: 2;
+//   width: calc(100% - 32px);
+//   max-width: 440px;
+//   margin: -64px auto 0;
+//   flex-shrink: 0;
+//   padding: 26px 20px 24px;
+//   box-sizing: border-box;
+//   background: #fff;
+//   border-radius: 24px;
+//   border: 1px solid rgba(227, 232, 229, 0.8);
+//   box-shadow:
+//     0 1px 2px rgba(0, 0, 0, 0.03),
+//     0 18px 40px rgba(16, 60, 38, 0.10);
+//   animation: lp-card-in 0.75s $ease-out 0.35s backwards;
+// }
+//
+// .lp-wordmark {
+//   display: block;
+//   width: 150px;
+//   height: auto;
+//   margin: 0 auto;
+//   animation: lp-fade 0.6s ease 0.6s both;
+// }
+//
+// .lp-card-caption {
+//   margin: 8px 0 22px;
+//   text-align: center;
+//   color: $muted;
+//   font-size: 13.5px;
+//   animation: lp-fade 0.6s ease 0.7s both;
+// }
+//
+// /* Stagger the form rows */
+// .lp-stagger-1 { animation: lp-rise 0.55s $ease-out 0.75s backwards; }
+// .lp-stagger-2 { animation: lp-rise 0.55s $ease-out 0.85s backwards; }
+// .lp-stagger-3 { animation: lp-rise 0.55s $ease-out 0.95s backwards; }
+// .lp-stagger-4 { animation: lp-rise 0.55s $ease-out 1.05s backwards; }
+//
+//
+// /* ---------- Fields ---------- */
+//
+// .lp-field {
+//   margin-bottom: 16px;
+//
+//   label {
+//     display: block;
+//     margin: 0 0 7px 4px;
+//     color: #374151;
+//     font-size: 13px;
 //     font-weight: 600;
-//     gap: 8px;
-//     box-shadow: 0 6px 16px rgba(0,152,102,0.35);
+//     letter-spacing: 0.2px;
+//     transition: color 0.2s ease;
 //   }
+//
+//   &:focus-within label { color: $green; }
+// }
+//
+// .lp-input {
+//   position: relative;
+//   height: 54px;
+//   display: flex;
+//   align-items: center;
+//   gap: 12px;
+//   padding: 0 14px;
+//   background: #f7f9f8;
+//   border: 1.5px solid $border;
+//   border-radius: 14px;
+//   transition: border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+//
+//   /* animated underline that grows from the center on focus */
+//   &::after {
+//     content: "";
+//     position: absolute;
+//     left: 14px;
+//     right: 14px;
+//     bottom: -1.5px;
+//     height: 2px;
+//     border-radius: 2px;
+//     background: linear-gradient(90deg, $green-light, $green);
+//     transform: scaleX(0);
+//     transition: transform 0.35s $ease-out;
+//   }
+//
+//   &:focus-within {
+//     background: #fff;
+//     border-color: rgba(0, 169, 91, 0.55);
+//     box-shadow: 0 0 0 4px rgba(0, 169, 91, 0.10), 0 6px 16px rgba(0, 169, 91, 0.08);
+//     // transform: translateY(-1px);  // removed: lifting the field hid the caret on some WebViews
+//
+//     &::after { transform: scaleX(1); }
+//
+//     .lp-input-icon {
+//       color: $green;
+//       transform: scale(1.12);
+//     }
+//   }
+// }
+//
+// .lp-input-icon {
+//   flex: 0 0 auto;
+//   font-size: 20px;
+//   color: #9aa5a0;
+//   transition: color 0.25s ease, transform 0.3s $ease-back;
+// }
+//
+// ion-input {
+//   --background: transparent;
+//   --color: #{$ink};
+//   --placeholder-color: #b4bcb8;
+//   --placeholder-opacity: 1;
+//   --padding-start: 0;
+//   --padding-end: 0;
+//   --padding-top: 0;
+//   --padding-bottom: 0;
+//   --highlight-color-focused: transparent;
+//   --highlight-color-valid: transparent;
+//   --highlight-color-invalid: transparent;
+//   --border-width: 0;
+//   flex: 1;
+//   min-width: 0;
+//   // min-height: 100% !important;
+//   height: 100%;
+//   min-height: 0 !important;
+//   display: flex;
+//   align-items: center;
+//   font-size: 15.5px;
+//   line-height: normal;
+//   caret-color: $green;
+// }
+//
+// ion-input::part(native) {
+//   border: none !important;
+//   outline: none !important;
+//   box-shadow: none !important;
+// }
+//
+// /* Ionic's inner wrappers: stretch to the field height and centre the text */
+// ion-input ::ng-deep .input-wrapper,
+// ion-input ::ng-deep .native-wrapper {
+//   height: 100%;
+//   min-height: 0 !important;
+//   display: flex;
+//   align-items: center;
+// }
+//
+// ion-input ::ng-deep input.native-input {
+//   height: 100%;
+//   padding: 0 !important;
+//   margin: 0;
+//   line-height: normal;
+//   caret-color: $green !important;
+// }
+//
+// /* Show / hide password */
+// .lp-eye {
+//   flex: 0 0 auto;
+//   width: 36px;
+//   height: 36px;
+//   margin-right: -6px;
+//   padding: 0;
+//   border: 0;
+//   border-radius: 50%;
+//   background: transparent;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   color: #9aa5a0;
+//   cursor: pointer;
+//   -webkit-tap-highlight-color: transparent;
+//   transition: background 0.2s ease, color 0.2s ease;
+//
+//   ion-icon {
+//     font-size: 20px;
+//     pointer-events: none;
+//     transition: transform 0.3s $ease-back;
+//   }
+//
+//   &:active { background: rgba(0, 169, 91, 0.10); }
+//
+//   &--on {
+//     color: $green;
+//
+//     ion-icon { transform: rotate(-12deg) scale(1.08); }
+//   }
+// }
+//
+//
+// /* ---------- Inline validation ---------- */
+//
+// $error: #e5383b;
+//
+// .lp-req {
+//   color: $error;
+//   font-weight: 700;
+// }
+//
+// /* green tick when the field is valid */
+// .lp-valid-icon {
+//   flex: 0 0 auto;
+//   font-size: 20px;
+//   color: $green;
+//   opacity: 0;
+//   transform: scale(0);
+//   width: 0;
+//   transition: opacity 0.2s ease, transform 0.3s $ease-back, width 0.2s ease;
+// }
+//
+// .lp-field--valid {
+//   .lp-input { border-color: rgba(0, 169, 91, 0.45); }
+//   .lp-valid-icon { opacity: 1; transform: scale(1); width: 20px; }
+// }
+//
+// .lp-field--error {
+//   label { color: $error !important; }
+//
+//   .lp-input,
+//   .lp-input:focus-within {
+//     background: #fff8f8;
+//     border-color: $error;
+//     box-shadow: 0 0 0 4px rgba(229, 56, 59, 0.10);
+//
+//     &::after { background: $error; }
+//
+//     .lp-input-icon { color: $error; }
+//   }
+// }
+//
+// .lp-error {
+//   display: flex;
+//   align-items: center;
+//   gap: 6px;
+//   margin: 7px 0 0 4px;
+//   color: $error;
+//   font-size: 12.5px;
+//   font-weight: 500;
+//   line-height: 1.3;
+//   animation: lp-error-in 0.3s $ease-out both;
+//
+//   ion-icon {
+//     flex: 0 0 auto;
+//     font-size: 15px;
+//   }
+// }
+//
+// .lp-shake { animation: lp-shake 0.45s ease-in-out; }
+//
+// @keyframes lp-error-in {
+//   from { opacity: 0; transform: translateY(-6px); }
+//   to { opacity: 1; transform: none; }
+// }
+//
+// @keyframes lp-shake {
+//   0%, 100% { transform: translateX(0); }
+//   15%, 55% { transform: translateX(-7px); }
+//   35%, 75% { transform: translateX(7px); }
+//   90% { transform: translateX(-2px); }
+// }
+//
+//
+// /* ---------- Forgot password ---------- */
+//
+// .lp-row {
+//   display: flex;
+//   justify-content: flex-end;
+//   margin: 2px 0 22px;
+// }
+//
+// .lp-forgot {
+//   position: relative;
+//   color: $green;
+//   font-size: 13.5px;
+//   font-weight: 600;
+//   cursor: pointer;
+//   user-select: none;
+//   padding: 4px 2px;
+//
+//   &::after {
+//     content: "";
+//     position: absolute;
+//     left: 2px;
+//     right: 2px;
+//     bottom: 1px;
+//     height: 1.5px;
+//     background: currentColor;
+//     transform: scaleX(0);
+//     transform-origin: right;
+//     transition: transform 0.3s ease;
+//   }
+//
+//   &:active::after,
+//   &:hover::after {
+//     transform: scaleX(1);
+//     transform-origin: left;
+//   }
+// }
+//
+//
+// /* ---------- Login button ---------- */
+//
+// .lp-btn {
+//   position: relative;
+//   overflow: hidden;
+//   height: 54px;
+//   border-radius: 14px;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   gap: 10px;
+//   color: #fff;
+//   font-size: 15.5px;
+//   font-weight: 700;
+//   letter-spacing: 0.2px;
+//   cursor: pointer;
+//   user-select: none;
+//   -webkit-tap-highlight-color: transparent;
+//   background: linear-gradient(135deg, $green-light 0%, $green 60%, $green-deep 100%);
+//   background-size: 200% 200%;
+//   box-shadow: 0 10px 22px rgba(0, 169, 91, 0.28);
+//   transition: transform 0.15s ease, box-shadow 0.2s ease;
+//
+//   span, ion-icon { position: relative; z-index: 1; }
+//
+//   ion-icon {
+//     font-size: 20px;
+//     animation: lp-nudge 1.8s ease-in-out 2s infinite;
+//   }
+//
+//   /* shine sweep */
+//   &::before {
+//     content: "";
+//     position: absolute;
+//     top: 0;
+//     bottom: 0;
+//     left: -75%;
+//     width: 50%;
+//     background: linear-gradient(100deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.35) 50%, rgba(255, 255, 255, 0) 100%);
+//     transform: skewX(-20deg);
+//     animation: lp-shine 3.6s ease-in-out 1.8s infinite;
+//   }
+//
+//   &:active {
+//     transform: scale(0.97);
+//     box-shadow: 0 5px 12px rgba(0, 169, 91, 0.22);
+//   }
+// }
+//
+//
+// /* =========================================================
+//    FOOTER
+//    ========================================================= */
+//
+// .lp-footer {
+//   margin-top: auto;
+//   flex-shrink: 0;
+//   padding: 28px 0 22px;
+//   text-align: center;
+//   animation: lp-fade 0.6s ease 1.2s both;
+//
+//   small {
+//     display: block;
+//     color: #9aa5a0;
+//     font-size: 11.5px;
+//     letter-spacing: 0.4px;
+//   }
+//
+//   strong {
+//     display: block;
+//     margin-top: 2px;
+//     font-size: 13px;
+//     font-weight: 700;
+//     letter-spacing: 3px;
+//     background: linear-gradient(90deg, $green, $green-light);
+//     -webkit-background-clip: text;
+//     background-clip: text;
+//     color: transparent;
+//   }
+// }
+//
+//
+// /* =========================================================
+//    KEYBOARD OPEN - compact hero so the form stays visible
+//    ========================================================= */
+//
+// .lp-keyboard-open {
+//   .lp-hero { padding-top: 18px; padding-bottom: 76px; }
+//   .lp-badge { width: 56px; height: 56px; border-radius: 18px; margin-bottom: 10px; }
+//   .lp-icon { width: 42px; height: 42px; }
+//   .lp-subtitle { opacity: 0; max-height: 0; margin-top: 0; }
+//   .lp-footer { display: none; }
+// }
+//
+//
+// /* =========================================================
+//    RESPONSIVE
+//    ========================================================= */
+//
+// @media (max-width: 360px) {
+//   .lp-hero { padding: 32px 20px 84px; }
+//   .lp-badge { width: 76px; height: 76px; border-radius: 24px; }
+//   .lp-icon { width: 56px; height: 56px; }
+//   .lp-title { font-size: 25px; }
+//   .lp-subtitle { font-size: 14px; }
+//   .lp-card { width: calc(100% - 24px); padding: 22px 16px 20px; }
+//   .lp-input, .lp-btn { height: 50px; }
+// }
+//
+// @media (min-width: 600px) {
+//   .lp-hero { padding: 72px 24px 120px; }
+//   .lp-badge { width: 104px; height: 104px; border-radius: 32px; }
+//   .lp-icon { width: 78px; height: 78px; }
+//   .lp-title { font-size: 34px; }
+//   .lp-subtitle { font-size: 16px; max-width: 360px; }
+//   .lp-wave { height: 80px; }
+//   .lp-card { margin-top: -80px; padding: 34px 32px 30px; border-radius: 28px; }
+//   .lp-wordmark { width: 180px; }
+// }
+//
+//
+// /* =========================================================
+//    KEYFRAMES
+//    ========================================================= */
+//
+// @keyframes lp-hero-in { from { transform: translateY(-40px); opacity: 0; } to { transform: none; opacity: 1; } }
+// @keyframes lp-card-in { from { transform: translateY(60px) scale(0.97); opacity: 0; } to { transform: none; opacity: 1; } }
+// @keyframes lp-rise { from { transform: translateY(14px); opacity: 0; } to { transform: none; opacity: 1; } }
+// @keyframes lp-fade { from { opacity: 0; } to { opacity: 1; } }
+// @keyframes lp-pop { from { transform: scale(0) rotate(-12deg); opacity: 0; } to { transform: none; opacity: 1; } }
+// @keyframes lp-ring { 0% { transform: scale(1); opacity: 0.8; } 100% { transform: scale(1.45); opacity: 0; } }
+// @keyframes lp-draw { to { stroke-dashoffset: 0; } }
+// @keyframes lp-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+// @keyframes lp-dot-pop { 0% { transform: scale(0); } 70% { transform: scale(1.35); } 100% { transform: scale(1); } }
+// @keyframes lp-typing { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-4px); } }
+// @keyframes lp-drift { from { transform: translate(0, 0) scale(1); } to { transform: translate(16px, 20px) scale(1.1); } }
+// @keyframes lp-float-up {
+//   0% { opacity: 0; transform: translateY(0); }
+//   15% { opacity: 1; }
+//   85% { opacity: 0.6; }
+//   100% { opacity: 0; transform: translateY(-220px); }
+// }
+// @keyframes lp-shine { 0% { left: -75%; } 35%, 100% { left: 130%; } }
+// @keyframes lp-nudge { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(4px); } }
+//
+//
+// /* =========================================================
+//    REDUCED MOTION
+//    ========================================================= */
+//
+// @media (prefers-reduced-motion: reduce) {
+//   .lp-wrapper *,
+//   .lp-wrapper *::before,
+//   .lp-wrapper *::after {
+//     animation-duration: 0.01ms !important;
+//     animation-delay: 0s !important;
+//     animation-iteration-count: 1 !important;
+//     transition-duration: 0.01ms !important;
+//   }
+// }
+//
+
+// =====================================================================
+// OLD LOGIN STYLES - commented out, replaced by the animated design above.
+// =====================================================================
+
+// /* =========================================================
+//    LOGIN PAGE
+//    ========================================================= */
+//
+// .login-page {
+//   --background: #f2f8f5;
+//
+//   background:
+//     radial-gradient(
+//       circle at 8% 18%,
+//       rgba(207, 244, 224, 0.72) 0%,
+//       rgba(207, 244, 224, 0) 32%
+//     ),
+//     radial-gradient(
+//       circle at 94% 84%,
+//       rgba(208, 245, 226, 0.72) 0%,
+//       rgba(208, 245, 226, 0) 34%
+//     ),
+//     linear-gradient(
+//       180deg,
+//       #f5faf8 0%,
+//       #edf8f3 100%
+//     );
+//
+//   --padding-start: 0;
+//   --padding-end: 0;
+//   --padding-top: 0;
+//   --padding-bottom: 0;
+//
+//   width: 100%;
+//   height: 100%;
+// }
+// .ture-icon-img {
+//   width: 20px !important;
+//   height: 18px !important;
+//   object-fit: contain;
+// }
+//
+//
+// /* =========================================================
+//    ION CONTENT
+//    ========================================================= */
+//
+// ion-content.login-page {
+//   --background: transparent;
+// }
+//
+// ion-content.login-page::part(scroll) {
+//   min-height: 100%;
+//
+//   display: flex;
+//   flex-direction: column;
+//
+//   box-sizing: border-box;
+// }
+//
+//
+// /* =========================================================
+//    MAIN PAGE WRAPPER
+//    ========================================================= */
+//
+// .page-wrapper {
+//   width: 100%;
+//   min-height: 100%;
+//
+//   display: flex;
+//   flex-direction: column;
+//   align-items: center;
+//
+//   box-sizing: border-box;
+//
+//   padding-top: env(safe-area-inset-top, 0px);
+//   padding-bottom: env(safe-area-inset-bottom, 0px);
+// }
+//
+//
+// /* =========================================================
+//    TOP SECTION
+//    ========================================================= */
+//
+// .top-wrapper {
+//   width: 100%;
+//   max-width: 900px;
+//
+//   box-sizing: border-box;
+//
+//   text-align: center;
+//
+//   padding: 76px 24px 58px;
+//
+//   display: flex;
+//   flex-direction: column;
+//   align-items: center;
+// }
+//
+//
+// /* =========================================================
+//    LOGO CONTAINER
+//    ========================================================= */
+//
+// .brand-container {
+//   width: 278px;
+//   height: 49px;
+//
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//
+//   position: relative;
+//
+//   margin: 0 auto 52px;
+//
+//   flex-shrink: 0;
+// }
+//
+//
+// /* =========================================================
+//    ACTUAL SUPER ASSIST LOGO
+//    ========================================================= */
+//
+// .brand-logo {
+//   width: 278px;
+//   height: 49px;
+//
+//   display: block;
+//
+//   object-fit: contain;
+//
+//   opacity: 1;
+//
+//   margin: 0;
+//   padding: 0;
+// }
+//
+//
+// /* =========================================================
+//    PAGE TITLE
+//    ========================================================= */
+//
+// .title {
+//   margin: 0;
+//
+//   color: #111515;
+//
+//   font-size: 57px;
+//   line-height: 1.08;
+//
+//   font-weight: 700;
+//
+//   letter-spacing: -2px;
+//
+//   text-align: center;
+// }
+//
+//
+// /* =========================================================
+//    SUBTITLE
+//    ========================================================= */
+//
+// .subtitle {
+//   margin: 20px 0 0;
+//
+//   color: #4c5750;
+//
+//   font-size: 30px;
+//
+//   line-height: 1.35;
+//
+//   font-weight: 400;
+//
+//   letter-spacing: -0.5px;
+//
+//   text-align: center;
+// }
+//
+//
+// /* =========================================================
+//    FORM CARD
+//    ========================================================= */
+//
+// .form-wrapper {
+//   width: calc(100% - 68px);
+//   max-width: 830px;
+//
+//   box-sizing: border-box;
+//
+//   background: rgba(255, 255, 255, 0.97);
+//
+//   border-radius: 38px;
+//
+//   padding: 78px 40px 48px;
+//
+//   margin: 0 auto 48px;
+//
+//   border: 1px solid rgba(226, 232, 228, 0.9);
+//
+//   box-shadow:
+//     0 2px 4px rgba(0, 0, 0, 0.025),
+//     0 10px 35px rgba(24, 63, 45, 0.055);
+//
+//   position: relative;
+// }
+//
+//
+// /* =========================================================
+//    FIELD
+//    ========================================================= */
+//
+// .field {
+//   width: 100%;
+//
+//   margin: 0 0 54px;
+// }
+//
+//
+// /* Password field */
+//
+// .password-field {
+//   margin-bottom: 0;
+// }
+//
+//
+// /* =========================================================
+//    LABEL
+//    ========================================================= */
+//
+// .field label {
+//   display: block;
+//
+//   margin: 0 0 22px 10px;
+//
+//   color: #171b1a;
+//
+//   font-size: 29px;
+//
+//   line-height: 1.2;
+//
+//   font-weight: 400;
+//
+//   letter-spacing: -0.5px;
+// }
+//
+//
+// /* =========================================================
+//    INPUT WRAPPER
+//    ========================================================= */
+//
+// .input-wrapper {
+//   width: 100%;
+//   height: 132px;
+//
+//   box-sizing: border-box;
+//
+//   display: flex;
+//   align-items: center;
+//
+//   padding: 0 34px;
+//
+//   gap: 28px;
+//
+//   background: #ffffff;
+//
+//   border: 2px solid #b9cbbd;
+//
+//   border-radius: 37px;
+//
+//   transition:
+//     border-color 0.2s ease,
+//     box-shadow 0.2s ease;
+// }
+//
+//
+// /* =========================================================
+//    INPUT ICON
+//    ========================================================= */
+//
+// .input-icon {
+//   flex: 0 0 auto;
+//
+//   width: 43px;
+//   height: 43px;
+//
+//   font-size: 43px;
+//
+//   color: #718074;
+// }
+//
+//
+// /* =========================================================
+//    ION INPUT
+//    ========================================================= */
+//
+// ion-input {
+//   --background: transparent;
+//
+//   --color: #202522;
+//
+//   --placeholder-color: #c7cdca;
+//
+//   --placeholder-opacity: 1;
+//
+//   --padding-start: 0;
+//   --padding-end: 0;
+//   --padding-top: 0;
+//   --padding-bottom: 0;
+//
+//   --highlight-color-focused: transparent;
+//   --highlight-color-valid: transparent;
+//   --highlight-color-invalid: transparent;
+//
+//   flex: 1;
+//
+//   width: 100%;
+//   min-width: 0;
+//
+//   font-size: 29px;
+//
+//   font-weight: 400;
+//
+//   color: #202522;
+//
+//   --border-width: 0;
+// }
+//
+//
+// /* Remove Ionic default input highlight */
+//
+// ion-input::part(native) {
+//   border: none !important;
+//
+//   outline: none !important;
+//
+//   box-shadow: none !important;
+// }
+//
+//
+// /* =========================================================
+//    INPUT FOCUS & BLINKING EFFECT (FORCED)
+// ========================================================= */
+//
+// .input-wrapper:focus-within {
+//   border-color: #54b85a !important;
+//   animation: greenInputBlink 1.4s ease-in-out infinite !important;
+//   transition: none !important;
+// }
+//
+// @keyframes greenInputBlink {
+//   0% {
+//     border-color: #54b85a;
+//     box-shadow: 0 0 0 3px rgba(75, 189, 85, 0.08), 0 0 8px rgba(75, 189, 85, 0.05);
+//   }
+//   50% {
+//     border-color: #2eb837;
+//     box-shadow: 0 0 0 6px rgba(75, 189, 85, 0.25), 0 0 20px rgba(75, 189, 85, 0.3);
+//   }
+//   100% {
+//     border-color: #54b85a;
+//     box-shadow: 0 0 0 3px rgba(75, 189, 85, 0.08), 0 0 8px rgba(75, 189, 85, 0.05);
+//   }
+// }
+//
+//
+// /* =========================================================
+//    PASSWORD WRAPPER
+//    ========================================================= */
+//
+// .password-wrapper {
+//   position: relative;
+//
+//   padding-right: 30px;
+// }
+//
+//
+// /* =========================================================
+//    EYE ICON
+//    ========================================================= */
+//
+// .eye {
+//   flex: 0 0 auto;
+//
+//   width: 45px;
+//   height: 45px;
+//
+//   font-size: 45px;
+//
+//   color: #718074;
+//
+//   cursor: pointer;
+//
+//   transition: color 0.2s ease;
+// }
+//
+// .eye:active {
+//   color: #4bbd55;
+// }
+//
+//
+// /* =========================================================
+//    FORGOT PASSWORD ROW
+//    ========================================================= */
+//
+// .row {
+//   width: 100%;
+//
+//   display: flex;
+//
+//   justify-content: flex-end;
+//
+//   align-items: center;
+//
+//   margin: 27px 0 54px;
+// }
+//
+//
+// /* =========================================================
+//    FORGOT PASSWORD
+//    ========================================================= */
+//
+// .forgot {
+//   color: #00a95b;
+//
+//   font-size: 29px;
+//
+//   line-height: 1.2;
+//
+//   font-weight: 500;
+//
+//   letter-spacing: -0.3px;
+//
+//   cursor: pointer;
+//
+//   user-select: none;
+//
+//   transition: opacity 0.2s ease;
+// }
+//
+// .forgot:active {
+//   opacity: 0.7;
+// }
+//
+//
+// /* =========================================================
+//    LOGIN BUTTON
+//    ========================================================= */
+//
+// .login-btn {
+//   width: 100%;
+//
+//   height: 126px;
+//
+//   border-radius: 36px;
+//
+//   background: #05ae61;
+//
+//   display: flex;
+//
+//   align-items: center;
+//
+//   justify-content: center;
+//
+//   gap: 24px;
+//
+//   box-sizing: border-box;
+//
+//   color: #ffffff;
+//
+//   font-size: 29px;
+//
+//   line-height: 1;
+//
+//   font-weight: 700;
+//
+//   letter-spacing: -0.5px;
+//
+//   cursor: pointer;
+//
+//   user-select: none;
+//
+//   box-shadow:
+//     0 13px 28px rgba(0, 174, 97, 0.22);
+//
+//   transition:
+//     transform 0.15s ease,
+//     opacity 0.15s ease,
+//     box-shadow 0.15s ease;
+// }
+//
+//
+// /* =========================================================
+//    LOGIN BUTTON ARROW
+//    ========================================================= */
+//
+// .login-btn ion-icon {
+//   width: 45px;
+//   height: 45px;
+//
+//   font-size: 45px;
+//
+//   flex: 0 0 auto;
+// }
+//
+//
+// /* =========================================================
+//    BUTTON PRESS
+//    ========================================================= */
+//
+// .login-btn:active {
+//   transform: scale(0.985);
+//
+//   opacity: 0.94;
+//
+//   box-shadow:
+//     0 7px 18px rgba(0, 174, 97, 0.18);
+// }
+//
+//
+// /* =========================================================
+//    MOBILE - 600px AND BELOW
+//    ========================================================= */
+//
+// @media (max-width: 600px) {
+//
+//   .top-wrapper {
+//     padding: 42px 20px 34px;
+//   }
+//
+//   .brand-container {
+//     width: 278px;
+//     max-width: 100%;
+//
+//     height: 49px;
+//
+//     margin-bottom: 34px;
+//   }
+//
+//   .brand-logo {
+//     width: 278px;
+//     max-width: 100%;
+//
+//     height: 49px;
+//
+//     object-fit: contain;
+//   }
+//
+//   .title {
+//     font-size: 34px;
+//
+//     letter-spacing: -1px;
+//
+//     line-height: 1.1;
+//   }
+//
+//   .subtitle {
+//     margin-top: 12px;
+//
+//     font-size: 18px;
+//
+//     line-height: 1.42;
+//   }
+//
+//   .form-wrapper {
+//     width: calc(100% - 34px);
+//
+//     max-width: none;
+//
+//     border-radius: 30px;
+//
+//     padding: 38px 26px 30px;
+//
+//     margin-bottom: 30px;
+//   }
+//
+//   .field {
+//     margin-bottom: 31px;
+//   }
+//
+//   .field label {
+//     font-size: 19px;
+//
+//     margin: 0 0 13px 8px;
+//
+//     line-height: 1.2;
+//   }
+//
+//   .input-wrapper {
+//     height: 62px;
+//
+//     border-radius: 22px;
+//
+//     padding: 0 18px;
+//
+//     gap: 14px;
+//
+//     border-width: 1.5px;
+//   }
+//
+//   .input-icon {
+//     width: 25px;
+//     height: 25px;
+//
+//     font-size: 25px;
+//   }
+//
+//   ion-input {
+//     font-size: 18px;
+//   }
+//
+//   .password-wrapper {
+//     padding-right: 17px;
+//   }
+//
+//   .eye {
+//     width: 27px;
+//     height: 27px;
+//
+//     font-size: 27px;
+//   }
+//
+//   .row {
+//     margin: 15px 0 30px;
+//   }
+//
+//   .forgot {
+//     font-size: 18px;
+//   }
+//
+//   .login-btn {
+//     height: 69px;
+//
+//     border-radius: 22px;
+//
+//     font-size: 18px;
+//
+//     gap: 11px;
+//   }
+//
+//   .login-btn ion-icon {
+//     width: 28px;
+//     height: 28px;
+//
+//     font-size: 28px;
+//   }
+// }
+//
+//
+// /* =========================================================
+//    SMALL MOBILE - 390px AND BELOW
+//    ========================================================= */
+//
+// @media (max-width: 390px) {
+//
+//   .top-wrapper {
+//     padding-top: 32px;
+//   }
+//
+//   .brand-container {
+//     width: 278px;
+//     max-width: 100%;
+//
+//     height: 49px;
+//
+//     margin-bottom: 30px;
+//   }
+//
+//   .brand-logo {
+//     width: 278px;
+//     max-width: 100%;
+//
+//     height: 49px;
+//     margin-top: 85px;
+//   }
+//
+//   .title {
+//     font-size: 31px;
+//     margin-top: 45px;
+//   }
+//
+//   .subtitle {
+//     font-size: 16px;
+//   }
+//
+//   .form-wrapper {
+//     width: calc(100% - 24px);
+//
+//     padding: 32px 20px 25px;
+//   }
+//
+//   .field label {
+//     font-size: 18px;
+//   }
+//
+//   .input-wrapper {
+//     height: 62px;
+//
+//     border-radius: 16px;
+//
+//     padding: 0 15px;
+//
+//     gap: 11px;
+//   }
+//
+//   .input-icon {
+//     width: 24px;
+//     height: 24px;
+//
+//     font-size: 24px;
+//   }
+//
+//   ion-input {
+//     font-size: 16px;
+//   }
+//
+//   .forgot {
+//     font-size: 16px;
+//   }
+//
+//   .login-btn {
+//     height: 56px;
+//
+//     border-radius: 16px;
+//
+//     font-size: 16px;
+//   }
+//
+//   .login-btn ion-icon {
+//     width: 26px;
+//     height: 26px;
+//
+//     font-size: 26px;
+//   }
+// }
+//
+//
+// /* =========================================================
+//    TABLET
+//    ========================================================= */
+//
+// @media (min-width: 601px) and (max-width: 1024px) {
+//
+//   .top-wrapper {
+//     padding-top: 60px;
+//
+//     padding-bottom: 45px;
+//   }
+//
+//   .brand-container {
+//     width: 278px;
+//     height: 49px;
+//
+//     margin-bottom: 42px;
+//   }
+//
+//   .brand-logo {
+//     width: 278px;
+//     height: 49px;
+//   }
+//
+//   .title {
+//     font-size: 46px;
+//   }
+//
+//   .subtitle {
+//     font-size: 24px;
+//   }
+//
+//   .form-wrapper {
+//     width: calc(100% - 60px);
+//
+//     max-width: 760px;
+//
+//     padding: 55px 36px 40px;
+//
+//     border-radius: 34px;
+//   }
+//
+//   .field label {
+//     font-size: 25px;
+//   }
+//
+//   .input-wrapper {
+//     height: 105px;
+//
+//     border-radius: 31px;
+//
+//     padding: 0 28px;
+//
+//     gap: 22px;
+//   }
+//
+//   .input-icon {
+//     width: 36px;
+//     height: 36px;
+//
+//     font-size: 36px;
+//   }
+//
+//   ion-input {
+//     font-size: 25px;
+//   }
+//
+//   .eye {
+//     width: 38px;
+//     height: 38px;
+//
+//     font-size: 38px;
+//   }
+//
+//   .forgot {
+//     font-size: 24px;
+//   }
+//
+//   .login-btn {
+//     height: 102px;
+//
+//     border-radius: 30px;
+//
+//     font-size: 25px;
+//   }
+//
+//   .login-btn ion-icon {
+//     width: 38px;
+//     height: 38px;
+//
+//     font-size: 38px;
+//   }
+// }
+//
+//
+// /* =========================================================
+//    DESKTOP / LAPTOP
+//    ========================================================= */
+//
+// @media (min-width: 1025px) {
+//
+//   .top-wrapper {
+//     padding-top: 76px;
+//
+//     padding-bottom: 58px;
+//   }
+//
+//   .form-wrapper {
+//     max-width: 830px;
+//   }
+// }
+//
+//
+// /* =========================================================
+//    LARGE DESKTOP
+//    ========================================================= */
+//
+// @media (min-width: 1200px) {
+//
+//   .top-wrapper {
+//     padding-top: 90px;
+//
+//     padding-bottom: 64px;
+//   }
+//
+//   .form-wrapper {
+//     max-width: 830px;
+//   }
+// }
+//
+//
+// /* =========================================================
+//    PASSWORD EYE BUTTON
+//    ========================================================= */
+//
+// .eye-btn {
+//   width: 45px;
+//   height: 45px;
+//
+//   padding: 0;
+//   margin: 0;
+//
+//   border: 0;
+//   outline: 0;
+//
+//   background: transparent;
+//
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//
+//   color: #718074;
+//
+//   cursor: pointer;
+//
+//   flex: 0 0 auto;
+//
+//   -webkit-tap-highlight-color: transparent;
+// }
+//
+// .eye-btn ion-icon {
+//   width: 45px;
+//   height: 45px;
+//
+//   font-size: 45px;
+//
+//   color: #718074;
+//
+//   pointer-events: none;
+// }
+//
+// .eye-btn:active ion-icon {
+//   color: #4bbd55;
+// }
+//
+//
+// /* =========================================================
+//    MOBILE EYE BUTTON
+// ========================================================= */
+//
+// @media (max-width: 600px) {
+//
+//   .eye-btn {
+//     width: 27px;
+//     height: 27px;
+//
+//     flex: 0 0 27px;
+//   }
+//
+//   .eye-btn ion-icon {
+//     width: 27px;
+//     height: 27px;
+//
+//     font-size: 27px;
+//   }
+// }
+//
+//
+// /* =========================================================
+//    TABLET EYE BUTTON
+// ========================================================= */
+//
+// @media (min-width: 601px) and (max-width: 1024px) {
+//
+//   .eye-btn {
+//     width: 38px;
+//     height: 38px;
+//
+//     flex: 0 0 38px;
+//   }
+//
+//   .eye-btn ion-icon {
+//     width: 38px;
+//     height: 38px;
+//
+//     font-size: 38px;
+//   }
+// }
+//
+//
+// /* =========================================================
+//    REDUCE MOTION
+// ========================================================= */
+//
+// @media (prefers-reduced-motion: reduce) {
+//
+//   .input-wrapper,
+//   .eye,
+//   .forgot,
+//   .login-btn {
+//     transition: none;
+//   }
+//
+//   .input-wrapper:focus-within {
+//     animation: none;
+//   }
+// }
+//
+// .password-eye {
+//   font-size: 25px;
+//   color: #818181;
+//   cursor: pointer;
+//   margin-top: 18px;
+// }
+//
+//
+//
+// // .login-page {
+// //     --background: #eefdf8;
+// //   }
+//
+// //   /* ⭐⭐ VERY IMPORTANT FIX FOR LAPTOP JUMP ISSUE */
+// //   ion-content.login-page::part(scroll) {
+// //     display: flex;
+// //     flex-direction: column;
+// //     min-height: 100%;
+// //   }
+//
+// //   /* FULL PAGE FLEX LAYOUT */
+// //   .page-wrapper {
+// //     flex: 1;
+// //     display: flex;
+// //     flex-direction: column;
+// //     justify-content: space-between;
+//
+// //     /* ⭐ remove vh dependency */
+// //     min-height: 100%;
+// //   }
+//
+// //   /* TOP AREA */
+// //   .top-wrapper {
+// //     text-align: center;
+// //     padding-top: calc(constant(safe-area-inset-top) + 20px);
+// //     padding-top: calc(env(safe-area-inset-top) + 20px);
+// //     padding-bottom: 20px;
+// //     transition:.3s;
+// //   }
+// //   .hide-top + .form-wrapper{
+// //     min-height:100vh;
+// //     border-radius:30px 30px 0 0;
+// //   }
+// //   /* FORM CARD */
+// //   .form-wrapper {
+// //     min-height:42vh;
+// //     background: white;
+// //     border-top-left-radius: 35px;
+// //     border-top-right-radius: 35px;
+// //     padding: 25px 20px 35px;
+// //     box-shadow: 0 -4px 12px rgba(0,0,0,0.06);
+// //   }
+//
+// //   .logo {
+// //     width: 55px;
+// //     height: 55px;
+// //     border-radius: 50%;
+// //     margin-top: 30px;
+// //   }
+//
+// //   .title {
+// //     font-size: 22px;
+// //     font-weight: 600;
+// //     margin-top: 10px;
+// //   }
+//
+// //   .subtitle {
+// //     color: #6b7280;
+// //     font-size: 14px;
+// //   }
+//
+// //   .illustration {
+// //     width: 260px;
+// //     margin-top: 8px;
+// //   }
+//
+// //   /* FIELD */
+// //   .field {
+// //     margin-bottom: 18px;
+// //   }
+//
+// //   .field label {
+// //     font-size: 13px;
+// //     margin-bottom: 6px;
+// //     display: block;
+// //   }
+//
+// //   /* INPUT BOX */
+// //   .input-wrapper {
+// //     background: #f9fafb;
+// //     border: 1.5px solid #e5e7eb;
+// //     border-radius: 12px;
+// //     height: 50px;
+//
+// //     display: flex;
+// //     align-items: center;
+// //     padding: 0 14px;
+//
+// //     transition: 0.25s;
+// //   }
+//
+// //   ion-input {
+// //     --highlight-color-focused: transparent;
+// //     --padding-start: 0;
+// //   }
+//
+// //   .input-wrapper:focus-within {
+// //     border: 2px solid #009866;
+// //     box-shadow: 0 0 0 3px rgba(0,152,102,0.08);
+// //   }
+//
+// //   .password-wrapper {
+// //     position: relative;
+// //   }
+//
+// //   .eye {
+// //     position: absolute;
+// //     right: 12px;
+// //     font-size: 22px;
+// //     z-index: 10;   /* 🔥 IMPORTANT */
+// //     color: #009866;
+// //   }
+//
+// //   .row {
+// //     display: flex;
+// //     justify-content: space-between;
+// //     align-items: center;
+// //     margin: 10px 0 16px;
+// //   }
+//
+// //   .remember {
+// //     display: flex;
+// //     align-items: center;
+// //     gap: 6px;
+// //   }
+//
+// //   .forgot {
+// //     color: #009866;
+// //     font-weight: 500;
+// //     font-size: 14px;
+// //   }
+//
+// //   .login-btn {
+// //     height: 52px;
+// //     border-radius: 14px;
+// //     background: linear-gradient(90deg,#00b36b,#009866);
+// //     display: flex;
+// //     justify-content: center;
+// //     align-items: center;
+// //     color: white;
+// //     font-weight: 600;
+// //     gap: 8px;
+// //     box-shadow: 0 6px 16px rgba(0,152,102,0.35);
+// //   }

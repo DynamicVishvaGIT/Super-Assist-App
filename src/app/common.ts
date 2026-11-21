@@ -50,19 +50,53 @@ export class Common {
     return -1;
   }
 
-  async showToastMessage(message: string, css: string, location:any, duration: number) {
-    if (location){
-      location = location;
-    }
-    else{
-      location='top';
-    }
-    let toast = await this.toastController.create({
-      message: message,
+  // OLD plain toast - replaced by the card-style toast below
+  // async showToastMessage(message: string, css: string, location:any, duration: number) {
+  //   if (location){
+  //     location = location;
+  //   }
+  //   else{
+  //     location='top';
+  //   }
+  //   let toast = await this.toastController.create({
+  //     message: message,
+  //     duration: duration,
+  //     position: location,
+  //     cssClass: css
+  //   });
+  //
+  //   await toast.present();
+  // }
+
+  /**
+   * Card-style toast: icon + title + message + close button + countdown bar.
+   * Same signature as before, so every existing call keeps working.
+   * css: 'toast-success' | 'toast-error' | 'toast-info' | 'toast-warning'
+   */
+  async showToastMessage(message: string, css: string, location: any, duration: number) {
+    const types: { [key: string]: { title: string; icon: string } } = {
+      'toast-success': { title: 'Success', icon: 'checkmark-circle' },
+      'toast-error':   { title: 'Error',   icon: 'close-circle' },
+      'toast-warning': { title: 'Warning', icon: 'warning' },
+      'toast-info':    { title: 'Info',    icon: 'information-circle' },
+    };
+    const type = types[css] || types['toast-info'];
+
+    // Only one toast at a time, like the native apps
+    try { await this.toastController.dismiss(); } catch (e) { /* no toast open */ }
+
+    const toast = await this.toastController.create({
+      header: type.title,
+      message: typeof message === 'string' ? message : JSON.stringify(message),
       duration: duration,
-      position: location,
-      cssClass: css
+      position: location || 'top',
+      icon: type.icon,
+      cssClass: ['sa-toast', css || 'toast-info'],
+      swipeGesture: 'vertical',
+      buttons: [{ icon: 'close', role: 'cancel', side: 'end' }],
     });
+    // drives the countdown bar animation
+    toast.style.setProperty('--sa-toast-duration', `${duration || 2000}ms`);
 
     await toast.present();
   }

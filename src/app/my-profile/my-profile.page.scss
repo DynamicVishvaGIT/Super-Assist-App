@@ -1,1366 +1,1906 @@
-/* ==========================================================
-   PROFILE PAGE - COMPLETE SCSS
-   SAFE AREA TOP + BOTTOM FIX
-   ========================================================== */
+/* =========================================================
+   SETTINGS / PROFILE (v2) - items 1-6 and 10-20
+   One clean definition per element (item 20). Works on Android + iOS.
+   The previous styles are fully commented out at the bottom.
+   ========================================================= */
+
+$green: #00a95b;            // one brand green (item 17)
+$green-tint: #e3f6ec;
+$ink: #111827;
+$text: #374151;
+$muted: #6b7280;
+$faint: #9ca3af;
+$line: #eef1ef;
+$danger: #e5383b;
+$page: #f4f6f5;
+$ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+$ease-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+$avatar: 104px;             // item 13: overlap is derived from this one value
+$tabbar: 66px;              // item 12: current bottom tab bar height
 
 
-/* ==========================================================
-   GLOBAL BOX SIZING
-   ========================================================== */
+/* =========================================================
+   HEADER (item 10) - same style as Chats / Contacts
+   ========================================================= */
 
-* {
-  box-sizing: border-box;
-}
-
-
-/* ==========================================================
-   SAFE AREA VARIABLES
-   ========================================================== */
-
-:root {
-  --profile-safe-top: env(safe-area-inset-top, 0px);
-  --profile-safe-bottom: env(safe-area-inset-bottom, 0px);
-
-  --profile-header-height: 56px;
-  --profile-bottom-tabs-height: 60px;
-}
-
-
-/* ==========================================================
-   PROFILE HEADER
-   ========================================================== */
-
-.profile-header {
-  /* IMPORTANT:
-     Keeps the complete header below the Android/iOS status bar
-  */
-  padding-top: env(safe-area-inset-top, 0px);
-
+ion-header.sp-header {
   background: #ffffff;
+  box-shadow: 0 1px 0 $line;
 
-  position: relative;
-
-  z-index: 1000;
+  &::after { display: none; }
 
   ion-toolbar {
     --background: #ffffff;
     --border-width: 0;
-
     --min-height: 56px;
-
-    --padding-start: 16px;
-    --padding-end: 8px;
-
-    --padding-top: 0;
-    --padding-bottom: 0;
-
-    min-height: 56px;
-
-    height: 56px;
-
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-  }
-
-  ion-title {
-    font-size: 22px;
-
-    font-weight: 500;
-
-    color: #1a1a1a;
-
-    padding: 0;
-
-    margin: 0;
-
-    line-height: 56px;
-
-    text-align: left;
-
-    white-space: nowrap;
-  }
-
-  ion-button {
-    --color: #333333;
-
+    --padding-top: 0;        /* ion-app already adds the notch space */
     --padding-start: 0;
     --padding-end: 0;
-
-    font-size: 13px;
-  }
-
-  ion-buttons {
-    margin: 0;
-  }
-
-  ion-icon {
-    color: #333333;
   }
 }
 
+.sp-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 56px;
+  padding: 6px 6px 0 16px;
+  box-sizing: border-box;
+}
 
-/* ==========================================================
-   PROFILE CONTENT
-   ========================================================== */
+.sp-title {
+  margin: 0;
+  color: $green;
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.5px;
+}
 
-.profile-content {
-  --background: #f4f6f8;
+.menu-dots-btn {
+  width: 40px;
+  height: 40px;
+  margin: 0;
+  --color: #6c7b6b;
+  --padding-start: 0;
+  --padding-end: 0;
+  --border-radius: 50%;
+  --background-activated: rgba(0, 169, 91, 0.10);
 
-  /*
-    60px = bottom tab height
-    safe-area-inset-bottom = Android/iOS navigation area
-  */
-  margin-bottom: calc(
-    var(--profile-bottom-tabs-height) +
-    env(safe-area-inset-bottom, 0px)
-  );
-
-  background: #f4f6f8;
+  ion-icon { font-size: 20px; }
 }
 
 
-/* Ionic scroll container */
+/* =========================================================
+   CONTENT
+   ========================================================= */
 
-.profile-content::part(scroll) {
-  padding-top: 0;
-
-  padding-bottom: 24px;
-
-  background: #f4f6f8;
+.sp-content {
+  --background: #{$page};
+  /* item 12: room for the 66px tab bar (single, correct value) */
+  --padding-bottom: calc(#{$tabbar} + 20px + env(safe-area-inset-bottom, 0px));
 }
 
-
-/* ==========================================================
-   PROFILE CONTAINER
-   ========================================================== */
-
-.profile-container {
+.sp-container {
   width: 100%;
-
-  padding: 16px 16px 36px;
-
-  display: flex;
-
-  flex-direction: column;
-
-  align-items: center;
-
-  min-height: 100%;
-
-  position: relative;
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 20px 16px 0;
+  box-sizing: border-box;
 }
 
 
-/* ==========================================================
-   FEATURE ICON
-   ========================================================== */
+/* =========================================================
+   AVATAR (item 13)
+   ========================================================= */
 
-.feature-icon-img {
-  width: 18px;
-
-  height: 18px;
-
-  min-width: 18px;
-
-  min-height: 18px;
-
-  object-fit: contain;
-
-  display: block;
-}
-
-
-/* ==========================================================
-   AVATAR WRAPPER
-   ========================================================== */
-
-.avatar-wrapper {
+.sp-avatar-wrap {
   position: relative;
-
-  z-index: 10;
-
-  margin-bottom: -55px;
-
+  z-index: 2;
   display: flex;
-
-  align-items: center;
-
   justify-content: center;
-
-  cursor: pointer;
-
-  flex-shrink: 0;
+  margin-bottom: calc(#{$avatar} / -2);    /* half the avatar overlaps the card */
+  animation: sp-pop 0.55s $ease-back backwards;   /* item 19 */
 }
 
-
-/* ==========================================================
-   AVATAR CIRCLE
-   ========================================================== */
-
-.avatar-circle {
-  width: 110px;
-
-  height: 110px;
-
-  min-width: 110px;
-
-  min-height: 110px;
-
+.sp-avatar {
+  width: $avatar;
+  height: $avatar;
   border-radius: 50%;
-
-  background: #e2e8f0;
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: center;
-
-  box-shadow:
-    0 4px 12px rgba(0, 0, 0, 0.08);
-
-  border: 4px solid #ffffff;
-
   overflow: hidden;
-
-  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: $green-tint;
+  border: 4px solid #ffffff;
+  box-shadow: 0 8px 22px rgba(0, 110, 55, 0.14);
+  box-sizing: border-box;
 
   .avatar-img {
     width: 100%;
-
     height: 100%;
-
     object-fit: cover;
-
-    display: block;
   }
 
   .avatar-initials {
-    font-size: 36px;
-
-    font-weight: 600;
-
-    color: #1a1a1a;
-
+    color: $green;
+    font-size: 34px;
+    font-weight: 800;
     letter-spacing: -0.5px;
   }
+
+  .avatar-icon {
+    font-size: 46px;
+    color: $green;
+    opacity: 0.8;
+  }
 }
 
 
-/* ==========================================================
-   PROFILE CARDS
-   ========================================================== */
+/* =========================================================
+   CARDS
+   ========================================================= */
 
-.profile-card {
+.sp-card {
   background: #ffffff;
-
-  width: 100%;
-
-  border-radius: 16px;
-
-  padding: 6px 20px;
-
-  box-shadow:
-    0 2px 8px rgba(0, 0, 0, 0.03);
-
-  border: 1px solid #edf2f7;
-
+  border-radius: 18px;
+  border: 1px solid #edf1ef;
+  box-shadow: 0 2px 10px rgba(17, 24, 39, 0.04);
   margin-bottom: 16px;
-
   overflow: hidden;
+  animation: sp-rise 0.5s $ease-out backwards;   /* item 19 */
 
-  position: relative;
-
-  &.card-top {
-    /*
-      Keeps avatar overlapping the card exactly
-    */
-    padding-top: 65px;
+  &--details {
+    padding: calc(#{$avatar} / 2 + 16px) 16px 6px;   /* clears the avatar overlap */
+    animation-delay: 0.08s;
   }
 
-
-  /* ========================================================
-     INFORMATION GROUP
-     ======================================================== */
-
-  .info-group {
-    padding: 14px 0;
-
-    label {
-      font-size: 16px;
-
-      font-weight: 600;
-
-      color: #8e8e93;
-
-      letter-spacing: 0.6px;
-
-      display: block;
-
-      margin-bottom: 4px;
-
-      line-height: 22px;
-    }
-
-
-    .info-value {
-      font-size: 16px;
-
-      font-weight: 500;
-
-      color: #1a1a1a;
-
-      line-height: 24px;
-
-      word-break: break-word;
-
-      overflow-wrap: anywhere;
-    }
-
-
-    .edit-input {
-      width: 100%;
-
-      border: 1px solid #cbd5e1;
-
-      border-radius: 8px;
-
-      padding: 8px 12px;
-
-      font-size: 16px;
-
-      outline: none;
-
-      background: #ffffff;
-
-      color: #1a1a1a;
-
-      appearance: none;
-
-      -webkit-appearance: none;
-
-      box-shadow: none;
-
-      &:focus {
-        border-color: #00ba63;
-
-        outline: none;
-
-        box-shadow: none;
-      }
-    }
-  }
-
-
-  /* ========================================================
-     OPTION ITEM
-     ======================================================== */
-
-  .option-item {
-    display: flex;
-
-    align-items: center;
-
-    justify-content: space-between;
-
-    min-height: 62px;
-
-    padding: 20px 0;
-
-    cursor: pointer;
-
-    -webkit-tap-highlight-color: transparent;
-
-
-    .option-left {
-      display: flex;
-
-      align-items: center;
-
-      gap: 16px;
-
-      min-width: 0;
-
-      flex: 1;
-
-
-      .icon-box {
-        display: flex;
-
-        align-items: center;
-
-        justify-content: center;
-
-        width: 24px;
-
-        min-width: 24px;
-
-        height: 24px;
-
-        ion-icon {
-          font-size: 22px;
-
-          color: #2c2c2c;
-
-          width: 22px;
-
-          height: 22px;
-        }
-      }
-
-
-      span {
-        font-size: 16px;
-
-        font-weight: 400;
-
-        color: #1a1a1a;
-
-        line-height: 22px;
-
-        white-space: nowrap;
-
-        overflow: hidden;
-
-        text-overflow: ellipsis;
-      }
-    }
-
-
-    .chevron-icon {
-      font-size: 18px;
-
-      width: 18px;
-
-      height: 18px;
-
-      min-width: 18px;
-
-      color: #8e8e93;
-
-      margin-left: 12px;
-
-      flex-shrink: 0;
-    }
-  }
+  &--menu { animation-delay: 0.16s; }
+  &--logout { animation-delay: 0.24s; }
 }
 
 
-/* ==========================================================
-   CARD DIVIDER
-   ========================================================== */
+/* ---------- Detail rows (item 14: icons) ---------- */
 
-.card-divider {
-  height: 1px;
+.sp-info {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 0;
 
-  min-height: 1px;
-
-  background: #f1f5f9;
-
-  width: 100%;
+  & + .sp-info { border-top: 1px solid $line; }
 }
 
+.sp-info-icon {
+  flex: 0 0 38px;
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: $green-tint;
+  color: $green;
 
-/* ==========================================================
-   VERSION TEXT
-   ========================================================== */
+  ion-icon { font-size: 19px; }
+}
 
-.version-text {
-  width: 100%;
+.sp-info-text {
+  flex: 1;
+  min-width: 0;
 
-  text-align: center;
+  label {
+    display: block;
+    margin-bottom: 3px;
+    color: $faint;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+  }
+}
 
-  margin-top: 20px;
-
-  margin-bottom: 20px;
-
-  padding: 0 10px;
-
-  font-size: 16px;
-
-  font-weight: 500;
-
-  color: #9ca3af;
-
+.info-value {
+  color: $ink;
+  font-size: 15.5px;
+  font-weight: 600;
   line-height: 22px;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+
+  /* item 1: "Not added" looks like a hint, not real data */
+  &.is-empty {
+    color: $faint;
+    font-weight: 500;
+    font-style: italic;
+  }
+}
+
+/* item 18: placeholder line while the profile loads */
+.sp-skel {
+  width: 60%;
+  height: 14px;
+  margin: 4px 0;
+  border-radius: 7px;
+  background: linear-gradient(90deg, #f0f2f1 25%, #e4e8e6 37%, #f0f2f1 63%);
+  background-size: 400% 100%;
+  animation: sp-shimmer 1.3s ease infinite;
+}
+
+.edit-input {
+  width: 100%;
+  height: 40px;
+  padding: 0 12px;
+  box-sizing: border-box;
+  border: 1.5px solid #e3e8e5;
+  border-radius: 10px;
+  background: #f7f9f8;
+  color: $ink;
+  font-size: 15px;
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+
+  &:focus {
+    background: #ffffff;
+    border-color: rgba(0, 169, 91, 0.55);
+    box-shadow: 0 0 0 3px rgba(0, 169, 91, 0.10);
+  }
 }
 
 
-/* ==========================================================
-   EDIT BUTTONS
-   ========================================================== */
+/* ---------- Menu rows (items 3, 4, 5) ---------- */
+
+.option-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 60px;
+  padding: 0 14px 0 16px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.15s ease;
+
+  & + .option-item { border-top: 1px solid $line; }
+
+  &:active { background: #f6f9f7; }
+}
+
+.option-left {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  > span:last-child {
+    color: $ink;
+    font-size: 15.5px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.icon-box {
+  flex: 0 0 36px;
+  width: 36px;
+  height: 36px;
+  border-radius: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  ion-icon { font-size: 19px; }
+
+  &--green  { background: #e3f6ec; color: #00a95b; }
+  &--blue   { background: #e6f0ff; color: #2563eb; }
+  &--purple { background: #f1e9ff; color: #7c3aed; }
+  &--orange { background: #fdeee6; color: #e8590c; }
+  &--red    { background: #fde8e8; color: $danger; }
+}
+
+.chevron-icon {
+  flex: 0 0 auto;
+  font-size: 18px;
+  color: #c4cbc7;
+  transition: transform 0.2s ease;
+}
+
+.option-item:active .chevron-icon { transform: translateX(3px); }
+
+/* item 6: Log out row */
+.option-item--danger .option-left > span:last-child { color: $danger; }
+
+
+/* ---------- Edit buttons (item 17: no solid red cancel) ---------- */
 
 .edit-btns {
   display: flex;
-
   gap: 12px;
+  margin: 4px 0 16px;
 
-  width: 100%;
-
-  margin-top: 12px;
-
-  margin-bottom: 12px;
-
-  .cancel {
-    flex: 1;
-
-    background: #ef4444;
-
-    color: #ffffff;
-
-    text-align: center;
-
-    padding: 14px;
-
-    border-radius: 12px;
-
-    font-weight: 600;
-
-    cursor: pointer;
-
-    -webkit-tap-highlight-color: transparent;
-  }
-
-
+  .cancel,
   .save {
     flex: 1;
-
-    background: #00ba63;
-
-    color: #ffffff;
-
-    text-align: center;
-
-    padding: 14px;
-
-    border-radius: 12px;
-
-    font-weight: 600;
-
-    cursor: pointer;
-
-    -webkit-tap-highlight-color: transparent;
-  }
-}
-
-
-/* ==========================================================
-   BOTTOM NAVIGATION
-   ========================================================== */
-
-.custom-bottom-tabs {
-  /*
-    IMPORTANT:
-    The complete bottom navigation includes the phone's
-    navigation/gesture safe area.
-  */
-  position: fixed;
-
-  left: 0;
-
-  right: 0;
-
-  bottom: 0;
-
-  width: 100%;
-
-  min-height: calc(
-    60px + env(safe-area-inset-bottom, 0px)
-  );
-
-  height: calc(
-    60px + env(safe-area-inset-bottom, 0px)
-  );
-
-  background: #ffffff;
-
-  border-top: 1px solid #f3f4f6;
-
-  display: flex;
-
-  justify-content: space-around;
-
-  align-items: flex-start;
-
-  padding-top: 7px;
-
-  padding-right: 0;
-
-  padding-left: 0;
-
-  /*
-    Push content above Android gesture/navigation area
-  */
-  padding-bottom: env(safe-area-inset-bottom, 0px);
-
-  z-index: 1000;
-
-  box-shadow:
-    0 -4px 12px rgba(0, 0, 0, 0.03);
-
-  box-sizing: border-box;
-
-
-  /* ========================================================
-     TAB ITEM
-     ======================================================== */
-
-  .tab-item {
-    flex: 1;
-
-    height: 53px;
-
-    min-width: 0;
-
+    height: 50px;
+    border-radius: 14px;
     display: flex;
-
-    flex-direction: column;
-
     align-items: center;
-
     justify-content: center;
-
-    color: #9ca3af;
-
-    font-size: 10px;
-
-    line-height: 14px;
-
-    gap: 3px;
-
-    cursor: pointer;
-
-    text-align: center;
-
-    -webkit-tap-highlight-color: transparent;
-
-
-    ion-icon {
-      font-size: 22px;
-
-      width: 22px;
-
-      height: 22px;
-
-      display: block;
-
-      flex-shrink: 0;
-    }
-
-
-    &.active {
-      color: #00ba63;
-    }
-  }
-}
-
-
-/* ==========================================================
-   IONIC FOOTER SAFETY
-   ========================================================== */
-
-ion-footer {
-  padding-bottom: env(safe-area-inset-bottom, 0px);
-
-  background: #ffffff;
-
-  z-index: 1000;
-}
-
-
-ion-footer ion-toolbar {
-  --background: #ffffff;
-
-  --border-width: 0;
-
-  --border-style: none;
-
-  --border-color: transparent;
-
-  --padding-top: 0;
-
-  --padding-bottom: 0;
-}
-
-
-/* ==========================================================
-   SAFE AREA - IONIC CONTENT
-   ========================================================== */
-
-.profile-content {
-  /*
-    Do NOT add safe-area top padding here because the header
-    already handles the status bar.
-  */
-  --padding-top: 0;
-
-  /*
-    Keep content above the fixed bottom navigation.
-  */
-  --padding-bottom: calc(
-    24px +
-    60px +
-    env(safe-area-inset-bottom, 0px)
-  );
-}
-
-
-/* ==========================================================
-   MOBILE DEVICES
-   ========================================================== */
-
-@media (max-width: 480px) {
-
-  /* --------------------------------------------------------
-     HEADER
-     -------------------------------------------------------- */
-
-  .profile-header {
-    padding-top: env(safe-area-inset-top, 0px);
-
-    ion-toolbar {
-      --min-height: 56px;
-
-      min-height: 56px;
-
-      height: 56px;
-
-      --padding-start: 16px;
-
-      --padding-end: 8px;
-    }
-
-    ion-title {
-      font-size: 24px;
-      color: #00A859 !important;
-      font-weight: 600;
-
-      line-height: 56px;
-    }
-  }
-
-
-  /* --------------------------------------------------------
-     CONTENT
-     -------------------------------------------------------- */
-
-  .profile-container {
-    padding: 16px 16px 36px;
-  }
-
-
-  /* --------------------------------------------------------
-     AVATAR
-     -------------------------------------------------------- */
-
-  .avatar-wrapper {
-    margin-bottom: -55px;
-  }
-
-
-  .avatar-circle {
-    width: 110px;
-
-    height: 110px;
-
-    min-width: 110px;
-
-    min-height: 110px;
-  }
-
-
-  /* --------------------------------------------------------
-     CARDS
-     -------------------------------------------------------- */
-
-  .profile-card {
-    width: 100%;
-
-    border-radius: 16px;
-
-    padding-left: 20px;
-
-    padding-right: 20px;
-
-    margin-bottom: 16px;
-
-
-    &.card-top {
-      padding-top: 65px;
-    }
-
-
-    .info-group {
-
-      label {
-        font-size: 16px;
-
-        line-height: 22px;
-      }
-
-      .info-value {
-        font-size: 16px;
-
-        line-height: 24px;
-      }
-    }
-
-
-    .option-item {
-
-      padding-top: 20px;
-
-      padding-bottom: 20px;
-
-
-      .option-left {
-
-        gap: 16px;
-
-
-        span {
-          font-size: 16px;
-        }
-      }
-    }
-  }
-
-
-  /* --------------------------------------------------------
-     VERSION
-     -------------------------------------------------------- */
-
-  .version-text {
-    font-size: 16px;
-
-    margin-top: 20px;
-
-    margin-bottom: 20px;
-  }
-
-
-  /* --------------------------------------------------------
-     BOTTOM NAV
-     -------------------------------------------------------- */
-
-  .custom-bottom-tabs {
-    min-height: calc(
-      60px + env(safe-area-inset-bottom, 0px)
-    );
-
-    height: calc(
-      60px + env(safe-area-inset-bottom, 0px)
-    );
-
-    padding-top: 7px;
-
-    padding-bottom: env(safe-area-inset-bottom, 0px);
-  }
-
-
-  .custom-bottom-tabs .tab-item {
-    height: 53px;
-
-    font-size: 10px;
-
-    gap: 3px;
-
-
-    ion-icon {
-      font-size: 22px;
-
-      width: 22px;
-
-      height: 22px;
-    }
-  }
-}
-
-
-/* ==========================================================
-   VERY SMALL DEVICES
-   ========================================================== */
-
-@media (max-width: 360px) {
-
-  /* --------------------------------------------------------
-     HEADER
-     -------------------------------------------------------- */
-
-  .profile-header {
-    padding-top: env(safe-area-inset-top, 0px);
-
-    ion-toolbar {
-      --padding-start: 12px;
-
-      --padding-end: 8px;
-
-      min-height: 54px;
-
-      height: 54px;
-
-      --min-height: 54px;
-    }
-
-
-    ion-title {
-      font-size: 21px;
-
-      line-height: 54px;
-    }
-  }
-
-
-  /* --------------------------------------------------------
-     CONTENT
-     -------------------------------------------------------- */
-
-  .profile-container {
-    padding-left: 12px;
-
-    padding-right: 12px;
-
-    padding-bottom: 30px;
-  }
-
-
-  /* --------------------------------------------------------
-     AVATAR
-     -------------------------------------------------------- */
-
-  .avatar-circle {
-    width: 100px;
-
-    height: 100px;
-
-    min-width: 100px;
-
-    min-height: 100px;
-  }
-
-
-  .avatar-wrapper {
-    margin-bottom: -50px;
-  }
-
-
-  /* --------------------------------------------------------
-     CARD
-     -------------------------------------------------------- */
-
-  .profile-card {
-
-    padding-left: 16px;
-
-    padding-right: 16px;
-
-
-    &.card-top {
-      padding-top: 60px;
-    }
-
-
-    .info-group {
-
-      label {
-        font-size: 15px;
-      }
-
-
-      .info-value {
-        font-size: 16px;
-      }
-    }
-
-
-    .option-item {
-
-      padding-top: 18px;
-
-      padding-bottom: 18px;
-
-
-      .option-left {
-
-        gap: 13px;
-
-
-        .icon-box {
-          width: 22px;
-
-          min-width: 22px;
-
-
-          ion-icon {
-            font-size: 21px;
-          }
-        }
-
-
-        span {
-          font-size: 15px;
-        }
-      }
-
-
-      .chevron-icon {
-        font-size: 17px;
-
-        width: 17px;
-
-        min-width: 17px;
-      }
-    }
-  }
-
-
-  /* --------------------------------------------------------
-     VERSION
-     -------------------------------------------------------- */
-
-  .version-text {
     font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 0.15s ease;
+
+    &:active { transform: scale(0.97); }
   }
 
-
-  /* --------------------------------------------------------
-     BOTTOM NAV
-     -------------------------------------------------------- */
-
-  .custom-bottom-tabs {
-    min-height: calc(
-      60px + env(safe-area-inset-bottom, 0px)
-    );
-
-    height: calc(
-      60px + env(safe-area-inset-bottom, 0px)
-    );
+  .cancel {
+    background: #eef1ef;
+    color: $text;
   }
 
-
-  .custom-bottom-tabs .tab-item {
-    font-size: 9px;
-
-    height: 53px;
-
-
-    ion-icon {
-      font-size: 21px;
-
-      width: 21px;
-
-      height: 21px;
-    }
+  .save {
+    color: #ffffff;
+    background: linear-gradient(135deg, #56b952 0%, $green 60%, #008a4b 100%);
+    box-shadow: 0 8px 18px rgba(0, 169, 91, 0.26);
   }
 }
 
 
-/* ==========================================================
-   ANDROID SAFE AREA / STATUS BAR SAFETY
-   ========================================================== */
+/* ---------- Version (item 16) ---------- */
 
-/*
-  This is the important part for the screenshot you sent.
-
-  The header starts BELOW the status bar instead of underneath it.
-*/
-
-@supports (padding-top: env(safe-area-inset-top)) {
-
-  .profile-header {
-    padding-top: env(safe-area-inset-top);
-  }
-
-
-  .custom-bottom-tabs {
-    padding-bottom: env(safe-area-inset-bottom);
-
-    height: calc(
-      60px + env(safe-area-inset-bottom)
-    );
-  }
-
-
-  .profile-content {
-    margin-bottom: calc(
-      60px + env(safe-area-inset-bottom)
-    );
-
-    --padding-bottom: calc(
-      24px +
-      60px +
-      env(safe-area-inset-bottom)
-    );
-  }
+.version-text {
+  margin: 4px 0 8px;
+  text-align: center;
+  color: $faint;
+  font-size: 12.5px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
 }
 
 
-/* ==========================================================
-   PREVENT HORIZONTAL OVERFLOW
-   ========================================================== */
+/* =========================================================
+   KEYFRAMES (item 19)
+   ========================================================= */
 
-.profile-content,
-.profile-container,
-.profile-card {
-  max-width: 100%;
+@keyframes sp-pop {
+  from { opacity: 0; transform: scale(0.6); }
+  to { opacity: 1; transform: none; }
+}
 
-  overflow-x: hidden;
+@keyframes sp-rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes sp-shimmer {
+  0% { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sp-avatar-wrap, .sp-card, .sp-skel { animation: none !important; }
 }
 
 
-/* ==========================================================
-   TOUCH / TAP RESET
-   ========================================================== */
+/* =========================================================
+   ⋮ OPTIONS BOTTOM SHEET (custom, animated)
+   ========================================================= */
 
-.custom-bottom-tabs,
-.tab-item,
-.option-item,
-.avatar-wrapper,
-.edit-btns .cancel,
-.edit-btns .save {
-  -webkit-tap-highlight-color: transparent;
+.sp-sheet-layer {
+  position: fixed;
+  top: 0; right: 0; bottom: 0; left: 0;
+  z-index: 20000;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
 }
 
-
-/* ==========================================================
-   IMAGE SAFETY
-   ========================================================== */
-
-.avatar-img,
-.feature-icon-img {
-  user-select: none;
-
-  -webkit-user-drag: none;
+.sp-sheet-backdrop {
+  position: absolute;
+  top: 0; right: 0; bottom: 0; left: 0;
+  background: rgba(17, 24, 39, 0.45);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  animation: sp-fade-in 0.25s ease both;
 }
 
-
-/* ==========================================================
-   REMOVE OLD / CONFLICTING PROFILE FOOTER STYLES
-   ========================================================== */
-
-.profile-header ion-toolbar,
-.profile-header ion-title,
-.profile-content,
-.custom-bottom-tabs {
-  box-sizing: border-box;
-}
-
-
-/* ==========================================================
-   FINAL PROFILE HEADER FIX
-   ========================================================== */
-
-.profile-header {
+.sp-sheet {
+  position: relative;
   width: 100%;
-
-  margin: 0;
-
-  border: 0;
-
-  box-shadow: none;
-
-  overflow: visible;
+  max-width: 560px;
+  box-sizing: border-box;
+  padding: 10px 16px calc(16px + env(safe-area-inset-bottom, 0px));
+  border-radius: 26px 26px 0 0;
+  background: #ffffff;
+  box-shadow: 0 -12px 35px rgba(0, 0, 0, 0.16);
+  animation: sp-sheet-up 0.42s cubic-bezier(0.32, 1.25, 0.5, 1) both;
 }
 
+.sp-sheet-handle {
+  width: 42px;
+  height: 5px;
+  margin: 2px auto 14px;
+  border-radius: 999px;
+  background: #d9dde1;
+}
 
-/* ==========================================================
-   FINAL BOTTOM TAB FIX
-   ========================================================== */
+.sp-sheet-title {
+  margin: 0 4px 12px;
+  color: $faint;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  animation: sp-item-in 0.35s $ease-out 0.08s both;
+}
 
-.custom-bottom-tabs {
-  margin: 0;
-
+.sp-sheet-group {
+  border-radius: 16px;
+  background: #f7f9f8;
   overflow: hidden;
+  animation: sp-item-in 0.4s $ease-out 0.12s both;
+}
 
-  transform: translateZ(0);
+.sp-sheet-item {
+  width: 100%;
+  min-height: 58px;
+  padding: 0 14px;
+  border: 0;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.15s ease;
 
-  -webkit-transform: translateZ(0);
+  &:active { background: rgba(17, 24, 39, 0.05); }
+
+  &:active .sp-sheet-chevron { transform: translateX(3px); }
+
+  &--danger {
+    .sp-sheet-icon { background: #fde8e8; color: $danger; }
+    .sp-sheet-label { color: $danger; }
+  }
+}
+
+.sp-sheet-icon {
+  flex: 0 0 38px;
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  ion-icon { font-size: 20px; }
+}
+
+.sp-sheet-label {
+  flex: 1;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.sp-sheet-chevron {
+  flex: 0 0 auto;
+  font-size: 18px;
+  color: #d0a7a8;
+  transition: transform 0.2s ease;
+}
+
+.sp-sheet-cancel {
+  width: 100%;
+  height: 52px;
+  margin-top: 12px;
+  border: 0;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #eef1ef;
+  color: $text;
+  font-size: 15.5px;
+  font-weight: 700;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.15s ease, background 0.15s ease;
+  animation: sp-item-in 0.4s $ease-out 0.18s both;
+
+  ion-icon { font-size: 18px; }
+  &:active { transform: scale(0.97); background: #e4e8e6; }
+}
+
+/* closing: slide down + fade the backdrop */
+.sp-sheet-layer--closing {
+  .sp-sheet { animation: sp-sheet-down 0.26s ease-in both; }
+  .sp-sheet-backdrop { animation: sp-fade-out 0.26s ease both; }
+}
+
+@keyframes sp-fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes sp-fade-out { from { opacity: 1; } to { opacity: 0; } }
+@keyframes sp-sheet-up { from { transform: translateY(100%); } to { transform: translateY(0); } }
+@keyframes sp-sheet-down { from { transform: translateY(0); } to { transform: translateY(100%); } }
+@keyframes sp-item-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .sp-sheet, .sp-sheet-backdrop, .sp-sheet-title, .sp-sheet-group, .sp-sheet-cancel { animation: none !important; }
 }
 
 
-// // .profile-header ion-toolbar {
-// //     --background: #ffffff;
-// //     border-bottom: 1px solid #eee;
-// //     position: relative;
-// //   }
-
+// =====================================================================
+// OLD PROFILE STYLES (v1) - the ENTIRE previous file, commented out.
+// To restore: delete v2 above and uncomment everything below.
+// =====================================================================
+// /* ==========================================================
+//    PROFILE PAGE - COMPLETE SCSS
+//    SAFE AREA TOP + BOTTOM FIX
+//    ========================================================== */
+//
+//
+// /* ==========================================================
+//    GLOBAL BOX SIZING
+//    ========================================================== */
+//
+// * {
+//   box-sizing: border-box;
+// }
+//
+//
+// /* ==========================================================
+//    SAFE AREA VARIABLES
+//    ========================================================== */
+//
+// :root {
+//   --profile-safe-top: env(safe-area-inset-top, 0px);
+//   --profile-safe-bottom: env(safe-area-inset-bottom, 0px);
+//
+//   --profile-header-height: 56px;
+//   --profile-bottom-tabs-height: 60px;
+// }
+//
+//
+// /* ==========================================================
+//    PROFILE HEADER
+//    ========================================================== */
+//
 // .profile-header {
-
+//   /* IMPORTANT:
+//      Keeps the complete header below the Android/iOS status bar
+//   */
+//   padding-top: env(safe-area-inset-top, 0px);
+//
+//   background: #ffffff;
+//
+//   position: relative;
+//
+//   z-index: 1000;
+//
 //   ion-toolbar {
 //     --background: #ffffff;
 //     --border-width: 0;
-//     --min-height: 52px;
-//     --padding-start: 8px;
-//     --padding-end: 12px;
+//
+//     --min-height: 56px;
+//
+//     --padding-start: 16px;
+//     --padding-end: 8px;
+//
 //     --padding-top: 0;
 //     --padding-bottom: 0;
-
-//     box-shadow: 0 2px 10px rgba(0,0,0,.08);
+//
+//     min-height: 56px;
+//
+//     height: 56px;
+//
+//     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 //   }
-
+//
+//   ion-title {
+//     font-size: 22px;
+//
+//     font-weight: 500;
+//
+//     color: #1a1a1a;
+//
+//     padding: 0;
+//
+//     margin: 0;
+//
+//     line-height: 56px;
+//
+//     text-align: left;
+//
+//     white-space: nowrap;
+//   }
+//
+//   ion-button {
+//     --color: #333333;
+//
+//     --padding-start: 0;
+//     --padding-end: 0;
+//
+//     font-size: 13px;
+//   }
+//
 //   ion-buttons {
 //     margin: 0;
 //   }
-
-//   ion-button {
-//     --padding-start: 0;
-//     --padding-end: 0;
-//     --color: #085e54;
-//     width: 36px;
-//     height: 36px;
-//   }
-
+//
 //   ion-icon {
-//     font-size: 26px;
-//   }
-
-//   ion-title {
-//     padding-inline-start: 6px;
-//     padding-inline-end: 0;
-//     text-align: left;
-
-//     font-size: 18px;
-//     font-weight: 500;
-//     color: #222;
+//     color: #333333;
 //   }
 // }
-//   .back {
-//     font-size: 24px;
-//     color: #085e54;
-//     position: absolute;
-//     left: 12px;
-//   }
-  
-//   .title {
-//     // text-align: center;
-//     font-size: 18px;
-//     font-weight: 500;
-//     margin-left: 44px;
-//   }
-  
-//   /* PROFILE TOP */
-  
-//   .profile-top {
-//     text-align: center;
-//     padding: 25px 0;
-//     background: #fff;
-//   }
-  
-//   .profile-img {
-//     width: 130px;
-//     height: 130px;
-//     border-radius: 50%;
+//
+//
+// /* ==========================================================
+//    PROFILE CONTENT
+//    ========================================================== */
+//
+// .profile-content {
+//   --background: #f4f6f8;
+//
+//   /*
+//     60px = bottom tab height
+//     safe-area-inset-bottom = Android/iOS navigation area
+//   */
+//   margin-bottom: calc(
+//     var(--profile-bottom-tabs-height) +
+//     env(safe-area-inset-bottom, 0px)
+//   );
+//
+//   background: #f4f6f8;
+// }
+//
+//
+// /* Ionic scroll container */
+//
+// .profile-content::part(scroll) {
+//   padding-top: 0;
+//
+//   padding-bottom: 24px;
+//
+//   background: #f4f6f8;
+// }
+//
+//
+// /* ==========================================================
+//    PROFILE CONTAINER
+//    ========================================================== */
+//
+// .profile-container {
+//   width: 100%;
+//
+//   padding: 16px 16px 36px;
+//
+//   display: flex;
+//
+//   flex-direction: column;
+//
+//   align-items: center;
+//
+//   min-height: 100%;
+//
+//   position: relative;
+// }
+//
+//
+// /* ==========================================================
+//    FEATURE ICON
+//    ========================================================== */
+//
+// .feature-icon-img {
+//   width: 18px;
+//
+//   height: 18px;
+//
+//   min-width: 18px;
+//
+//   min-height: 18px;
+//
+//   object-fit: contain;
+//
+//   display: block;
+// }
+//
+//
+// /* ==========================================================
+//    AVATAR WRAPPER
+//    ========================================================== */
+//
+// .avatar-wrapper {
+//   position: relative;
+//
+//   z-index: 10;
+//
+//   margin-bottom: -55px;
+//
+//   display: flex;
+//
+//   align-items: center;
+//
+//   justify-content: center;
+//
+//   cursor: pointer;
+//
+//   flex-shrink: 0;
+// }
+//
+//
+// /* ==========================================================
+//    AVATAR CIRCLE
+//    ========================================================== */
+//
+// .avatar-circle {
+//   width: 110px;
+//
+//   height: 110px;
+//
+//   min-width: 110px;
+//
+//   min-height: 110px;
+//
+//   border-radius: 50%;
+//
+//   background: #e2e8f0;
+//
+//   display: flex;
+//
+//   align-items: center;
+//
+//   justify-content: center;
+//
+//   box-shadow:
+//     0 4px 12px rgba(0, 0, 0, 0.08);
+//
+//   border: 4px solid #ffffff;
+//
+//   overflow: hidden;
+//
+//   position: relative;
+//
+//   .avatar-img {
+//     width: 100%;
+//
+//     height: 100%;
+//
 //     object-fit: cover;
+//
+//     display: block;
 //   }
-  
-//   .edit-text {
-//     color: #085e54;
-//     margin-top: 10px;
-//     font-size: 16px;
+//
+//   .avatar-initials {
+//     font-size: 36px;
+//
+//     font-weight: 600;
+//
+//     color: #1a1a1a;
+//
+//     letter-spacing: -0.5px;
 //   }
-
-//   // .edit-badge {
-//   //   position: fixed;
-//   //   bottom: 450px;
-//   //   right: 174px;
-//   //   width: 40px;
-//   //   height: 40px;
-//   //   background: #4caf50;
-//   //   border-radius: 50%;
-//   //   display: flex;
-//   //   align-items: center;
-//   //   justify-content: center;
-//   //   border: 3px solid white;
-//   // }
-  
-//   // .edit-icon {
-//   //   font-size: 22px;
-//   //   color: white;
-//   // }
-  
-//   /* GAP */
-  
-//   .gap {
-//     height: 12px;
-//     background: #f5f5f5;
+// }
+//
+//
+// /* ==========================================================
+//    PROFILE CARDS
+//    ========================================================== */
+//
+// .profile-card {
+//   background: #ffffff;
+//
+//   width: 100%;
+//
+//   border-radius: 16px;
+//
+//   padding: 6px 20px;
+//
+//   box-shadow:
+//     0 2px 8px rgba(0, 0, 0, 0.03);
+//
+//   border: 1px solid #edf2f7;
+//
+//   margin-bottom: 16px;
+//
+//   overflow: hidden;
+//
+//   position: relative;
+//
+//   &.card-top {
+//     /*
+//       Keeps avatar overlapping the card exactly
+//     */
+//     padding-top: 65px;
 //   }
-  
-//   /* DETAILS */
-  
-//   .details {
-//     background: #fff;
+//
+//
+//   /* ========================================================
+//      INFORMATION GROUP
+//      ======================================================== */
+//
+//   .info-group {
+//     padding: 14px 0;
+//
+//     label {
+//       font-size: 16px;
+//
+//       font-weight: 600;
+//
+//       color: #8e8e93;
+//
+//       letter-spacing: 0.6px;
+//
+//       display: block;
+//
+//       margin-bottom: 4px;
+//
+//       line-height: 22px;
+//     }
+//
+//
+//     .info-value {
+//       font-size: 16px;
+//
+//       font-weight: 500;
+//
+//       color: #1a1a1a;
+//
+//       line-height: 24px;
+//
+//       word-break: break-word;
+//
+//       overflow-wrap: anywhere;
+//     }
+//
+//
+//     .edit-input {
+//       width: 100%;
+//
+//       border: 1px solid #cbd5e1;
+//
+//       border-radius: 8px;
+//
+//       padding: 8px 12px;
+//
+//       font-size: 16px;
+//
+//       outline: none;
+//
+//       background: #ffffff;
+//
+//       color: #1a1a1a;
+//
+//       appearance: none;
+//
+//       -webkit-appearance: none;
+//
+//       box-shadow: none;
+//
+//       &:focus {
+//         border-color: #00ba63;
+//
+//         outline: none;
+//
+//         box-shadow: none;
+//       }
+//     }
 //   }
-  
-//   .field {
-//     padding: 14px;
-//   }
-  
-//   .field label {
-//     font-size: 13px;
-//     color: #8e8e93;
-//   }
-  
-//   .field div {
-//     font-size: 17px;
-//     margin-top: 4px;
-//   }
-  
-//   .field input {
-//     width: 100%;
-//     border: none;
-//     outline: none;
-//     font-size: 17px;
-//     margin-top: 4px;
-//     background: transparent;
-//   }
-  
-//   .divider {
-//     height: 1px;
-//     background: #eee;
-//     margin-left: 14px;
-//   }
-  
-//   /* FOOTER */
-  
-//   .footer {
-//     position: fixed;
-//     bottom: 0;
-//     width: 100%;
-//     padding: 12px;
-//     background: #fff;
-//   }
-  
-//   /* LOGOUT */
-  
-//   .logout-btn {
-//     background: #ff3b31;
-//     color: white;
-//     text-align: center;
-//     padding: 14px;
-//     border-radius: 12px;
-//     font-size: 16px;
-//   }
-  
-//   /* EDIT BUTTONS */
-  
-//   .edit-btns {
+//
+//
+//   /* ========================================================
+//      OPTION ITEM
+//      ======================================================== */
+//
+//   .option-item {
 //     display: flex;
-//     gap: 10px;
+//
+//     align-items: center;
+//
+//     justify-content: space-between;
+//
+//     min-height: 62px;
+//
+//     padding: 20px 0;
+//
+//     cursor: pointer;
+//
+//     -webkit-tap-highlight-color: transparent;
+//
+//
+//     .option-left {
+//       display: flex;
+//
+//       align-items: center;
+//
+//       gap: 16px;
+//
+//       min-width: 0;
+//
+//       flex: 1;
+//
+//
+//       .icon-box {
+//         display: flex;
+//
+//         align-items: center;
+//
+//         justify-content: center;
+//
+//         width: 24px;
+//
+//         min-width: 24px;
+//
+//         height: 24px;
+//
+//         ion-icon {
+//           font-size: 22px;
+//
+//           color: #2c2c2c;
+//
+//           width: 22px;
+//
+//           height: 22px;
+//         }
+//       }
+//
+//
+//       span {
+//         font-size: 16px;
+//
+//         font-weight: 400;
+//
+//         color: #1a1a1a;
+//
+//         line-height: 22px;
+//
+//         white-space: nowrap;
+//
+//         overflow: hidden;
+//
+//         text-overflow: ellipsis;
+//       }
+//     }
+//
+//
+//     .chevron-icon {
+//       font-size: 18px;
+//
+//       width: 18px;
+//
+//       height: 18px;
+//
+//       min-width: 18px;
+//
+//       color: #8e8e93;
+//
+//       margin-left: 12px;
+//
+//       flex-shrink: 0;
+//     }
 //   }
-  
+// }
+//
+//
+// /* ==========================================================
+//    CARD DIVIDER
+//    ========================================================== */
+//
+// .card-divider {
+//   height: 1px;
+//
+//   min-height: 1px;
+//
+//   background: #f1f5f9;
+//
+//   width: 100%;
+// }
+//
+//
+// /* ==========================================================
+//    VERSION TEXT
+//    ========================================================== */
+//
+// .version-text {
+//   width: 100%;
+//
+//   text-align: center;
+//
+//   margin-top: 20px;
+//
+//   margin-bottom: 20px;
+//
+//   padding: 0 10px;
+//
+//   font-size: 16px;
+//
+//   font-weight: 500;
+//
+//   color: #9ca3af;
+//
+//   line-height: 22px;
+// }
+//
+//
+// /* ==========================================================
+//    EDIT BUTTONS
+//    ========================================================== */
+//
+// .edit-btns {
+//   display: flex;
+//
+//   gap: 12px;
+//
+//   width: 100%;
+//
+//   margin-top: 12px;
+//
+//   margin-bottom: 12px;
+//
 //   .cancel {
 //     flex: 1;
-//     background: #ff3b31;
-//     color: white;
+//
+//     background: #ef4444;
+//
+//     color: #ffffff;
+//
 //     text-align: center;
+//
 //     padding: 14px;
+//
 //     border-radius: 12px;
+//
+//     font-weight: 600;
+//
+//     cursor: pointer;
+//
+//     -webkit-tap-highlight-color: transparent;
 //   }
-  
+//
+//
 //   .save {
 //     flex: 1;
-//     background: #27d366;
-//     color: white;
+//
+//     background: #00ba63;
+//
+//     color: #ffffff;
+//
 //     text-align: center;
+//
 //     padding: 14px;
+//
 //     border-radius: 12px;
+//
+//     font-weight: 600;
+//
+//     cursor: pointer;
+//
+//     -webkit-tap-highlight-color: transparent;
 //   }
+// }
+//
+//
+// /* ==========================================================
+//    BOTTOM NAVIGATION
+//    ========================================================== */
+//
+// .custom-bottom-tabs {
+//   /*
+//     IMPORTANT:
+//     The complete bottom navigation includes the phone's
+//     navigation/gesture safe area.
+//   */
+//   position: fixed;
+//
+//   left: 0;
+//
+//   right: 0;
+//
+//   bottom: 0;
+//
+//   width: 100%;
+//
+//   min-height: calc(
+//     60px + env(safe-area-inset-bottom, 0px)
+//   );
+//
+//   height: calc(
+//     60px + env(safe-area-inset-bottom, 0px)
+//   );
+//
+//   background: #ffffff;
+//
+//   border-top: 1px solid #f3f4f6;
+//
+//   display: flex;
+//
+//   justify-content: space-around;
+//
+//   align-items: flex-start;
+//
+//   padding-top: 7px;
+//
+//   padding-right: 0;
+//
+//   padding-left: 0;
+//
+//   /*
+//     Push content above Android gesture/navigation area
+//   */
+//   padding-bottom: env(safe-area-inset-bottom, 0px);
+//
+//   z-index: 1000;
+//
+//   box-shadow:
+//     0 -4px 12px rgba(0, 0, 0, 0.03);
+//
+//   box-sizing: border-box;
+//
+//
+//   /* ========================================================
+//      TAB ITEM
+//      ======================================================== */
+//
+//   .tab-item {
+//     flex: 1;
+//
+//     height: 53px;
+//
+//     min-width: 0;
+//
+//     display: flex;
+//
+//     flex-direction: column;
+//
+//     align-items: center;
+//
+//     justify-content: center;
+//
+//     color: #9ca3af;
+//
+//     font-size: 10px;
+//
+//     line-height: 14px;
+//
+//     gap: 3px;
+//
+//     cursor: pointer;
+//
+//     text-align: center;
+//
+//     -webkit-tap-highlight-color: transparent;
+//
+//
+//     ion-icon {
+//       font-size: 22px;
+//
+//       width: 22px;
+//
+//       height: 22px;
+//
+//       display: block;
+//
+//       flex-shrink: 0;
+//     }
+//
+//
+//     &.active {
+//       color: #00ba63;
+//     }
+//   }
+// }
+//
+//
+// /* ==========================================================
+//    IONIC FOOTER SAFETY
+//    ========================================================== */
+//
+// ion-footer {
+//   padding-bottom: env(safe-area-inset-bottom, 0px);
+//
+//   background: #ffffff;
+//
+//   z-index: 1000;
+// }
+//
+//
+// ion-footer ion-toolbar {
+//   --background: #ffffff;
+//
+//   --border-width: 0;
+//
+//   --border-style: none;
+//
+//   --border-color: transparent;
+//
+//   --padding-top: 0;
+//
+//   --padding-bottom: 0;
+// }
+//
+//
+// /* ==========================================================
+//    SAFE AREA - IONIC CONTENT
+//    ========================================================== */
+//
+// .profile-content {
+//   /*
+//     Do NOT add safe-area top padding here because the header
+//     already handles the status bar.
+//   */
+//   --padding-top: 0;
+//
+//   /*
+//     Keep content above the fixed bottom navigation.
+//   */
+//   --padding-bottom: calc(
+//     24px +
+//     60px +
+//     env(safe-area-inset-bottom, 0px)
+//   );
+// }
+//
+//
+// /* ==========================================================
+//    MOBILE DEVICES
+//    ========================================================== */
+//
+// @media (max-width: 480px) {
+//
+//   /* --------------------------------------------------------
+//      HEADER
+//      -------------------------------------------------------- */
+//
+//   .profile-header {
+//     padding-top: env(safe-area-inset-top, 0px);
+//
+//     ion-toolbar {
+//       --min-height: 56px;
+//
+//       min-height: 56px;
+//
+//       height: 56px;
+//
+//       --padding-start: 16px;
+//
+//       --padding-end: 8px;
+//     }
+//
+//     ion-title {
+//       font-size: 24px;
+//       color: #00A859 !important;
+//       font-weight: 600;
+//
+//       line-height: 56px;
+//     }
+//   }
+//
+//
+//   /* --------------------------------------------------------
+//      CONTENT
+//      -------------------------------------------------------- */
+//
+//   .profile-container {
+//     padding: 16px 16px 36px;
+//   }
+//
+//
+//   /* --------------------------------------------------------
+//      AVATAR
+//      -------------------------------------------------------- */
+//
+//   .avatar-wrapper {
+//     margin-bottom: -55px;
+//   }
+//
+//
+//   .avatar-circle {
+//     width: 110px;
+//
+//     height: 110px;
+//
+//     min-width: 110px;
+//
+//     min-height: 110px;
+//   }
+//
+//
+//   /* --------------------------------------------------------
+//      CARDS
+//      -------------------------------------------------------- */
+//
+//   .profile-card {
+//     width: 100%;
+//
+//     border-radius: 16px;
+//
+//     padding-left: 20px;
+//
+//     padding-right: 20px;
+//
+//     margin-bottom: 16px;
+//
+//
+//     &.card-top {
+//       padding-top: 65px;
+//     }
+//
+//
+//     .info-group {
+//
+//       label {
+//         font-size: 16px;
+//
+//         line-height: 22px;
+//       }
+//
+//       .info-value {
+//         font-size: 16px;
+//
+//         line-height: 24px;
+//       }
+//     }
+//
+//
+//     .option-item {
+//
+//       padding-top: 20px;
+//
+//       padding-bottom: 20px;
+//
+//
+//       .option-left {
+//
+//         gap: 16px;
+//
+//
+//         span {
+//           font-size: 16px;
+//         }
+//       }
+//     }
+//   }
+//
+//
+//   /* --------------------------------------------------------
+//      VERSION
+//      -------------------------------------------------------- */
+//
+//   .version-text {
+//     font-size: 16px;
+//
+//     margin-top: 20px;
+//
+//     margin-bottom: 20px;
+//   }
+//
+//
+//   /* --------------------------------------------------------
+//      BOTTOM NAV
+//      -------------------------------------------------------- */
+//
+//   .custom-bottom-tabs {
+//     min-height: calc(
+//       60px + env(safe-area-inset-bottom, 0px)
+//     );
+//
+//     height: calc(
+//       60px + env(safe-area-inset-bottom, 0px)
+//     );
+//
+//     padding-top: 7px;
+//
+//     padding-bottom: env(safe-area-inset-bottom, 0px);
+//   }
+//
+//
+//   .custom-bottom-tabs .tab-item {
+//     height: 53px;
+//
+//     font-size: 10px;
+//
+//     gap: 3px;
+//
+//
+//     ion-icon {
+//       font-size: 22px;
+//
+//       width: 22px;
+//
+//       height: 22px;
+//     }
+//   }
+// }
+//
+//
+// /* ==========================================================
+//    VERY SMALL DEVICES
+//    ========================================================== */
+//
+// @media (max-width: 360px) {
+//
+//   /* --------------------------------------------------------
+//      HEADER
+//      -------------------------------------------------------- */
+//
+//   .profile-header {
+//     padding-top: env(safe-area-inset-top, 0px);
+//
+//     ion-toolbar {
+//       --padding-start: 12px;
+//
+//       --padding-end: 8px;
+//
+//       min-height: 54px;
+//
+//       height: 54px;
+//
+//       --min-height: 54px;
+//     }
+//
+//
+//     ion-title {
+//       font-size: 21px;
+//
+//       line-height: 54px;
+//     }
+//   }
+//
+//
+//   /* --------------------------------------------------------
+//      CONTENT
+//      -------------------------------------------------------- */
+//
+//   .profile-container {
+//     padding-left: 12px;
+//
+//     padding-right: 12px;
+//
+//     padding-bottom: 30px;
+//   }
+//
+//
+//   /* --------------------------------------------------------
+//      AVATAR
+//      -------------------------------------------------------- */
+//
+//   .avatar-circle {
+//     width: 100px;
+//
+//     height: 100px;
+//
+//     min-width: 100px;
+//
+//     min-height: 100px;
+//   }
+//
+//
+//   .avatar-wrapper {
+//     margin-bottom: -50px;
+//   }
+//
+//
+//   /* --------------------------------------------------------
+//      CARD
+//      -------------------------------------------------------- */
+//
+//   .profile-card {
+//
+//     padding-left: 16px;
+//
+//     padding-right: 16px;
+//
+//
+//     &.card-top {
+//       padding-top: 60px;
+//     }
+//
+//
+//     .info-group {
+//
+//       label {
+//         font-size: 15px;
+//       }
+//
+//
+//       .info-value {
+//         font-size: 16px;
+//       }
+//     }
+//
+//
+//     .option-item {
+//
+//       padding-top: 18px;
+//
+//       padding-bottom: 18px;
+//
+//
+//       .option-left {
+//
+//         gap: 13px;
+//
+//
+//         .icon-box {
+//           width: 22px;
+//
+//           min-width: 22px;
+//
+//
+//           ion-icon {
+//             font-size: 21px;
+//           }
+//         }
+//
+//
+//         span {
+//           font-size: 15px;
+//         }
+//       }
+//
+//
+//       .chevron-icon {
+//         font-size: 17px;
+//
+//         width: 17px;
+//
+//         min-width: 17px;
+//       }
+//     }
+//   }
+//
+//
+//   /* --------------------------------------------------------
+//      VERSION
+//      -------------------------------------------------------- */
+//
+//   .version-text {
+//     font-size: 15px;
+//   }
+//
+//
+//   /* --------------------------------------------------------
+//      BOTTOM NAV
+//      -------------------------------------------------------- */
+//
+//   .custom-bottom-tabs {
+//     min-height: calc(
+//       60px + env(safe-area-inset-bottom, 0px)
+//     );
+//
+//     height: calc(
+//       60px + env(safe-area-inset-bottom, 0px)
+//     );
+//   }
+//
+//
+//   .custom-bottom-tabs .tab-item {
+//     font-size: 9px;
+//
+//     height: 53px;
+//
+//
+//     ion-icon {
+//       font-size: 21px;
+//
+//       width: 21px;
+//
+//       height: 21px;
+//     }
+//   }
+// }
+//
+//
+// /* ==========================================================
+//    ANDROID SAFE AREA / STATUS BAR SAFETY
+//    ========================================================== */
+//
+// /*
+//   This is the important part for the screenshot you sent.
+//
+//   The header starts BELOW the status bar instead of underneath it.
+// */
+//
+// @supports (padding-top: env(safe-area-inset-top)) {
+//
+//   .profile-header {
+//     padding-top: env(safe-area-inset-top);
+//   }
+//
+//
+//   .custom-bottom-tabs {
+//     padding-bottom: env(safe-area-inset-bottom);
+//
+//     height: calc(
+//       60px + env(safe-area-inset-bottom)
+//     );
+//   }
+//
+//
+//   .profile-content {
+//     margin-bottom: calc(
+//       60px + env(safe-area-inset-bottom)
+//     );
+//
+//     --padding-bottom: calc(
+//       24px +
+//       60px +
+//       env(safe-area-inset-bottom)
+//     );
+//   }
+// }
+//
+//
+// /* ==========================================================
+//    PREVENT HORIZONTAL OVERFLOW
+//    ========================================================== */
+//
+// .profile-content,
+// .profile-container,
+// .profile-card {
+//   max-width: 100%;
+//
+//   overflow-x: hidden;
+// }
+//
+//
+// /* ==========================================================
+//    TOUCH / TAP RESET
+//    ========================================================== */
+//
+// .custom-bottom-tabs,
+// .tab-item,
+// .option-item,
+// .avatar-wrapper,
+// .edit-btns .cancel,
+// .edit-btns .save {
+//   -webkit-tap-highlight-color: transparent;
+// }
+//
+//
+// /* ==========================================================
+//    IMAGE SAFETY
+//    ========================================================== */
+//
+// .avatar-img,
+// .feature-icon-img {
+//   user-select: none;
+//
+//   -webkit-user-drag: none;
+// }
+//
+//
+// /* ==========================================================
+//    REMOVE OLD / CONFLICTING PROFILE FOOTER STYLES
+//    ========================================================== */
+//
+// .profile-header ion-toolbar,
+// .profile-header ion-title,
+// .profile-content,
+// .custom-bottom-tabs {
+//   box-sizing: border-box;
+// }
+//
+//
+// /* ==========================================================
+//    FINAL PROFILE HEADER FIX
+//    ========================================================== */
+//
+// .profile-header {
+//   width: 100%;
+//
+//   margin: 0;
+//
+//   border: 0;
+//
+//   box-shadow: none;
+//
+//   overflow: visible;
+// }
+//
+//
+// /* ==========================================================
+//    FINAL BOTTOM TAB FIX
+//    ========================================================== */
+//
+// .custom-bottom-tabs {
+//   margin: 0;
+//
+//   overflow: hidden;
+//
+//   transform: translateZ(0);
+//
+//   -webkit-transform: translateZ(0);
+// }
+//
+//
+// // // .profile-header ion-toolbar {
+// // //     --background: #ffffff;
+// // //     border-bottom: 1px solid #eee;
+// // //     position: relative;
+// // //   }
+//
+// // .profile-header {
+//
+// //   ion-toolbar {
+// //     --background: #ffffff;
+// //     --border-width: 0;
+// //     --min-height: 52px;
+// //     --padding-start: 8px;
+// //     --padding-end: 12px;
+// //     --padding-top: 0;
+// //     --padding-bottom: 0;
+//
+// //     box-shadow: 0 2px 10px rgba(0,0,0,.08);
+// //   }
+//
+// //   ion-buttons {
+// //     margin: 0;
+// //   }
+//
+// //   ion-button {
+// //     --padding-start: 0;
+// //     --padding-end: 0;
+// //     --color: #085e54;
+// //     width: 36px;
+// //     height: 36px;
+// //   }
+//
+// //   ion-icon {
+// //     font-size: 26px;
+// //   }
+//
+// //   ion-title {
+// //     padding-inline-start: 6px;
+// //     padding-inline-end: 0;
+// //     text-align: left;
+//
+// //     font-size: 18px;
+// //     font-weight: 500;
+// //     color: #222;
+// //   }
+// // }
+// //   .back {
+// //     font-size: 24px;
+// //     color: #085e54;
+// //     position: absolute;
+// //     left: 12px;
+// //   }
+//
+// //   .title {
+// //     // text-align: center;
+// //     font-size: 18px;
+// //     font-weight: 500;
+// //     margin-left: 44px;
+// //   }
+//
+// //   /* PROFILE TOP */
+//
+// //   .profile-top {
+// //     text-align: center;
+// //     padding: 25px 0;
+// //     background: #fff;
+// //   }
+//
+// //   .profile-img {
+// //     width: 130px;
+// //     height: 130px;
+// //     border-radius: 50%;
+// //     object-fit: cover;
+// //   }
+//
+// //   .edit-text {
+// //     color: #085e54;
+// //     margin-top: 10px;
+// //     font-size: 16px;
+// //   }
+//
+// //   // .edit-badge {
+// //   //   position: fixed;
+// //   //   bottom: 450px;
+// //   //   right: 174px;
+// //   //   width: 40px;
+// //   //   height: 40px;
+// //   //   background: #4caf50;
+// //   //   border-radius: 50%;
+// //   //   display: flex;
+// //   //   align-items: center;
+// //   //   justify-content: center;
+// //   //   border: 3px solid white;
+// //   // }
+//
+// //   // .edit-icon {
+// //   //   font-size: 22px;
+// //   //   color: white;
+// //   // }
+//
+// //   /* GAP */
+//
+// //   .gap {
+// //     height: 12px;
+// //     background: #f5f5f5;
+// //   }
+//
+// //   /* DETAILS */
+//
+// //   .details {
+// //     background: #fff;
+// //   }
+//
+// //   .field {
+// //     padding: 14px;
+// //   }
+//
+// //   .field label {
+// //     font-size: 13px;
+// //     color: #8e8e93;
+// //   }
+//
+// //   .field div {
+// //     font-size: 17px;
+// //     margin-top: 4px;
+// //   }
+//
+// //   .field input {
+// //     width: 100%;
+// //     border: none;
+// //     outline: none;
+// //     font-size: 17px;
+// //     margin-top: 4px;
+// //     background: transparent;
+// //   }
+//
+// //   .divider {
+// //     height: 1px;
+// //     background: #eee;
+// //     margin-left: 14px;
+// //   }
+//
+// //   /* FOOTER */
+//
+// //   .footer {
+// //     position: fixed;
+// //     bottom: 0;
+// //     width: 100%;
+// //     padding: 12px;
+// //     background: #fff;
+// //   }
+//
+// //   /* LOGOUT */
+//
+// //   .logout-btn {
+// //     background: #ff3b31;
+// //     color: white;
+// //     text-align: center;
+// //     padding: 14px;
+// //     border-radius: 12px;
+// //     font-size: 16px;
+// //   }
+//
+// //   /* EDIT BUTTONS */
+//
+// //   .edit-btns {
+// //     display: flex;
+// //     gap: 10px;
+// //   }
+//
+// //   .cancel {
+// //     flex: 1;
+// //     background: #ff3b31;
+// //     color: white;
+// //     text-align: center;
+// //     padding: 14px;
+// //     border-radius: 12px;
+// //   }
+//
+// //   .save {
+// //     flex: 1;
+// //     background: #27d366;
+// //     color: white;
+// //     text-align: center;
+// //     padding: 14px;
+// //     border-radius: 12px;
+// //   }

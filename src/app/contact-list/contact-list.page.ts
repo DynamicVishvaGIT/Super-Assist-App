@@ -93,12 +93,16 @@ export class ContactListPage implements OnInit, OnDestroy {
      LOAD ALL CONTACTS
   ========================================================= */
 
-  load_contacts(): void {
+  // load_contacts(): void {
+  load_contacts(done?: () => void): void {
     if (this.isLoadingContacts) {
+      done?.();
       return;
     }
     this.isLoadingContacts = true;
-    this.commonService.presentLoading();
+    // this.commonService.presentLoading();
+    // (item 14/15) no blocking full-screen loader: first load shows the skeleton rows,
+    // later visits refresh quietly in the background (pull-to-refresh also available)
     this.apiService.load_contacts()
       .pipe(takeUntil(this._unsubscribeAll)).subscribe({
         next: (response: any) => {
@@ -119,17 +123,22 @@ export class ContactListPage implements OnInit, OnDestroy {
             }
           );
           console.log('Total contacts:',this.contacts.length);
+          // (item 11) A-Z order so the letter headers make sense
+          this.contacts.sort((a, b) => this.compareContacts(a, b));
           this.currentPage = 1;
-          this.filteredContacts = [...this.contacts];
-          this.visibleContacts = this.filteredContacts.slice(0,this.PAGE_SIZE);
+          // this.filteredContacts = [...this.contacts];
+          // this.visibleContacts = this.filteredContacts.slice(0,this.PAGE_SIZE);
+          this.filterContacts();   // same as above when the search box is empty; keeps an active search after a quiet refresh
           this.isLoadingContacts = false;
-          this.commonService.dismissLoading();
+          // this.commonService.dismissLoading();
+          done?.();
         },
         error: (respError: any) => {
           console.error('load_contacts error:',respError);
           this.isLoadingContacts = false;
-          this.commonService.dismissLoading();
+          // this.commonService.dismissLoading();
           this.commonService.showToastMessage(respError,'toast-error','',4000);
+          done?.();
         }
       });
     }
@@ -578,6 +587,80 @@ export class ContactListPage implements OnInit, OnDestroy {
   /* =========================================================
      TRACK BY
   ========================================================= */
+
+  // =========================================================
+  // VIEW HELPER (redesign) - same palette + hash as the Chats page,
+  // so a contact has the same avatar colour on both tabs
+  // =========================================================
+  readonly avatarPalette = [
+    { bg: '#e3f6ec', fg: '#00a95b' }, { bg: '#e6f0ff', fg: '#2563eb' },
+    { bg: '#fdeee6', fg: '#e8590c' }, { bg: '#f1e9ff', fg: '#7c3aed' },
+    { bg: '#fde8ef', fg: '#d6336c' }, { bg: '#e3f7f8', fg: '#0c8599' },
+    { bg: '#fff4d6', fg: '#c47f00' }, { bg: '#eceff3', fg: '#495464' },
+  ];
+
+  /** (item 15) skeleton only on the very first load */
+  get showSkeleton(): boolean {
+    return this.isLoadingContacts && !this.contacts.length;
+  }
+
+  /** (item 14) pull-to-refresh, reuses load_contacts */
+  doRefresh(event: any): void {
+    this.load_contacts(() => event?.target?.complete());
+  }
+
+  /** (item 11) section letter: A-Z, everything else under '#' */
+  sectionLetter(contact: Contact): string {
+    const first = (contact?.name || '').trim().charAt(0).toUpperCase();
+    return /^[A-Z]$/.test(first) ? first : '#';
+  }
+
+  /** (item 11) show a letter header before the first contact of each letter */
+  showSectionHeader(index: number): boolean {
+    if (index === 0) { return true; }
+    const prev = this.visibleContacts[index - 1];
+    const cur = this.visibleContacts[index];
+    return !!cur && (!prev || this.sectionLetter(prev) !== this.sectionLetter(cur));
+  }
+
+  /** A-Z by name, names starting with a non-letter / no name go to the end ('#') */
+  private compareContacts(a: Contact, b: Contact): number {
+    const la = this.sectionLetter(a);
+    const lb = this.sectionLetter(b);
+    if (la === '#' && lb !== '#') { return 1; }
+    if (lb === '#' && la !== '#') { return -1; }
+    const na = (a.name || a.phone || '').trim();
+    const nb = (b.name || b.phone || '').trim();
+    return na.localeCompare(nb, undefined, { sensitivity: 'base' });
+  }
+
+  /** (item 10) display-only phone formatting: 919434478921 -> +91 94344 78921 */
+  formatPhone(phone: string | null | undefined): string {
+    const raw = (phone || '').toString().trim();
+    const digits = raw.replace(/\D/g, '');
+    if (!digits || digits.length !== raw.replace(/^\+/, '').length) { return raw; }  // not plain digits: show as-is
+    if (digits.length === 12 && digits.startsWith('91')) {
+      return '+91 ' + digits.slice(2, 7) + ' ' + digits.slice(7);
+    }
+    if (digits.length === 10) {
+      return digits.slice(0, 5) + ' ' + digits.slice(5);
+    }
+    if (digits.length > 10) {
+      const cc = digits.slice(0, digits.length - 10);
+      const rest = digits.slice(-10);
+      return '+' + cc + ' ' + rest.slice(0, 5) + ' ' + rest.slice(5);
+    }
+    return raw;
+  }
+
+  getAvatarColor(name: string | null): { bg: string; fg: string } {
+    const key = (name || '?').toString();
+    let hash = 0;
+    for (let i = 0; i < key.length; i++) {
+      hash = (hash * 31 + key.charCodeAt(i)) | 0;
+    }
+    return this.avatarPalette[Math.abs(hash) % this.avatarPalette.length];
+  }
 
   trackByContactId(
     index: number,

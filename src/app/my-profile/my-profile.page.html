@@ -1,3 +1,180 @@
+<!-- =====================================================================
+     SETTINGS / PROFILE (v2) - items 1-6 and 10-20
+     Same handlers as before (presentMenuOptions, open*, edit mode, logout).
+     The previous template is fully commented out at the bottom of this file.
+     ===================================================================== -->
+
+<!-- ================= HEADER (item 10, 11) ================= -->
+<ion-header class="sp-header">
+  <ion-toolbar>
+    <div class="sp-header-row">
+      <h1 class="sp-title">Settings</h1>
+      <ion-button fill="clear" class="menu-dots-btn" (click)="presentMenuOptions()" aria-label="Options">
+        <ion-icon name="ellipsis-vertical"></ion-icon>
+      </ion-button>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="sp-content">
+  <div class="sp-container">
+
+    <!-- ================= AVATAR (item 13: no magic overlap numbers) ================= -->
+    <div class="sp-avatar-wrap">
+      <div class="sp-avatar">
+        <img [src]="selectedImage.data" *ngIf="selectedImage.name" class="avatar-img">
+        <img [src]="currentUser?.BUSINESS_LOGO" *ngIf="!selectedImage.name && currentUser?.BUSINESS_LOGO" class="avatar-img" onerror="this.style.display='none'">
+        <ng-container *ngIf="!selectedImage.name && !currentUser?.BUSINESS_LOGO">
+          <!-- (item 1) initials only from the real name; otherwise a neutral person icon -->
+          <span *ngIf="myProfileData.full_name" class="avatar-initials">{{ getInitials(myProfileData.full_name) }}</span>
+          <ion-icon *ngIf="!myProfileData.full_name" name="person" class="avatar-icon"></ion-icon>
+        </ng-container>
+      </div>
+    </div>
+
+    <!-- ================= DETAILS CARD (items 1, 14, 15, 18) ================= -->
+    <div class="sp-card sp-card--details">
+
+      <div class="sp-info">
+        <span class="sp-info-icon"><ion-icon name="person-outline"></ion-icon></span>
+        <div class="sp-info-text">
+          <label>FULL NAME</label>
+          <ng-container *ngIf="!isEdit">
+            <div class="sp-skel" *ngIf="profileLoading"></div>
+            <div class="info-value" *ngIf="!profileLoading" [class.is-empty]="!myProfileData.full_name">
+              {{ myProfileData.full_name || 'Not added' }}
+            </div>
+          </ng-container>
+          <input *ngIf="isEdit" [(ngModel)]="user.full_name" class="edit-input">
+        </div>
+      </div>
+
+      <div class="sp-info">
+        <span class="sp-info-icon"><ion-icon name="call-outline"></ion-icon></span>
+        <div class="sp-info-text">
+          <label>MOBILE NUMBER</label>
+          <ng-container *ngIf="!isEdit">
+            <div class="sp-skel" *ngIf="profileLoading"></div>
+            <div class="info-value" *ngIf="!profileLoading" [class.is-empty]="!(myProfileData.mobile || myProfileData.phone)">
+              {{ (myProfileData.mobile || myProfileData.phone) ? formatPhone(myProfileData.mobile || myProfileData.phone) : 'Not added' }}
+            </div>
+          </ng-container>
+          <input *ngIf="isEdit" [(ngModel)]="user.phone" class="edit-input">
+        </div>
+      </div>
+
+      <div class="sp-info">
+        <span class="sp-info-icon"><ion-icon name="mail-outline"></ion-icon></span>
+        <div class="sp-info-text">
+          <label>EMAIL</label>
+          <ng-container *ngIf="!isEdit">
+            <div class="sp-skel" *ngIf="profileLoading"></div>
+            <div class="info-value" *ngIf="!profileLoading" [class.is-empty]="!myProfileData.email">
+              {{ myProfileData.email || 'Not added' }}
+            </div>
+          </ng-container>
+          <input *ngIf="isEdit" [(ngModel)]="user.email" class="edit-input">
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= MENU CARD (items 3, 4, 5) ================= -->
+    <div class="sp-card sp-card--menu">
+      <div class="option-item" (click)="openHelpCentre()">
+        <div class="option-left">
+          <span class="icon-box icon-box--green"><ion-icon name="help-circle-outline"></ion-icon></span>
+          <span>Help Centre</span>
+        </div>
+        <ion-icon name="chevron-forward-outline" class="chevron-icon"></ion-icon>
+      </div>
+
+      <div class="option-item" (click)="openSupport()">
+        <div class="option-left">
+          <span class="icon-box icon-box--blue"><ion-icon name="headset-outline"></ion-icon></span>
+          <span>Support</span>
+        </div>
+        <ion-icon name="chevron-forward-outline" class="chevron-icon"></ion-icon>
+      </div>
+
+      <div class="option-item" (click)="openPrivacyPolicy()">
+        <div class="option-left">
+          <span class="icon-box icon-box--purple"><ion-icon name="shield-checkmark-outline"></ion-icon></span>
+          <span>Privacy Policy</span>
+        </div>
+        <ion-icon name="chevron-forward-outline" class="chevron-icon"></ion-icon>
+      </div>
+
+      <div class="option-item" (click)="openTerms()">
+        <div class="option-left">
+          <span class="icon-box icon-box--orange"><ion-icon name="document-text-outline"></ion-icon></span>
+          <span>Terms and Conditions</span>
+        </div>
+        <ion-icon name="chevron-forward-outline" class="chevron-icon"></ion-icon>
+      </div>
+    </div>
+
+    <!-- OLD v2: Log out row on the page (Logout now lives only in the ⋮ bottom sheet)
+    <!~~ ================= LOG OUT (item 6) ================= ~~>
+    <div class="sp-card sp-card--logout">
+      <div class="option-item option-item--danger" (click)="confirmLogout()">
+        <div class="option-left">
+          <span class="icon-box icon-box--red"><ion-icon name="log-out-outline"></ion-icon></span>
+          <span>Log out</span>
+        </div>
+      </div>
+    </div>
+    -->
+
+    <!-- edit mode (unchanged behaviour) -->
+    <div *ngIf="isEdit" class="edit-btns">
+      <div class="cancel" (click)="cancelEdit()">Cancel</div>
+      <div class="save" (click)="save()">Save</div>
+    </div>
+
+    <!-- (items 2, 16) real version, small and quiet -->
+    <div class="version-text" *ngIf="appVersionText">
+      Version {{ appVersionText }}
+    </div>
+  </div>
+</ion-content>
+
+
+<!-- ================= ⋮ OPTIONS BOTTOM SHEET (custom, animated) =================
+     Same content as the old action sheet: "Options", "Logout", "Cancel". -->
+<div
+  class="sp-sheet-layer"
+  *ngIf="showMenuSheet"
+  [class.sp-sheet-layer--closing]="menuClosing">
+
+  <div class="sp-sheet-backdrop" (click)="closeMenuSheet()"></div>
+
+  <div class="sp-sheet" role="dialog" aria-label="Options">
+    <div class="sp-sheet-handle"></div>
+
+    <div class="sp-sheet-title">Options</div>
+
+    <div class="sp-sheet-group">
+      <button type="button" class="sp-sheet-item sp-sheet-item--danger" (click)="onMenuLogout()">
+        <span class="sp-sheet-icon"><ion-icon name="log-out-outline"></ion-icon></span>
+        <span class="sp-sheet-label">Logout</span>
+        <ion-icon name="chevron-forward-outline" class="sp-sheet-chevron"></ion-icon>
+      </button>
+    </div>
+
+    <button type="button" class="sp-sheet-cancel" (click)="closeMenuSheet()">
+      <ion-icon name="close"></ion-icon>
+      <span>Cancel</span>
+    </button>
+  </div>
+</div>
+
+
+<!-- =====================================================================
+     OLD PROFILE TEMPLATE (v1) - the ENTIRE previous file, commented out.
+     To restore: delete v2 above, remove this wrapper, and change the inner
+     markers back to normal HTML comment markers.
+     =====================================================================
+
 <ion-header class="profile-header" style="background: #ffffff; border-bottom: 1px solid #E6E8EA; box-shadow: none;">
   <div class="header-row" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; min-height: 56px;">
     <ion-title>Profile</ion-title>
@@ -13,7 +190,7 @@
 <ion-content class="profile-content">
   <div class="profile-container">
     
-    <!-- CIRCULAR AVATAR SECTION -->
+    <!~~ CIRCULAR AVATAR SECTION ~~>
     <div class="avatar-wrapper" >
       <div class="avatar-circle">
         <img [src]="selectedImage.data" *ngIf="selectedImage.name" class="avatar-img">
@@ -24,7 +201,7 @@
       </div>
     </div>
 
-    <!-- CARD 1: USER DETAILS -->
+    <!~~ CARD 1: USER DETAILS ~~>
     <div class="profile-card card-top">
       <div class="info-group">
         <label>FULL NAME</label>
@@ -49,7 +226,7 @@
       </div>
     </div>
 
-    <!-- CARD 2: OPTIONS / MENU -->
+    <!~~ CARD 2: OPTIONS / MENU ~~>
     <div class="profile-card">
       <div class="option-item" (click)="openHelpCentre()">
         <div class="option-left">
@@ -95,13 +272,13 @@
       </div>
     </div>
 
-    <!-- EDIT MODE BUTTONS -->
+    <!~~ EDIT MODE BUTTONS ~~>
     <div *ngIf="isEdit" class="edit-btns">
       <div class="cancel" (click)="cancelEdit()">Cancel</div>
       <div class="save" (click)="save()">Save</div>
     </div>
 
-    <!-- VERSION INFORMATION -->
+    <!~~ VERSION INFORMATION ~~>
     <div class="version-text">
       Version 2.4.0 (Premium)
     </div>
@@ -109,8 +286,8 @@
   </div>
 </ion-content>
 
-<!-- BOTTOM NAVIGATION TABS -->
-<!-- <div class="custom-bottom-tabs">
+<!~~ BOTTOM NAVIGATION TABS ~~>
+<!~~ <div class="custom-bottom-tabs">
   <div class="tab-item" [class.active]="activeTab === 'chats'" (click)="goToChats()">
     <img [src]="activeTab === 'chats' ? 'assets/images/chat.active.png' : 'assets/images/chat.png'" alt="Chats" class="feature-icon-img" />
     <span>Chats</span>
@@ -125,16 +302,16 @@
     <img [src]="activeTab === 'settings' ? 'assets/images/setting.active.png' : 'assets/images/setting.png'" alt="Settings" class="feature-icon-img" />
     <span>Settings</span>
   </div>
-</div> -->
+</div> ~~>
 
 
-<!-- <ion-header class="profile-header">
+<!~~ <ion-header class="profile-header">
   <ion-toolbar>
     <ion-icon name="chevron-back-outline" class="back" (click)="onBack()"></ion-icon>
     <div class="title">Profile</div>
   </ion-toolbar>
-</ion-header> -->
-<!-- <ion-header class="profile-header" mode="md">
+</ion-header> ~~>
+<!~~ <ion-header class="profile-header" mode="md">
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-button fill="clear" (click)="onBack()">
@@ -143,19 +320,19 @@
     </ion-buttons>
     <ion-title>Profile</ion-title>
   </ion-toolbar>
-</ion-header> -->
+</ion-header> ~~>
 
-<!-- <ion-content> -->
-  <!-- PROFILE IMAGE -->
-  <!-- <div class="profile-top"> -->
-    <!-- <img src="assets/images/Prasenjit_Chanda.png" class="profile-img" *ngIf="!selectedImage.name"> -->
-    <!-- <img [src]="currentUser.BUSINESS_LOGO" class="profile-img" *ngIf="!selectedImage.name">
+<!~~ <ion-content> ~~>
+  <!~~ PROFILE IMAGE ~~>
+  <!~~ <div class="profile-top"> ~~>
+    <!~~ <img src="assets/images/Prasenjit_Chanda.png" class="profile-img" *ngIf="!selectedImage.name"> ~~>
+    <!~~ <img [src]="currentUser.BUSINESS_LOGO" class="profile-img" *ngIf="!selectedImage.name">
     <img [src]="selectedImage.data" alt="" class="profile-img" *ngIf="selectedImage.name">
     <div class="edit-text" (click)="changeProfilePicture()">
       Select Photo
-    </div> -->
+    </div> ~~>
     
-  <!-- </div>
+  <!~~ </div>
   <div class="gap"></div>
   <div class="details">
     <div class="field">
@@ -171,17 +348,18 @@
     </div>
    
   </div>
-</ion-content> -->
+</ion-content> ~~>
 
-<!-- FOOTER BUTTONS -->
-<!-- <div class="footer"> -->
-  <!-- VIEW MODE -->
-  <!-- <div *ngIf="!isEdit" class="logout-btn" (click)="logout()"> -->
-    <!-- Logout
-  </div> -->
-  <!-- EDIT MODE -->
-  <!-- <div *ngIf="isEdit" class="edit-btns">
+<!~~ FOOTER BUTTONS ~~>
+<!~~ <div class="footer"> ~~>
+  <!~~ VIEW MODE ~~>
+  <!~~ <div *ngIf="!isEdit" class="logout-btn" (click)="logout()"> ~~>
+    <!~~ Logout
+  </div> ~~>
+  <!~~ EDIT MODE ~~>
+  <!~~ <div *ngIf="isEdit" class="edit-btns">
     <div class="cancel" (click)="cancelEdit()">Cancel</div>
     <div class="save" (click)="save()">Save</div>
   </div>
-</div> -->
+</div> ~~>
+-->

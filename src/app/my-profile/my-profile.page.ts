@@ -1,7 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Camera, CameraOptions, PictureSourceType } from '@awesome-cordova-plugins/camera/ngx';
-import { ActionSheetController } from '@ionic/angular';
+// import { ActionSheetController } from '@ionic/angular';
+import { ActionSheetController, AlertController, Platform } from '@ionic/angular';
+import { AppVersion } from '@awesome-cordova-plugins/app-version/ngx';
+import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser/ngx';
+import { environment } from '../../environments/environment';
 import { User } from '../user';
 import { Subject, takeUntil } from 'rxjs';
 import { Api } from '../api';
@@ -35,13 +39,21 @@ export class MyProfilePage implements OnInit {
   tempUser: any;
   selectedImage: any = { name: '', data: '' };
 
+  // ---- redesign (items 2, 18) ----
+  appVersionText = '';        // real app version (from config.xml via the AppVersion plugin)
+  profileLoading = true;      // shows placeholder lines instead of a full-screen loader
+
   constructor(
     private router: Router, 
     private actionSheetCtrl: ActionSheetController, 
     private camera: Camera, 
     private userService: User, 
     private apiService: Api,
-    private commonService: Common
+    private commonService: Common,
+    private alertCtrl: AlertController,
+    private platform: Platform,
+    private appVersion: AppVersion,
+    private inAppBrowser: InAppBrowser
   ) { 
     this._unsubscribeAll = new Subject();
   }
@@ -58,19 +70,23 @@ export class MyProfilePage implements OnInit {
       }
     });
     this.load_profile();
+    this.loadAppVersion();
   }
 
   load_profile() {
-    this.commonService.presentLoading();
+    // this.commonService.presentLoading();   // (item 18) replaced by placeholder lines
+    this.profileLoading = true;
     this.apiService.load_profile()
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((response: any) => {
         if (response && response.profile) {
           this.myProfileData = response.profile;
         }
-        this.commonService.dismissLoading();
+        // this.commonService.dismissLoading();
+        this.profileLoading = false;
       }, error => {
-        this.commonService.dismissLoading();
+        // this.commonService.dismissLoading();
+        this.profileLoading = false;
         console.log(error);
       });
   }
@@ -84,33 +100,68 @@ export class MyProfilePage implements OnInit {
     return name.slice(0, 2).toUpperCase();
   }
 
-  async presentMenuOptions() {
-    const actionSheet = await this.actionSheetCtrl.create({
-      header: 'Options',
-      buttons: [
-        // {
-        //   text: 'Edit Profile',
-        //   icon: 'create-outline',
-        //   handler: () => {
-        //     this.toggleEdit();
-        //   }
-        // },
-        {
-          text: 'Logout',
-          role: 'destructive',
-          icon: 'log-out-outline',
-          handler: () => {
-            this.logout();
-          }
-        },
-        {
-          text: 'Cancel',
-          icon: 'close',
-          role: 'cancel'
-        }
-      ]
-    });
-    await actionSheet.present();
+  // OLD: Ionic action sheet (replaced by the custom animated bottom sheet below)
+  // async presentMenuOptions() {
+  //   const actionSheet = await this.actionSheetCtrl.create({
+  //     header: 'Options',
+  //     buttons: [
+  //       // {
+  //       //   text: 'Edit Profile',
+  //       //   icon: 'create-outline',
+  //       //   handler: () => {
+  //       //     this.toggleEdit();
+  //       //   }
+  //       // },
+  //       {
+  //         text: 'Logout',
+  //         role: 'destructive',
+  //         icon: 'log-out-outline',
+  //         handler: () => {
+  //           this.logout();
+  //         }
+  //       },
+  //       {
+  //         text: 'Cancel',
+  //         icon: 'close',
+  //         role: 'cancel'
+  //       }
+  //     ]
+  //   });
+  //   await actionSheet.present();
+  // }
+
+  // =========================================================
+  // CUSTOM "OPTIONS" BOTTOM SHEET (same content: Options / Logout / Cancel)
+  // =========================================================
+  showMenuSheet = false;
+  menuClosing = false;
+
+  presentMenuOptions() {
+    this.menuClosing = false;
+    this.showMenuSheet = true;
+    document.body.classList.add('sa-sheet-open');     // slides the tab bar away (global.scss)
+  }
+
+  closeMenuSheet(after?: () => void) {
+    if (!this.showMenuSheet || this.menuClosing) { return; }
+    this.menuClosing = true;                          // play the slide-down animation first
+    setTimeout(() => {
+      this.showMenuSheet = false;
+      this.menuClosing = false;
+      document.body.classList.remove('sa-sheet-open');
+      after?.();
+    }, 260);
+  }
+
+  /** Same as the old sheet: Logout logs out straight away */
+  onMenuLogout() {
+    this.closeMenuSheet(() => this.logout());
+  }
+
+  ionViewWillLeave() {
+    this.showMenuSheet = false;
+    this.menuClosing = false;
+    document.body.classList.remove('sa-sheet-open');
   }
 
   toggleEdit() {
@@ -204,19 +255,86 @@ export class MyProfilePage implements OnInit {
     this.router.navigate(['/my-profile']);
   }
 
+  // OLD (item 3): rows only logged to the console
+  // openHelpCentre() {
+  //   console.log('Help Centre clicked');
+  // }
+  //
+  // openSupport() {
+  //   console.log('Support clicked');
+  // }
+  //
+  // openPrivacyPolicy() {
+  //   console.log('Privacy Policy clicked');
+  // }
+  //
+  // openTerms() {
+  //   console.log('Terms clicked');
+  // }
   openHelpCentre() {
-    console.log('Help Centre clicked');
+    this.openSettingsLink(environment.settingsLinks?.helpCentre, 'Help Centre');
   }
-
   openSupport() {
-    console.log('Support clicked');
+    this.openSettingsLink(environment.settingsLinks?.support, 'Support');
   }
-
   openPrivacyPolicy() {
-    console.log('Privacy Policy clicked');
+    this.openSettingsLink(environment.settingsLinks?.privacyPolicy, 'Privacy Policy');
+  }
+  openTerms() {
+    this.openSettingsLink(environment.settingsLinks?.terms, 'Terms and Conditions');
   }
 
-  openTerms() {
-    console.log('Terms clicked');
+  // =========================================================
+  // REDESIGN HELPERS (items 2, 3, 6, 15)
+  // =========================================================
+
+  /** (item 3) open the configured link inside the app, or tell the user it's coming */
+  private openSettingsLink(url: string | undefined, title: string) {
+    if (url) {
+      this.inAppBrowser.create(url, '_blank', 'location=yes,toolbarcolor=#ffffff,closebuttoncaption=Close');
+      return;
+    }
+    this.commonService.showToastMessage(title + ' is coming soon.', 'toast-info', '', 2000);
+  }
+
+  /** (item 2) real version number instead of the hard-coded "2.4.0" */
+  private loadAppVersion() {
+    this.platform.ready().then(() => {
+      this.appVersion.getVersionNumber()
+        .then(v => this.appVersionText = v || '')
+        .catch(() => this.appVersionText = '');   // browser preview: plugin not available
+    });
+  }
+
+  /** (item 6) visible Log out row asks first, then uses the existing logout() */
+  async confirmLogout() {
+    const alert = await this.alertCtrl.create({
+      header: 'Log out',
+      message: 'Are you sure you want to log out?',
+      buttons: [
+        { text: 'Cancel', role: 'cancel', cssClass: 'alert-button-no' },
+        { text: 'Log out', role: 'destructive', cssClass: 'alert-button-yes', handler: () => this.logout() }
+      ]
+    });
+    await alert.present();
+  }
+
+  /** (item 15) same display format as the Contacts page: 919434478921 -> +91 94344 78921 */
+  formatPhone(phone: string | null | undefined): string {
+    const raw = (phone || '').toString().trim();
+    const digits = raw.replace(/\D/g, '');
+    if (!digits || digits.length !== raw.replace(/^\+/, '').length) { return raw; }
+    if (digits.length === 12 && digits.startsWith('91')) {
+      return '+91 ' + digits.slice(2, 7) + ' ' + digits.slice(7);
+    }
+    if (digits.length === 10) {
+      return digits.slice(0, 5) + ' ' + digits.slice(5);
+    }
+    if (digits.length > 10) {
+      const cc = digits.slice(0, digits.length - 10);
+      const rest = digits.slice(-10);
+      return '+' + cc + ' ' + rest.slice(0, 5) + ' ' + rest.slice(5);
+    }
+    return raw;
   }
 }

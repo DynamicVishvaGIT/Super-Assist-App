@@ -29,7 +29,27 @@ export class HomePage implements OnInit, OnDestroy {
   activeFilter: string = ''; // 'all' | 'unread' | 'favorites'
   
   county_list: any = [];
-  showModal = false;
+  // showModal = false;
+
+  // ---- UI-only state for the redesigned page ----
+  isScrolled = false;
+  contactErrors: { contact_number: string; contact_name: string; email_id: string } =
+    { contact_number: '', contact_name: '', email_id: '' };
+  contactShake: { [key: string]: boolean } = {};
+  readonly avatarPalette = [
+    { bg: '#e3f6ec', fg: '#00a95b' }, { bg: '#e6f0ff', fg: '#2563eb' },
+    { bg: '#fdeee6', fg: '#e8590c' }, { bg: '#f1e9ff', fg: '#7c3aed' },
+    { bg: '#fde8ef', fg: '#d6336c' }, { bg: '#e3f7f8', fg: '#0c8599' },
+    { bg: '#fff4d6', fg: '#c47f00' }, { bg: '#eceff3', fg: '#495464' },
+  ];
+
+  /** Bottom sheet visibility. Also slides the tab bar away while the sheet is open. */
+  private _showModal = false;
+  get showModal(): boolean { return this._showModal; }
+  set showModal(value: boolean) {
+    this._showModal = value;
+    document.body.classList.toggle('sa-sheet-open', value);
+  }
   contact = {
     country_code: '+91',
     contact_number: '',
@@ -72,9 +92,13 @@ export class HomePage implements OnInit, OnDestroy {
       }
     });
 
+    // setTimeout(() => {
+    //   this.loading = false;
+    // }, 1200);
+    // Skeleton now hides when the conversation list arrives; this is only a safety net
     setTimeout(() => {
       this.loading = false;
-    }, 1200);
+    }, 10000);
     this.allChats = [...this.chats];
     this.filteredChats = [...this.chats];
   }
@@ -111,6 +135,7 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   ionViewWillLeave() {
+    document.body.classList.remove('sa-sheet-open');
     if (this.backButtonSub) {
       this.backButtonSub.unsubscribe();
     }
@@ -127,7 +152,7 @@ export class HomePage implements OnInit, OnDestroy {
       });
   }
 
-  get_conversation_list(showLoader: boolean = true) {
+  get_conversation_list(showLoader: boolean = true, done?: () => void) {
     if (showLoader) {
       this.commonService.presentLoading();
     }
@@ -143,10 +168,14 @@ export class HomePage implements OnInit, OnDestroy {
         this.allChats = [...this.chats];
         this.applyFilters();
         this.commonService.dismissLoading();
+        this.loading = false;
+        done?.();
       },
       respError => {
         this.commonService.dismissLoading();
         this.commonService.showToastMessage(respError, 'toast-error', '', 4000);
+        this.loading = false;
+        done?.();
       });
   }
 
@@ -193,16 +222,23 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   add_new_contacts() {
-    if (!this.contact.contact_name) {
-      this.commonService.showToastMessage('Enter the contact person name.', 'toast-error', '', 2000);
-      return;
-    }
-    if (!this.contact.contact_number) {
-      this.commonService.showToastMessage('Enter the contact person number.', 'toast-error', '', 2000);
-      return;
-    }
-    if (!this.contact.email_id) {
-      this.commonService.showToastMessage('Enter the contact person mail id.', 'toast-error', '', 2000);
+    // OLD toast validation - replaced by inline validation (same rules, same order as the fields)
+    // if (!this.contact.contact_name) {
+    //   this.commonService.showToastMessage('Enter the contact person name.', 'toast-error', '', 2000);
+    //   return;
+    // }
+    // if (!this.contact.contact_number) {
+    //   this.commonService.showToastMessage('Enter the contact person number.', 'toast-error', '', 2000);
+    //   return;
+    // }
+    // if (!this.contact.email_id) {
+    //   this.commonService.showToastMessage('Enter the contact person mail id.', 'toast-error', '', 2000);
+    //   return;
+    // }
+    const fields: Array<'contact_number' | 'contact_name' | 'email_id'> = ['contact_number', 'contact_name', 'email_id'];
+    const invalid = fields.filter(f => !this.validateContactField(f));
+    if (invalid.length) {
+      invalid.forEach(f => this.shakeContactField(f));
       return;
     }
 
@@ -269,6 +305,7 @@ export class HomePage implements OnInit, OnDestroy {
 }
 
   openModal() {
+    this.contactErrors = { contact_number: '', contact_name: '', email_id: '' };
     this.showModal = true;
   }
 
@@ -284,6 +321,87 @@ export class HomePage implements OnInit, OnDestroy {
     this.chats = this.chats.filter((c: any) => c !== chat);
     this.allChats = [...this.chats];
     this.applyFilters();
+  }
+
+  // =========================================================
+  // VIEW HELPERS (redesign) - presentation only
+  // =========================================================
+
+  /** Same contact always gets the same avatar colour */
+  getAvatarColor(name: string): { bg: string; fg: string } {
+    const key = (name || '?').toString();
+    let hash = 0;
+    for (let i = 0; i < key.length; i++) {
+      hash = (hash * 31 + key.charCodeAt(i)) | 0;
+    }
+    return this.avatarPalette[Math.abs(hash) % this.avatarPalette.length];
+  }
+
+  /** WhatsApp-style time: today -> 03:45 PM, Yesterday, weekday, then dd/MM/yy */
+  formatChatTime(value: any): string {
+    if (!value) { return ''; }
+    const date = new Date(value);
+    if (isNaN(date.getTime())) { return ''; }
+    const now = new Date();
+    const startOf = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+    const days = Math.round((startOf(now) - startOf(date)) / 86400000);
+    const pad = (n: number) => (n < 10 ? '0' + n : '' + n);
+    if (days <= 0) {
+      const h = date.getHours() % 12 || 12;
+      return `${pad(h)}:${pad(date.getMinutes())} ${date.getHours() < 12 ? 'AM' : 'PM'}`;
+    }
+    if (days === 1) { return 'Yesterday'; }
+    if (days < 7) {
+      return ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][date.getDay()];
+    }
+    return `${pad(date.getDate())}/${pad(date.getMonth() + 1)}/${String(date.getFullYear()).slice(-2)}`;
+  }
+
+  badgeText(count: number): string {
+    return count > 99 ? '99+' : String(count);
+  }
+
+  /** Keeps rows from being re-created (and re-animated) on every inbox refresh */
+  trackChat(index: number, chat: any) {
+    return chat?.conv_id || chat?.id || index;
+  }
+
+  onContentScroll(event: any) {
+    const scrolled = (event?.detail?.scrollTop || 0) > 4;
+    if (scrolled !== this.isScrolled) { this.isScrolled = scrolled; }
+  }
+
+  clearSearch() {
+    this.searchText = '';
+    this.applyFilters();
+  }
+
+  /** Pull-to-refresh: reuses the existing list call without the full-screen loader */
+  doRefresh(event: any) {
+    this.get_conversation_list(false, () => event?.target?.complete());
+  }
+
+  validateContactField(field: 'contact_number' | 'contact_name' | 'email_id'): boolean {
+    const messages = {
+      contact_number: 'Phone number is required.',
+      contact_name: 'Full name is required.',
+      email_id: 'Email address is required.',
+    };
+    const value = (this.contact[field] || '').toString().trim();
+    this.contactErrors[field] = value ? '' : messages[field];
+    return !!value;
+  }
+
+  onContactChange(field: 'contact_number' | 'contact_name' | 'email_id') {
+    if (this.contactErrors[field]) { this.validateContactField(field); }
+  }
+
+  private shakeContactField(field: string) {
+    this.contactShake[field] = false;
+    setTimeout(() => {
+      this.contactShake[field] = true;
+      setTimeout(() => (this.contactShake[field] = false), 500);
+    }, 10);
   }
 
   goToChatDetails(chat: any) { console.log(chat)

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Theme used right after the system splash closes (AndroidPostSplashScreenTheme).
+  The Cordova default (Theme.AppCompat.NoActionBar) is DARK, so its black window
+  background flashed while the WebView loaded. This keeps everything white.
+-->
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Theme.SuperAssist.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:colorBackground">@android:color/white</item>
+        <item name="android:statusBarColor">@android:color/white</item>
+        <item name="android:navigationBarColor">@android:color/white</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="23">true</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="27">true</item>
+        <item name="android:windowOptOutEdgeToEdgeEnforcement" tools:targetApi="35">true</item>
+    </style>
+</resources>

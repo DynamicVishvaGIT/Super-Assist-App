@@ -15,6 +15,10 @@ export class ForgotPasswordPage implements OnInit {
   };
 
   isLoading = false;
+
+  // (redesign) inline validation like the login page
+  emailError = '';
+  shakeEmail = false;
   showSuccessMessage = false;
 
   private successTimer: any;
@@ -40,10 +44,11 @@ export class ForgotPasswordPage implements OnInit {
 
     if (!email) {
 
-      this.presentToast(
-        'Please enter your email address.',
-        'danger'
-      );
+      // this.presentToast(
+      //   'Please enter your email address.',
+      //   'danger'
+      // );
+      this.setEmailError('Please enter your email address.');   // same text, shown under the field
 
       return;
     }
@@ -57,13 +62,17 @@ export class ForgotPasswordPage implements OnInit {
 
     if (!emailPattern.test(email)) {
 
-      this.presentToast(
-        'Please enter a valid email address.',
-        'danger'
-      );
+      // this.presentToast(
+      //   'Please enter a valid email address.',
+      //   'danger'
+      // );
+      this.setEmailError('Please enter a valid email address.');
 
       return;
     }
+
+    this.emailError = '';
+    if (this.isLoading) { return; }   // no double submit (Enter key + tap)
 
 
     /*
@@ -97,10 +106,11 @@ export class ForgotPasswordPage implements OnInit {
 
       this.showSuccessMessage = true;
 
-      this.presentToast(
-        'A reset link has been sent to your email.',
-        'success'
-      );
+      // this.presentToast(
+      //   'A reset link has been sent to your email.',
+      //   'success'
+      // );
+      // (redesign) the animated success card on the page already shows this same message
 
 
       /* Hide custom success message after 4 seconds */
@@ -121,6 +131,23 @@ export class ForgotPasswordPage implements OnInit {
   /* =====================================================
      BACK TO LOGIN
      ===================================================== */
+
+  /* =====================================================
+     REDESIGN HELPERS (inline error + shake)
+     ===================================================== */
+
+  private setEmailError(message: string) {
+    this.emailError = message;
+    this.shakeEmail = false;
+    setTimeout(() => {
+      this.shakeEmail = true;
+      setTimeout(() => (this.shakeEmail = false), 500);
+    }, 10);
+  }
+
+  onEmailChange() {
+    if (this.emailError) { this.emailError = ''; }
+  }
 
   backToLogin() {
 

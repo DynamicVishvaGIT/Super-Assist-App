@@ -80,8 +80,12 @@ export class AppComponent {
   initializeApp() {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
-      this.statusBar.backgroundColorByHexString('#2c56fa');
+      // this.statusBar.backgroundColorByHexString('#2c56fa');
+      this.statusBar.backgroundColorByHexString('#ffffff'); // matches splash + white headers
       this.statusBar.overlaysWebView(false);
+
+      // Fade out the custom animated splash (defined in src/index.html)
+      (window as any).hideAppSplash?.();
 
       if (this.platform.is(this.apiService.device_type as 'android' | 'ios')) { //inapp update
         this.checkAppVersion();

@@ -44,7 +44,8 @@
     </ion-menu>
     <ion-router-outlet id="main-content"></ion-router-outlet>
     <ion-tabs  #myTabs (ionTabsDidChange)="getSelectedTab()">
-      <ion-tab-bar slot="bottom" [selectedTab]="tab_name" *ngIf="tab_name =='home' || tab_name =='my-profile' || tab_name =='contact-detail' || tab_name =='contact-list' || tab_name =='my-orders' || tab_name =='add-project-lead' || tab_name =='project-lead-list' || tab_name =='kyc-verification' || tab_name =='language-setting' || tab_name =='passbook' || tab_name =='media-details' || tab_name =='schemes-offers' ">
+      <ion-tab-bar slot="bottom" class="tb-bar" [selectedTab]="tab_name" *ngIf="tab_name =='home' || tab_name =='my-profile' || tab_name =='contact-detail' || tab_name =='contact-list' || tab_name =='my-orders' || tab_name =='add-project-lead' || tab_name =='project-lead-list' || tab_name =='kyc-verification' || tab_name =='language-setting' || tab_name =='passbook' || tab_name =='media-details' || tab_name =='schemes-offers' ">
+        <!-- OLD TAB BUTTONS (image icons) - commented out
         <ion-tab-button tab="home">
           <img src="assets/images/chat.png" class="footer-icon">
           <ion-label class="footer-label">Chats</ion-label>
@@ -60,6 +61,34 @@
         <ion-tab-button tab="my-profile">
           <img src="assets/images/setting.png" class="footer-icon">
           <ion-label class="footer-label">Settings</ion-label>
+        </ion-tab-button>
+        -->
+
+        <!-- Chats -->
+        <ion-tab-button tab="home" class="tb-btn">
+          <span class="tb-pill">
+            <ion-icon name="chatbubbles-outline" class="tb-icon tb-icon--off"></ion-icon>
+            <ion-icon name="chatbubbles" class="tb-icon tb-icon--on"></ion-icon>
+          </span>
+          <ion-label class="tb-label">Chats</ion-label>
+        </ion-tab-button>
+
+        <!-- Contacts -->
+        <ion-tab-button tab="contact-list" class="tb-btn">
+          <span class="tb-pill">
+            <ion-icon name="people-outline" class="tb-icon tb-icon--off"></ion-icon>
+            <ion-icon name="people" class="tb-icon tb-icon--on"></ion-icon>
+          </span>
+          <ion-label class="tb-label">Contacts</ion-label>
+        </ion-tab-button>
+
+        <!-- Settings -->
+        <ion-tab-button tab="my-profile" class="tb-btn">
+          <span class="tb-pill">
+            <ion-icon name="settings-outline" class="tb-icon tb-icon--off"></ion-icon>
+            <ion-icon name="settings" class="tb-icon tb-icon--on"></ion-icon>
+          </span>
+          <ion-label class="tb-label">Settings</ion-label>
         </ion-tab-button>
       </ion-tab-bar>
     </ion-tabs>

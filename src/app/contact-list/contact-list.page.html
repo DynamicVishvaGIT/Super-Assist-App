@@ -1,8 +1,191 @@
+<!-- =====================================================================
+     CONTACT LIST (v4) - items 2, 4, 5-18: flat rows, brand colours,
+     header + search matching the Chats page.
+     Same content and same handlers as before. The previous template is
+     fully commented out at the bottom of this file.
+     ===================================================================== -->
+<ion-header class="cl-header">
+  <ion-toolbar>
+    <!-- OLD v3 (item 4: back arrow removed on this main tab, title renamed to match the tab):
+    <div class="cl-header-row">
+      <button type="button" class="cl-back-btn" (click)="goBack()" aria-label="Back">
+        <ion-icon name="arrow-back-outline" class="back"></ion-icon>
+      </button>
+      <div class="cl-title-wrap">
+        <h2 class="cl-title">
+          Select Contact
+        </h2>
+      </div>
+    </div>
+    -->
+    <div class="cl-header-row cl-header-row--tab">
+      <div class="cl-title-wrap">
+        <h2 class="cl-title">
+          Contacts
+        </h2>
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content
+  class="cl-content"
+  [scrollEvents]="true">
+
+  <!-- (item 14) PULL TO REFRESH -->
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content refreshingSpinner="crescent"></ion-refresher-content>
+  </ion-refresher>
+
+  <!-- SEARCH (same look as the Chats page) -->
+  <div class="cl-search-container">
+    <div class="cl-search">
+      <ion-icon name="search-outline" class="cl-search-icon"></ion-icon>
+      <input
+        type="text"
+        placeholder="Search name or number..."
+        [(ngModel)]="searchQuery"
+        (input)="filterContacts()" />
+      <ion-icon
+        *ngIf="searchQuery"
+        name="close-circle"
+        class="clear-search"
+        (click)="clearSearch()">
+      </ion-icon>
+    </div>
+  </div>
+  <!-- (item 11) contact count -->
+  <div class="cl-count" *ngIf="!showSkeleton && filteredContacts.length">
+    {{ filteredContacts.length }} {{ filteredContacts.length === 1 ? 'contact' : 'contacts' }}
+  </div>
+
+  <!-- (item 15) skeleton rows on the first load -->
+  <div class="cl-skeleton" *ngIf="showSkeleton">
+    <div class="cl-sk-row" *ngFor="let s of [1,2,3,4,5,6,7,8]">
+      <span class="cl-sk-avatar"></span>
+      <span class="cl-sk-lines">
+        <span class="cl-sk-line cl-sk-line--name"></span>
+        <span class="cl-sk-line cl-sk-line--num"></span>
+      </span>
+    </div>
+  </div>
+
+  <!-- LIST: flat full-width rows with an inset divider -->
+  <div class="cl-list">
+    <!-- OLD v2:
+    <div
+      class="cl-row"
+      *ngFor="let contact of visibleContacts; trackBy: trackByContactId">
+
+    -->
+    <ng-container *ngFor="let contact of visibleContacts; let i = index; trackBy: trackByContactId">
+    <!-- (item 11) A-Z section header -->
+    <div class="cl-section" *ngIf="showSectionHeader(i)">{{ sectionLetter(contact) }}</div>
+
+    <!-- (item 16) rows fade in (only new rows, thanks to trackBy) -->
+    <div
+      class="cl-row"
+      [style.animation-delay.ms]="i < 12 ? i * 35 : 0">
+
+      <div
+        class="cl-avatar"
+        [style.background]="getAvatarColor(contact.name || contact.phone).bg"
+        [style.color]="getAvatarColor(contact.name || contact.phone).fg">
+        {{ getInitials(contact.name) }}
+      </div>
+
+      <div class="cl-info">
+        <div class="cl-text">
+          <div class="cl-name">
+            {{ contact.name || 'Unknown Contact' }}
+          </div>
+          <!-- OLD v2:
+          <div class="cl-number">
+            {{ contact.phone }}
+          </div>
+          -->
+          <div class="cl-number">
+            {{ formatPhone(contact.phone) }}
+            <!-- (item 17) shown only when the API says the contact has NOT opted in -->
+            <span class="cl-optin" *ngIf="contact.whatsapp_opted === false">Not opted in</span>
+          </div>
+        </div>
+
+        <div class="contact-actions-inline">
+          <button
+            type="button"
+            class="action-icon-btn message-btn"
+            [disabled]="contact.loadingConversation"
+            (click)="openMessageForContact(contact, $event)"
+            title="Message">
+            <ion-spinner
+              *ngIf="contact.loadingConversation"
+              name="crescent">
+            </ion-spinner>
+            <!-- OLD v2:
+            <img
+              *ngIf="!contact.loadingConversation"
+              src="assets/images/message.png"
+              alt="Message"
+              class="action-icon-img">
+            -->
+            <ion-icon
+              *ngIf="!contact.loadingConversation"
+              name="chatbubble-ellipses"
+              class="action-icon"></ion-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+    </ng-container>
+
+    <!-- OLD v2:
+    <div
+      class="empty-state"
+      *ngIf="visibleContacts.length === 0">
+    -->
+    <div
+      class="empty-state"
+      *ngIf="visibleContacts.length === 0 && !showSkeleton">
+      <ion-icon name="people-outline"></ion-icon>
+      <p>
+        {{ searchQuery ? 'No contacts found' : 'No contacts available' }}
+      </p>
+    </div>
+
+    <!-- (item 12) duplicate loader removed; ion-infinite-scroll below already shows "Loading more contacts..."
+    <div
+      class="load-more-loader"
+      *ngIf="isLoadingMore">
+      <ion-spinner name="crescent"></ion-spinner>
+      <span>Loading more contacts...</span>
+    </div>
+    -->
+  </div>
+
+  <ion-infinite-scroll
+    threshold="150px"
+    [disabled]="isInfiniteScrollDisabled"
+    (ionInfinite)="loadMoreContacts($event)">
+    <ion-infinite-scroll-content
+      loadingSpinner="crescent"
+      loadingText="Loading more contacts...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</ion-content>
+
+
+<!-- =====================================================================
+     OLD CONTACT LIST TEMPLATE (v1) - the ENTIRE previous file, commented out.
+     To restore: delete v2 above, remove this wrapper, and change the inner
+     markers back to normal HTML comment markers.
+     =====================================================================
+
 <ion-header class="chat-detail-header">
   <ion-toolbar>
     <div class="header-chat-row">
 
-      <!-- Back Button -->
+      <!~~ Back Button ~~>
       <ion-icon
         name="arrow-back-outline"
         class="back"
@@ -24,9 +207,9 @@
   class="chat-bg"
   [scrollEvents]="true">
 
-  <!-- =========================
+  <!~~ =========================
        Search Bar
-  ========================== -->
+  ========================== ~~>
   <div class="search-container">
 
     <div class="input-container">
@@ -39,7 +222,7 @@
         [(ngModel)]="searchQuery"
         (input)="filterContacts()" />
 
-      <!-- Clear Search -->
+      <!~~ Clear Search ~~>
       <ion-icon
         *ngIf="searchQuery"
         name="close-circle"
@@ -52,23 +235,23 @@
   </div>
 
 
-  <!-- =========================
+  <!~~ =========================
        Contact List
-  ========================== -->
+  ========================== ~~>
   <div class="contacts-list-wrapper">
 
     <div
       class="contact-card"
       *ngFor="let contact of visibleContacts; trackBy: trackByContactId"
-      ><!--(click)="selectContact(contact)"-->
+      ><!~~(click)="selectContact(contact)"~~>
 
-      <!-- Avatar -->
+      <!~~ Avatar ~~>
       <div class="contact-avatar">
         {{ getInitials(contact.name) }}
       </div>
 
 
-      <!-- Contact Details -->
+      <!~~ Contact Details ~~>
       <div class="contact-details">
 
         <div class="contact-name">
@@ -82,7 +265,7 @@
       </div>
 
 
-      <!-- Message Button -->
+      <!~~ Message Button ~~>
       <div class="contact-actions-inline">
 
         <button
@@ -104,7 +287,7 @@
           class="action-icon-img">
 
       </button>
-        <!-- <button
+        <!~~ <button
           type="button"
           class="action-icon-btn message-btn"
           [disabled]="contact.loadingConversation"
@@ -122,16 +305,16 @@
             alt="Message"
             class="action-icon-img">
 
-        </button> -->
+        </button> ~~>
 
       </div>
 
     </div>
 
 
-    <!-- =========================
+    <!~~ =========================
          Empty State
-    ========================== -->
+    ========================== ~~>
     <div
       class="empty-state"
       *ngIf="visibleContacts.length === 0">
@@ -145,9 +328,9 @@
     </div>
 
 
-    <!-- =========================
+    <!~~ =========================
          Loading More
-    ========================== -->
+    ========================== ~~>
     <div
       class="load-more-loader"
       *ngIf="isLoadingMore">
@@ -161,9 +344,9 @@
   </div>
 
 
-  <!-- =========================
+  <!~~ =========================
        Ionic Infinite Scroll
-  ========================== -->
+  ========================== ~~>
   <ion-infinite-scroll
     threshold="150px"
     [disabled]="isInfiniteScrollDisabled"
@@ -177,7 +360,7 @@
   </ion-infinite-scroll>
 
 </ion-content>
-<!-- <ion-header class="chat-detail-header">
+<!~~ <ion-header class="chat-detail-header">
   <ion-toolbar>
     <div class="header-chat-row">
       <ion-icon name="arrow-back-outline" class="back" (click)="goBack()" style="font-size: 24px !important; color: #111b21 !important; cursor: pointer; margin-left: 16px; margin-top: 18px !important;"></ion-icon>
@@ -223,4 +406,5 @@
       <p>No contacts found</p>
     </div>
   </div>
-</ion-content> -->
+</ion-content> ~~>
+-->

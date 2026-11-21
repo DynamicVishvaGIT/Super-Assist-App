@@ -1,12 +1,272 @@
+<!-- =====================================================================
+     HOME / CHAT LIST (v2) - WhatsApp-style redesign
+     All original bindings kept: searchText + filterChats(), openModal(),
+     loading, filteredChats, selectChat() (press), goToChatDetails(),
+     deleteChat(), getInitials(), closeModal(), contact.*, add_new_contacts()
+     ===================================================================== -->
+<ion-content
+  class="chat-content"
+  [scrollEvents]="true"
+  (ionScroll)="onContentScroll($event)">
+
+  <!-- PULL TO REFRESH -->
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content refreshingSpinner="crescent"></ion-refresher-content>
+  </ion-refresher>
+
+  <!-- ================= HEADER ================= -->
+  <div class="hp-header" [class.hp-header--scrolled]="isScrolled">
+
+    <div class="hp-header-row">
+      <div class="hp-brand">
+        <span class="hp-logo">
+          <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+            <path class="hp-logo-grey" d="M58 18 H86 A14 14 0 0 1 100 32 V66 L91 59 Q88 56 83 56 H58 A14 14 0 0 1 44 42 V32 A14 14 0 0 1 58 18 Z" />
+            <path class="hp-logo-green" d="M34 64 H62 A14 14 0 0 1 76 78 V86 A14 14 0 0 1 62 100 H37 Q32 100 29 103 L20 110 V78 A14 14 0 0 1 34 64 Z" />
+          </svg>
+        </span>
+        <h1 class="hp-title">Super Assist</h1>
+      </div>
+
+      <button type="button" class="hp-add-btn" (click)="openModal()" aria-label="Add contact">
+        <ion-icon name="add"></ion-icon>
+      </button>
+    </div>
+
+    <!-- SEARCH -->
+    <div class="hp-search">
+      <ion-icon name="search-outline" class="hp-search-icon"></ion-icon>
+      <ion-input
+        placeholder="Search chats"
+        [(ngModel)]="searchText"
+        (ionInput)="filterChats()">
+      </ion-input>
+      <button
+        type="button"
+        class="hp-search-clear"
+        *ngIf="searchText"
+        (click)="clearSearch()"
+        aria-label="Clear search">
+        <ion-icon name="close-circle"></ion-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- ================= SKELETON (shaped like chat rows) ================= -->
+  <div class="hp-skeleton-list" *ngIf="loading">
+    <div class="hp-skeleton" *ngFor="let i of [1,2,3,4,5,6,7]">
+      <span class="hp-sk-avatar"></span>
+      <span class="hp-sk-lines">
+        <span class="hp-sk-line hp-sk-line--name"></span>
+        <span class="hp-sk-line hp-sk-line--msg"></span>
+      </span>
+    </div>
+  </div>
+
+  <!-- ================= CHAT LIST ================= -->
+  <ion-list
+    *ngIf="!loading && filteredChats.length"
+    lines="none"
+    class="ion-no-padding hp-list">
+
+    <ion-item-sliding
+      *ngFor="let chat of filteredChats; let i = index; trackBy: trackChat"
+      class="hp-row-anim"
+      [style.animation-delay.ms]="(i < 12 ? i : 12) * 45">
+
+      <ion-item
+        (press)="selectChat(chat)"
+        [class.selected]="chat.selected"
+        lines="none"
+        class="hp-chat"
+        detail="false"
+        (click)="goToChatDetails(chat)">
+
+        <div class="hp-chat-row">
+
+          <!-- AVATAR (flips to a check when selected) -->
+          <div class="hp-avatar" [class.hp-avatar--selected]="chat.selected">
+            <span
+              class="hp-avatar-face"
+              [style.background]="getAvatarColor(chat.contacts__name || chat.contacts__wa_id).bg"
+              [style.color]="getAvatarColor(chat.contacts__name || chat.contacts__wa_id).fg">
+              {{ getInitials(chat.contacts__name || chat.contacts__wa_id) }}
+            </span>
+            <span class="hp-avatar-check">
+              <ion-icon name="checkmark"></ion-icon>
+            </span>
+          </div>
+
+          <!-- TEXT -->
+          <div class="hp-chat-info">
+            <div class="hp-line1">
+              <span class="hp-name" [class.hp-unread]="chat.unread_count > 0">
+                {{ chat.contacts__name ? chat.contacts__name : chat.contacts__wa_id }}
+              </span>
+              <span class="hp-time" [class.hp-time--unread]="chat.unread_count > 0">
+                {{ formatChatTime(chat.last_message_at) }}
+              </span>
+            </div>
+            <div class="hp-line2">
+              <span class="hp-msg" [class.hp-unread]="chat.unread_count > 0">
+                {{ chat.last_message_text }}
+              </span>
+              <span class="hp-badge" *ngIf="chat.unread_count > 0">
+                {{ badgeText(chat.unread_count) }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </ion-item>
+
+      <!-- SWIPE ACTION -->
+      <ion-item-options side="end">
+        <ion-item-option color="danger" class="hp-delete" (click)="deleteChat(chat)">
+          <span class="hp-delete-inner">
+            <ion-icon name="trash-outline"></ion-icon>
+            <span>Delete</span>
+          </span>
+        </ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+
+  <!-- ================= EMPTY / NO RESULTS ================= -->
+  <div class="hp-empty" *ngIf="!loading && !filteredChats.length">
+    <div class="hp-empty-art">
+      <span class="hp-empty-ring"></span>
+      <ion-icon [name]="searchText ? 'search-outline' : 'chatbubbles-outline'"></ion-icon>
+    </div>
+
+    <ng-container *ngIf="searchText; else noChats">
+      <h2>No results</h2>
+      <p>No chats match “{{ searchText }}”.</p>
+      <button type="button" class="hp-empty-link" (click)="clearSearch()">Clear search</button>
+    </ng-container>
+
+    <ng-template #noChats>
+      <h2>No chats yet</h2>
+      <p>Add a contact to start your first conversation.</p>
+      <button type="button" class="hp-empty-btn" (click)="openModal()">
+        <ion-icon name="add"></ion-icon>
+        <span>Start a new chat</span>
+      </button>
+    </ng-template>
+  </div>
+
+</ion-content>
+
+
+<!-- ================= ADD CONTACT BOTTOM SHEET ================= -->
+<div class="hp-modal" *ngIf="showModal">
+
+  <div class="hp-overlay" (click)="closeModal()"></div>
+
+  <div class="hp-sheet">
+    <div class="hp-sheet-handle"></div>
+
+    <div class="hp-sheet-head">
+      <span class="hp-sheet-icon"><ion-icon name="person-add-outline"></ion-icon></span>
+      <div>
+        <h2>Add Contact</h2>
+        <p>Create a new contact record in your database.</p>
+      </div>
+    </div>
+
+    <div class="hp-sheet-body">
+
+      <!-- PHONE NUMBER -->
+      <div class="hp-field" [class.hp-field--error]="contactErrors.contact_number">
+        <label>Phone Number <span class="hp-req">*</span></label>
+        <div class="hp-input" [class.hp-shake]="contactShake['contact_number']">
+          <ion-icon name="call-outline"></ion-icon>
+          <!--
+          <select [(ngModel)]="contact.country_code">
+            <option [value]="country.calling_code" *ngFor="let country of county_list">
+              {{ country.calling_code }}
+            </option>
+          </select>
+          -->
+          <input
+            type="tel"
+            inputmode="tel"
+            [(ngModel)]="contact.contact_number"
+            (ngModelChange)="onContactChange('contact_number')"
+            placeholder="Enter phone number">
+        </div>
+        <div class="hp-error" *ngIf="contactErrors.contact_number">
+          <ion-icon name="alert-circle"></ion-icon><span>{{ contactErrors.contact_number }}</span>
+        </div>
+      </div>
+
+      <!-- FULL NAME -->
+      <div class="hp-field" [class.hp-field--error]="contactErrors.contact_name">
+        <label>Full Name <span class="hp-req">*</span></label>
+        <div class="hp-input" [class.hp-shake]="contactShake['contact_name']">
+          <ion-icon name="person-outline"></ion-icon>
+          <input
+            [(ngModel)]="contact.contact_name"
+            (ngModelChange)="onContactChange('contact_name')"
+            placeholder="e.g. Alex Rivera">
+        </div>
+        <div class="hp-error" *ngIf="contactErrors.contact_name">
+          <ion-icon name="alert-circle"></ion-icon><span>{{ contactErrors.contact_name }}</span>
+        </div>
+      </div>
+
+      <!-- EMAIL -->
+      <div class="hp-field" [class.hp-field--error]="contactErrors.email_id">
+        <label>Email Address <span class="hp-req">*</span></label>
+        <div class="hp-input" [class.hp-shake]="contactShake['email_id']">
+          <ion-icon name="mail-outline"></ion-icon>
+          <input
+            type="email"
+            inputmode="email"
+            [(ngModel)]="contact.email_id"
+            (ngModelChange)="onContactChange('email_id')"
+            placeholder="alex@company.com">
+        </div>
+        <div class="hp-error" *ngIf="contactErrors.email_id">
+          <ion-icon name="alert-circle"></ion-icon><span>{{ contactErrors.email_id }}</span>
+        </div>
+      </div>
+
+      <!-- ORGANIZATION (optional) -->
+      <div class="hp-field">
+        <label>Organization</label>
+        <div class="hp-input">
+          <ion-icon name="business-outline"></ion-icon>
+          <input
+            [(ngModel)]="contact.organization"
+            placeholder="Company name">
+        </div>
+      </div>
+    </div>
+
+    <div class="hp-sheet-foot">
+      <button type="button" class="hp-btn hp-btn--ghost" (click)="closeModal()">Cancel</button>
+      <button type="button" class="hp-btn hp-btn--primary" (click)="add_new_contacts()">Add Contact</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- =====================================================================
+     OLD HOME TEMPLATE (v1) - FULLY commented out, replaced by v2 above.
+     To restore: delete v2 above and remove this comment wrapper.
+     Inner comment markers were changed to <!~~ ~~> so this block stays one comment
+     (change them back to normal HTML comment markers when restoring).
+     =====================================================================
+
 <ion-content class="chat-content">
 
-  <!-- =========================================================
+  <!~~ =========================================================
        TOP HEADER SECTION
-       ========================================================= -->
+       ========================================================= ~~>
 
   <div class="custom-header">
 
-    <!-- HEADER TOP ROW -->
+    <!~~ HEADER TOP ROW ~~>
     <div class="header-top-row">
 
       <div class="title">
@@ -27,9 +287,9 @@
     </div>
 
 
-    <!-- =======================================================
+    <!~~ =======================================================
          SEARCH BAR
-         ======================================================= -->
+         ======================================================= ~~>
 
     <div class="search-wrapper">
 
@@ -46,12 +306,12 @@
     </div>
 
 
-    <!-- =======================================================
+    <!~~ =======================================================
          FILTER CHIPS
          COMMENTED OUT AS REQUESTED
-         ======================================================= -->
+         ======================================================= ~~>
 
-    <!--
+    <!~~
 
     <div class="filter-chips">
 
@@ -86,14 +346,14 @@
 
     </div>
 
-    -->
+    ~~>
 
   </div>
 
 
-  <!-- =========================================================
+  <!~~ =========================================================
        SKELETON LOADER
-       ========================================================= -->
+       ========================================================= ~~>
 
   <div *ngIf="loading">
 
@@ -105,9 +365,9 @@
   </div>
 
 
-  <!-- =========================================================
+  <!~~ =========================================================
        CHAT LIST
-       ========================================================= -->
+       ========================================================= ~~>
 
   <ion-list
     *ngIf="!loading"
@@ -118,9 +378,9 @@
       *ngFor="let chat of filteredChats">
 
 
-      <!-- =====================================================
+      <!~~ =====================================================
            CHAT ITEM
-           ===================================================== -->
+           ===================================================== ~~>
 
       <ion-item
         (press)="selectChat(chat)"
@@ -133,9 +393,9 @@
         <div class="chat-row">
 
 
-          <!-- =================================================
+          <!~~ =================================================
                INITIALS AVATAR
-               ================================================= -->
+               ================================================= ~~>
 
           <div class="avatar initials-avatar">
 
@@ -146,21 +406,21 @@
           </div>
 
 
-          <!-- =================================================
+          <!~~ =================================================
                CHAT INFORMATION
-               ================================================= -->
+               ================================================= ~~>
 
           <div class="chat-info">
 
 
-            <!-- =================================================
+            <!~~ =================================================
                  NAME + TIME
-                 ================================================= -->
+                 ================================================= ~~>
 
             <div class="row1">
 
 
-              <!-- CONTACT NAME -->
+              <!~~ CONTACT NAME ~~>
 
               <div
                 class="name"
@@ -175,7 +435,7 @@
               </div>
 
 
-              <!-- MESSAGE TIME -->
+              <!~~ MESSAGE TIME ~~>
 
               <div class="date">
 
@@ -189,14 +449,14 @@
             </div>
 
 
-            <!-- =================================================
+            <!~~ =================================================
                  MESSAGE + UNREAD BADGE
-                 ================================================= -->
+                 ================================================= ~~>
 
             <div class="row2">
 
 
-              <!-- LAST MESSAGE -->
+              <!~~ LAST MESSAGE ~~>
 
               <div
                 class="msg"
@@ -207,7 +467,7 @@
               </div>
 
 
-              <!-- UNREAD COUNT -->
+              <!~~ UNREAD COUNT ~~>
 
               <div
                 class="badge"
@@ -226,9 +486,9 @@
       </ion-item>
 
 
-      <!-- =====================================================
+      <!~~ =====================================================
            SWIPE DELETE OPTION
-           ===================================================== -->
+           ===================================================== ~~>
 
       <ion-item-options side="end">
 
@@ -252,16 +512,16 @@
 
 
 
-<!-- ===========================================================
+<!~~ ===========================================================
      BOTTOM SHEET MODAL
-     =========================================================== -->
+     =========================================================== ~~>
 
 <div
   class="custom-modal"
   *ngIf="showModal">
 
 
-  <!-- OVERLAY -->
+  <!~~ OVERLAY ~~>
 
   <div
     class="overlay"
@@ -269,20 +529,20 @@
   </div>
 
 
-  <!-- BOTTOM SHEET -->
+  <!~~ BOTTOM SHEET ~~>
 
   <div class="bottom-sheet-card">
 
 
-    <!-- DRAG HANDLE -->
+    <!~~ DRAG HANDLE ~~>
 
     <div class="sheet-drag-handle">
     </div>
 
 
-    <!-- =======================================================
+    <!~~ =======================================================
          MODAL HEADER
-         ======================================================= -->
+         ======================================================= ~~>
 
     <div class="modal-header">
 
@@ -301,16 +561,16 @@
     </div>
 
 
-    <!-- =======================================================
+    <!~~ =======================================================
          FORM BODY
-         ======================================================= -->
+         ======================================================= ~~>
 
     <div class="modal-body">
 
 
-      <!-- =====================================================
+      <!~~ =====================================================
            PHONE NUMBER
-           ===================================================== -->
+           ===================================================== ~~>
 
       <label>
         Phone Number
@@ -327,7 +587,7 @@
             class="ture-icon-img">
 
 
-          <!--
+          <!~~
           <select [(ngModel)]="contact.country_code">
 
             <option
@@ -339,7 +599,7 @@
             </option>
 
           </select>
-          -->
+          ~~>
 
 
           <input
@@ -352,9 +612,9 @@
       </div>
 
 
-      <!-- =====================================================
+      <!~~ =====================================================
            FULL NAME
-           ===================================================== -->
+           ===================================================== ~~>
 
       <label>
         Full Name
@@ -373,9 +633,9 @@
       </div>
 
 
-      <!-- =====================================================
+      <!~~ =====================================================
            EMAIL ADDRESS
-           ===================================================== -->
+           ===================================================== ~~>
 
       <label>
         Email Address
@@ -394,9 +654,9 @@
       </div>
 
 
-      <!-- =====================================================
+      <!~~ =====================================================
            ORGANIZATION
-           ===================================================== -->
+           ===================================================== ~~>
 
       <label>
         Organization
@@ -417,9 +677,9 @@
     </div>
 
 
-    <!-- =======================================================
+    <!~~ =======================================================
          MODAL FOOTER
-         ======================================================= -->
+         ======================================================= ~~>
 
     <div class="modal-footer">
 
@@ -448,6 +708,11 @@
 
 
 
+
+-->
+
+
+<!-- OLDER VERSIONS (already commented before) -->
 <!-- <ion-header class="chat-header">
   <ion-toolbar>
     <div class="header-row">

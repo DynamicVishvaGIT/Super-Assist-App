@@ -1,355 +1,337 @@
-.chat-detail-header {
-  background: #ffffff !important;
-  border: none !important;
-  box-shadow: none !important;
-  position: relative;
-  z-index: 100;
+/* =========================================================
+   CONTACT LIST (v4) - items 2, 4, 5-18
+   Flat rows + inset divider, brand colours, header and search
+   matching the Chats page. Works on Android (md) and iOS (ios).
+   The previous styles are fully commented out at the bottom.
+   ========================================================= */
+
+$green: #00a95b;            // one brand green (login, tab bar, Chats)
+$ink: #111827;
+$muted: #6b7280;
+$faint: #9ca3af;
+$line: #eef1ef;
+$ease-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+
+/* =========================================================
+   HEADER (item 7) - same style as the Chats header
+   ========================================================= */
+
+ion-header.cl-header {
+  background: #ffffff;
+
+  &::after { display: none; }
 
   ion-toolbar {
     --background: #ffffff;
-    padding-top: 8px;
+    --border-width: 0;
+    --min-height: 56px;
+    /* ion-app already adds the notch space; avoid adding it twice */
+    --padding-top: 0;
+    --padding-start: 0;
+    --padding-end: 0;
   }
 }
 
-
-.header-chat-row {
+.cl-header-row {
   display: flex;
   align-items: center;
-  width: 100%;
-  padding: 0 16px;
-  gap: 12px;
+  gap: 6px;
+  min-height: 56px;
+  padding: 6px 16px 0 6px;
+  box-sizing: border-box;
+}
+
+.cl-back-btn {
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.2s ease;
+
+  &:active { background: rgba(0, 169, 91, 0.10); }
 
   .back {
-    font-size: 24px !important;
-    color: #111b21 !important;
-    cursor: pointer;
-    margin: 0 !important;
-    flex-shrink: 0;
-  }
-
-  .chat-user {
-    flex: 1;
-
-    .chat-user-name {
-      color: #00A859 !important;
-      font-weight: 700 !important;
-      margin: 0 !important;
-      font-size: 25px !important;
-      line-height: 1.2;
-    }
+    font-size: 22px;
+    color: $ink;
   }
 }
 
+/* item 4: no back button on this main tab, so the title starts at the page edge */
+.cl-header-row--tab {
+  padding-left: 16px;
+}
 
-/* =========================
-   Main Content
-========================= */
+.cl-title-wrap {
+  flex: 1;
+  min-width: 0;
+}
 
-.chat-bg {
+.cl-title {
+  margin: 0;
+  color: $green;
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+/* =========================================================
+   CONTENT
+   ========================================================= */
+
+.cl-content {
   --background: #ffffff;
 }
 
 
-/* =========================
-   Search
-========================= */
+/* =========================================================
+   SEARCH (item 8) - same look as the Chats page
+   ========================================================= */
 
-.search-container {
-  padding: 8px 16px 12px 16px;
-  background: #fff;
+.cl-search-container {
   position: sticky;
+  position: -webkit-sticky;
   top: 0;
   z-index: 10;
-  width: 100%;
+  // padding: 8px 16px 10px;   // OLD: search sat too close to the header
+  padding: 18px 16px 10px;
+  background: rgba(255, 255, 255, 0.97);
+  backdrop-filter: saturate(180%) blur(10px);
+  -webkit-backdrop-filter: saturate(180%) blur(10px);
+}
 
-  .input-container {
-    display: flex;
-    align-items: center;
-    gap: 12px;
+.cl-search {
+  height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px 0 14px;
+  box-sizing: border-box;
+  background: #f2f4f3;
+  border: 1.5px solid transparent;
+  border-radius: 22px;
+  transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 
-    background: #f4f5f8;
+  &:focus-within {
+    background: #ffffff;
+    border-color: rgba(0, 169, 91, 0.45);
+    box-shadow: 0 0 0 4px rgba(0, 169, 91, 0.08);
 
-    border: none;
-    border-radius: 16px;
+    .cl-search-icon { color: $green; }
+  }
 
-    padding: 0 16px;
+  input {
+    flex: 1;
+    min-width: 0;
+    height: 100%;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: $ink;
+    font-size: 15px;
+    caret-color: $green;
+    -webkit-appearance: none;
+    appearance: none;
 
-    height: 48px;
-    width: 100%;
+    &::placeholder { color: $faint; opacity: 1; }
+  }
 
-    box-shadow: none;
-
-    margin-top: 9px;
-    margin-bottom: -5px;
-
-    ion-icon {
-      font-size: 20px;
-      color: #9ca3af !important;
-      min-width: 20px;
-      flex-shrink: 0;
-    }
-
-    .clear-search {
-      cursor: pointer;
-      color: #8e8e93 !important;
-      font-size: 19px;
-      min-width: 19px;
-    }
-
-    input {
-      width: 100%;
-
-      border: 0;
-      outline: 0;
-
-      background: transparent;
-
-      font-size: 15px;
-      color: #111b21;
-
-      font-weight: 400;
-
-      min-width: 0;
-
-      &::placeholder {
-        color: #9ca3af;
-      }
-    }
+  .clear-search {
+    flex: 0 0 auto;
+    font-size: 20px;
+    color: #b8bfbb;
+    cursor: pointer;
+    animation: cl-pop 0.25s $ease-back;
   }
 }
 
+.cl-search-icon {
+  flex: 0 0 auto;
+  font-size: 19px;
+  color: $faint;
+  transition: color 0.2s ease;
+}
 
-/* =========================
-   Contact List
-========================= */
 
-.contacts-list-wrapper {
-  padding: 12px 16px calc(20px + env(safe-area-inset-bottom, 0px)) 16px;
+/* =========================================================
+   LIST (item 5) - flat rows like the Chats page
+   ========================================================= */
 
+.cl-list {
   display: flex;
   flex-direction: column;
-
-  gap: 8px;
-
-  width: 100%;
+  // padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+  /* item 2: room for the bottom tab bar (66px) so the last contacts are never hidden */
+  padding-bottom: calc(66px + 16px + env(safe-area-inset-bottom, 0px));
 }
 
-
-/* =========================
-   Contact Card
-========================= */
-
-.contact-card {
-  width: 100%;
-
-  padding: 10px 12px;
-
+.cl-row {
   display: flex;
   align-items: center;
+  min-height: 72px;
+  padding-left: 16px;
+  background: #ffffff;
+  // transition: background 0.15s ease;
+  animation: cl-row-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) backwards;   /* item 16 */
 
-  border-radius: 12px;
-
-  background: #f6f6f6;
-
-  cursor: pointer;
-
-  transition:
-    background 0.15s ease,
-    transform 0.1s ease;
-
-  &:hover {
-    background: #f0f2f5;
-  }
-
-  &:active {
-    transform: scale(0.98);
-  }
+  // &:active { background: #f7faf8; }   // OLD: row looked tappable; only the message button opens a chat
 }
 
-
-/* =========================
-   Avatar
-========================= */
-
-.contact-avatar {
+/* item 6: per-contact brand colours (set inline from getAvatarColor) */
+.cl-avatar {
+  flex: 0 0 48px;
   width: 48px;
   height: 48px;
-
-  min-width: 48px;
-
+  margin-right: 14px;
   border-radius: 50%;
-
-  background: #008069;
-
-  color: #fff;
-
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  text-transform: uppercase;
+  user-select: none;
+}
 
+/* divider starts where the text starts */
+.cl-info {
+  flex: 1;
+  min-width: 0;
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-right: 12px;
+  border-bottom: 1px solid $line;
+}
+
+.cl-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.cl-name {
+  color: $ink;
   font-size: 16px;
   font-weight: 600;
-
-  user-select: none;
-
-  text-transform: uppercase;
-}
-
-
-/* =========================
-   Contact Details
-========================= */
-
-.contact-details {
-  min-width: 0;
-  flex: 1;
-
-  padding-right: 8px;
-
-  margin-left: 12px;
-}
-
-
-.contact-name {
-  color: #111b21;
-
-  font-size: 15px;
-
-  font-weight: 600;
-
+  line-height: 1.25;
   white-space: nowrap;
-
   overflow: hidden;
-
   text-overflow: ellipsis;
 }
 
-
-.contact-number {
-  margin-top: 2px;
-
-  color: #8e8e93;
-
-  font-size: 13px;
-
+.cl-number {
+  margin-top: 3px;
+  color: $muted;
+  font-size: 13.5px;
   white-space: nowrap;
-
   overflow: hidden;
-
   text-overflow: ellipsis;
 }
 
-
-/* =========================
-   Message Action
-========================= */
-
+/* message button: same icon and size as before, only the tile background changed */
 .contact-actions-inline {
+  flex: 0 0 auto;
   display: flex;
-
-  gap: 8px;
-
   align-items: center;
-
-  flex-shrink: 0;
 }
-
 
 .action-icon-btn {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
   display: flex;
   align-items: center;
   justify-content: center;
-
-  width: 38px;
-  height: 38px;
-
-  min-width: 38px;
-
-  border-radius: 50%;
-
-  border: none;
-
   cursor: pointer;
-
-  background: transparent !important;
-
-  box-shadow: none !important;
-
-  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.15s ease, background 0.2s ease;
 
   &:active {
-    transform: scale(0.92);
+    transform: scale(0.9);
+    background: rgba(0, 169, 91, 0.10);
   }
 
   &:disabled {
     opacity: 0.6;
     cursor: default;
   }
+
+  ion-spinner {
+    width: 20px;
+    height: 20px;
+    color: $green;
+  }
+}
+
+// OLD v2 (PNG icon, replaced by an ion-icon in item 9):
+// .action-icon-img {
+//   display: block;
+//   width: 20px;
+//   height: 20px;
+//   object-fit: contain;
+//   /* OLD: background-color: #f6f6f6 (matched the old grey card; rows are white now) */
+//   background: transparent;
+// }
+
+/* item 9: crisp brand-green chat icon in a soft round button */
+.action-icon {
+  font-size: 20px;
+  color: #00a95b;
+}
+
+.message-btn {
+  background: rgba(0, 169, 91, 0.10);
 }
 
 
-.action-icon-img {
-  width: 18px !important;
-  height: 18px !important;
-
-  min-width: 20px !important;
-  min-height: 20px !important;
-
-  object-fit: contain !important;
-
-  display: block;
-
-  background-color: #f6f6f6 !important;
-}
-
-
-/* =========================
-   Empty State
-========================= */
+/* =========================================================
+   EMPTY + LOADING MORE (text unchanged)
+   ========================================================= */
 
 .empty-state {
-  text-align: center;
-
-  padding: 60px 20px;
-
-  color: #8e8e93;
-
-  font-size: 14px;
-
   display: flex;
   flex-direction: column;
-
   align-items: center;
-
   gap: 10px;
+  padding: 60px 20px;
+  text-align: center;
+  color: $muted;
+  font-size: 14px;
 
   ion-icon {
     font-size: 42px;
-    color: #b5b5b5;
+    color: #c4cbc7;
   }
 
-  p {
-    margin: 0;
-  }
+  p { margin: 0; }
 }
-
-
-/* =========================
-   Loading More
-========================= */
 
 .load-more-loader {
   display: flex;
-
   align-items: center;
   justify-content: center;
-
   gap: 8px;
-
   padding: 15px;
-
-  color: #8e8e93;
-
+  color: $muted;
   font-size: 13px;
 
   ion-spinner {
@@ -358,45 +340,154 @@
   }
 }
 
-
-/* =========================
-   Infinite Scroll
-========================= */
-
 ion-infinite-scroll {
   background: transparent;
 }
+
+@keyframes cl-pop {
+  0% { transform: scale(0); }
+  70% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+
+/* =========================================================
+   ITEMS 9-18 additions
+   ========================================================= */
+
+/* item 11: contact count + A-Z section headers */
+.cl-count {
+  padding: 2px 20px 6px;
+  color: $faint;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+
+.cl-section {
+  position: sticky;
+  position: -webkit-sticky;
+  // top: 62px;
+  top: 72px;                 /* just below the sticky search bar (18 + 44 + 10) */
+  z-index: 5;
+  padding: 6px 20px;
+  background: #f7f9f8;
+  color: $green;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+
+/* item 17: opt-in label */
+.cl-optin {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 7px;
+  border-radius: 8px;
+  background: #fff4e5;
+  color: #b25e09;
+  font-size: 10.5px;
+  font-weight: 600;
+  vertical-align: 1px;
+}
+
+/* item 15: skeleton rows */
+.cl-skeleton { padding-top: 4px; }
+
+.cl-sk-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  height: 72px;
+  padding: 0 16px;
+}
+
+.cl-sk-avatar,
+.cl-sk-line {
+  display: block;
+  background: linear-gradient(90deg, #f0f2f1 25%, #e4e8e6 37%, #f0f2f1 63%);
+  background-size: 400% 100%;
+  animation: cl-shimmer 1.3s ease infinite;
+}
+
+.cl-sk-avatar {
+  flex: 0 0 48px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+}
+
+.cl-sk-lines {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.cl-sk-line {
+  height: 12px;
+  border-radius: 6px;
+
+  &--name { width: 50%; }
+  &--num { width: 35%; }
+}
+
+ion-refresher-content {
+  --color: #{$green};
+}
+
+@keyframes cl-row-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes cl-shimmer {
+  0% { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cl-row, .cl-sk-avatar, .cl-sk-line, .clear-search { animation: none !important; }
+}
+
+
+// =====================================================================
+// OLD CONTACT LIST STYLES (v1) - the ENTIRE previous file, commented out.
+// To restore: delete v2 above and uncomment everything below.
+// =====================================================================
 // .chat-detail-header {
 //   background: #ffffff !important;
 //   border: none !important;
 //   box-shadow: none !important;
 //   position: relative;
 //   z-index: 100;
-
+//
 //   ion-toolbar {
 //     --background: #ffffff;
 //     padding-top: 8px;
-//     // padding-bottom: 8px;
 //   }
 // }
-
+//
+//
 // .header-chat-row {
 //   display: flex;
 //   align-items: center;
 //   width: 100%;
 //   padding: 0 16px;
 //   gap: 12px;
-
+//
 //   .back {
 //     font-size: 24px !important;
 //     color: #111b21 !important;
 //     cursor: pointer;
 //     margin: 0 !important;
+//     flex-shrink: 0;
 //   }
-
+//
 //   .chat-user {
 //     flex: 1;
-    
+//
 //     .chat-user-name {
 //       color: #00A859 !important;
 //       font-weight: 700 !important;
@@ -406,151 +497,518 @@ ion-infinite-scroll {
 //     }
 //   }
 // }
-
+//
+//
+// /* =========================
+//    Main Content
+// ========================= */
+//
+// .chat-bg {
+//   --background: #ffffff;
+// }
+//
+//
+// /* =========================
+//    Search
+// ========================= */
+//
 // .search-container {
 //   padding: 8px 16px 12px 16px;
 //   background: #fff;
-//   position: relative;
+//   position: sticky;
+//   top: 0;
 //   z-index: 10;
 //   width: 100%;
-
+//
 //   .input-container {
 //     display: flex;
 //     align-items: center;
 //     gap: 12px;
+//
 //     background: #f4f5f8;
+//
 //     border: none;
 //     border-radius: 16px;
+//
 //     padding: 0 16px;
+//
 //     height: 48px;
 //     width: 100%;
+//
 //     box-shadow: none;
+//
 //     margin-top: 9px;
 //     margin-bottom: -5px;
-
+//
 //     ion-icon {
 //       font-size: 20px;
 //       color: #9ca3af !important;
 //       min-width: 20px;
+//       flex-shrink: 0;
 //     }
-
+//
+//     .clear-search {
+//       cursor: pointer;
+//       color: #8e8e93 !important;
+//       font-size: 19px;
+//       min-width: 19px;
+//     }
+//
 //     input {
 //       width: 100%;
+//
 //       border: 0;
 //       outline: 0;
+//
 //       background: transparent;
+//
 //       font-size: 15px;
 //       color: #111b21;
+//
 //       font-weight: 400;
-
+//
+//       min-width: 0;
+//
 //       &::placeholder {
 //         color: #9ca3af;
 //       }
 //     }
 //   }
 // }
-
+//
+//
+// /* =========================
+//    Contact List
+// ========================= */
+//
 // .contacts-list-wrapper {
 //   padding: 12px 16px calc(20px + env(safe-area-inset-bottom, 0px)) 16px;
+//
 //   display: flex;
 //   flex-direction: column;
+//
 //   gap: 8px;
-//   overflow-y: auto;
+//
+//   width: 100%;
 // }
-
+//
+//
+// /* =========================
+//    Contact Card
+// ========================= */
+//
 // .contact-card {
 //   width: 100%;
+//
 //   padding: 10px 12px;
+//
 //   display: flex;
 //   align-items: center;
+//
 //   border-radius: 12px;
+//
 //   background: #f6f6f6;
+//
 //   cursor: pointer;
-//   transition: background 0.15s ease, transform 0.1s ease;
-
+//
+//   transition:
+//     background 0.15s ease,
+//     transform 0.1s ease;
+//
 //   &:hover {
 //     background: #f0f2f5;
 //   }
-
+//
 //   &:active {
 //     transform: scale(0.98);
 //   }
 // }
-
+//
+//
+// /* =========================
+//    Avatar
+// ========================= */
+//
 // .contact-avatar {
 //   width: 48px;
 //   height: 48px;
+//
 //   min-width: 48px;
+//
 //   border-radius: 50%;
+//
 //   background: #008069;
+//
 //   color: #fff;
+//
 //   display: flex;
 //   align-items: center;
 //   justify-content: center;
+//
 //   font-size: 16px;
 //   font-weight: 600;
+//
 //   user-select: none;
+//
+//   text-transform: uppercase;
 // }
-
+//
+//
+// /* =========================
+//    Contact Details
+// ========================= */
+//
 // .contact-details {
 //   min-width: 0;
 //   flex: 1;
+//
 //   padding-right: 8px;
+//
 //   margin-left: 12px;
 // }
-
+//
+//
 // .contact-name {
 //   color: #111b21;
+//
 //   font-size: 15px;
+//
 //   font-weight: 600;
+//
 //   white-space: nowrap;
+//
 //   overflow: hidden;
+//
 //   text-overflow: ellipsis;
 // }
-
+//
+//
 // .contact-number {
 //   margin-top: 2px;
+//
 //   color: #8e8e93;
+//
 //   font-size: 13px;
+//
+//   white-space: nowrap;
+//
+//   overflow: hidden;
+//
+//   text-overflow: ellipsis;
 // }
-
+//
+//
+// /* =========================
+//    Message Action
+// ========================= */
+//
 // .contact-actions-inline {
 //   display: flex;
+//
 //   gap: 8px;
+//
 //   align-items: center;
+//
 //   flex-shrink: 0;
 // }
-
+//
+//
 // .action-icon-btn {
 //   display: flex;
 //   align-items: center;
 //   justify-content: center;
+//
 //   width: 38px;
 //   height: 38px;
+//
 //   min-width: 38px;
+//
 //   border-radius: 50%;
+//
 //   border: none;
+//
 //   cursor: pointer;
+//
 //   background: transparent !important;
+//
 //   box-shadow: none !important;
-
+//
+//   padding: 0;
+//
 //   &:active {
 //     transform: scale(0.92);
 //   }
+//
+//   &:disabled {
+//     opacity: 0.6;
+//     cursor: default;
+//   }
 // }
-
+//
+//
 // .action-icon-img {
-//   width: 18px;
-//   height: 18px;
-//   min-width: 18px;
-//   min-height: 18px;
-//   object-fit: contain;
+//   width: 18px !important;
+//   height: 18px !important;
+//
+//   min-width: 20px !important;
+//   min-height: 20px !important;
+//
+//   object-fit: contain !important;
+//
 //   display: block;
+//
+//   background-color: #f6f6f6 !important;
 // }
-
+//
+//
+// /* =========================
+//    Empty State
+// ========================= */
+//
 // .empty-state {
 //   text-align: center;
-//   padding: 40px 20px;
+//
+//   padding: 60px 20px;
+//
 //   color: #8e8e93;
+//
 //   font-size: 14px;
+//
+//   display: flex;
+//   flex-direction: column;
+//
+//   align-items: center;
+//
+//   gap: 10px;
+//
+//   ion-icon {
+//     font-size: 42px;
+//     color: #b5b5b5;
+//   }
+//
+//   p {
+//     margin: 0;
+//   }
 // }
+//
+//
+// /* =========================
+//    Loading More
+// ========================= */
+//
+// .load-more-loader {
+//   display: flex;
+//
+//   align-items: center;
+//   justify-content: center;
+//
+//   gap: 8px;
+//
+//   padding: 15px;
+//
+//   color: #8e8e93;
+//
+//   font-size: 13px;
+//
+//   ion-spinner {
+//     width: 20px;
+//     height: 20px;
+//   }
+// }
+//
+//
+// /* =========================
+//    Infinite Scroll
+// ========================= */
+//
+// ion-infinite-scroll {
+//   background: transparent;
+// }
+// // .chat-detail-header {
+// //   background: #ffffff !important;
+// //   border: none !important;
+// //   box-shadow: none !important;
+// //   position: relative;
+// //   z-index: 100;
+//
+// //   ion-toolbar {
+// //     --background: #ffffff;
+// //     padding-top: 8px;
+// //     // padding-bottom: 8px;
+// //   }
+// // }
+//
+// // .header-chat-row {
+// //   display: flex;
+// //   align-items: center;
+// //   width: 100%;
+// //   padding: 0 16px;
+// //   gap: 12px;
+//
+// //   .back {
+// //     font-size: 24px !important;
+// //     color: #111b21 !important;
+// //     cursor: pointer;
+// //     margin: 0 !important;
+// //   }
+//
+// //   .chat-user {
+// //     flex: 1;
+//
+// //     .chat-user-name {
+// //       color: #00A859 !important;
+// //       font-weight: 700 !important;
+// //       margin: 0 !important;
+// //       font-size: 25px !important;
+// //       line-height: 1.2;
+// //     }
+// //   }
+// // }
+//
+// // .search-container {
+// //   padding: 8px 16px 12px 16px;
+// //   background: #fff;
+// //   position: relative;
+// //   z-index: 10;
+// //   width: 100%;
+//
+// //   .input-container {
+// //     display: flex;
+// //     align-items: center;
+// //     gap: 12px;
+// //     background: #f4f5f8;
+// //     border: none;
+// //     border-radius: 16px;
+// //     padding: 0 16px;
+// //     height: 48px;
+// //     width: 100%;
+// //     box-shadow: none;
+// //     margin-top: 9px;
+// //     margin-bottom: -5px;
+//
+// //     ion-icon {
+// //       font-size: 20px;
+// //       color: #9ca3af !important;
+// //       min-width: 20px;
+// //     }
+//
+// //     input {
+// //       width: 100%;
+// //       border: 0;
+// //       outline: 0;
+// //       background: transparent;
+// //       font-size: 15px;
+// //       color: #111b21;
+// //       font-weight: 400;
+//
+// //       &::placeholder {
+// //         color: #9ca3af;
+// //       }
+// //     }
+// //   }
+// // }
+//
+// // .contacts-list-wrapper {
+// //   padding: 12px 16px calc(20px + env(safe-area-inset-bottom, 0px)) 16px;
+// //   display: flex;
+// //   flex-direction: column;
+// //   gap: 8px;
+// //   overflow-y: auto;
+// // }
+//
+// // .contact-card {
+// //   width: 100%;
+// //   padding: 10px 12px;
+// //   display: flex;
+// //   align-items: center;
+// //   border-radius: 12px;
+// //   background: #f6f6f6;
+// //   cursor: pointer;
+// //   transition: background 0.15s ease, transform 0.1s ease;
+//
+// //   &:hover {
+// //     background: #f0f2f5;
+// //   }
+//
+// //   &:active {
+// //     transform: scale(0.98);
+// //   }
+// // }
+//
+// // .contact-avatar {
+// //   width: 48px;
+// //   height: 48px;
+// //   min-width: 48px;
+// //   border-radius: 50%;
+// //   background: #008069;
+// //   color: #fff;
+// //   display: flex;
+// //   align-items: center;
+// //   justify-content: center;
+// //   font-size: 16px;
+// //   font-weight: 600;
+// //   user-select: none;
+// // }
+//
+// // .contact-details {
+// //   min-width: 0;
+// //   flex: 1;
+// //   padding-right: 8px;
+// //   margin-left: 12px;
+// // }
+//
+// // .contact-name {
+// //   color: #111b21;
+// //   font-size: 15px;
+// //   font-weight: 600;
+// //   white-space: nowrap;
+// //   overflow: hidden;
+// //   text-overflow: ellipsis;
+// // }
+//
+// // .contact-number {
+// //   margin-top: 2px;
+// //   color: #8e8e93;
+// //   font-size: 13px;
+// // }
+//
+// // .contact-actions-inline {
+// //   display: flex;
+// //   gap: 8px;
+// //   align-items: center;
+// //   flex-shrink: 0;
+// // }
+//
+// // .action-icon-btn {
+// //   display: flex;
+// //   align-items: center;
+// //   justify-content: center;
+// //   width: 38px;
+// //   height: 38px;
+// //   min-width: 38px;
+// //   border-radius: 50%;
+// //   border: none;
+// //   cursor: pointer;
+// //   background: transparent !important;
+// //   box-shadow: none !important;
+//
+// //   &:active {
+// //     transform: scale(0.92);
+// //   }
+// // }
+//
+// // .action-icon-img {
+// //   width: 18px;
+// //   height: 18px;
+// //   min-width: 18px;
+// //   min-height: 18px;
+// //   object-fit: contain;
+// //   display: block;
+// // }
+//
+// // .empty-state {
+// //   text-align: center;
+// //   padding: 40px 20px;
+// //   color: #8e8e93;
+// //   font-size: 14px;
+// // }

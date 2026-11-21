@@ -7,7 +7,9 @@
 
   <base href="/" />
 
-  <meta name="color-scheme" content="light dark" />
+  <!-- OLD: <meta name="color-scheme" content="light dark" /> -->
+  <meta name="color-scheme" content="light" />
+  <meta name="theme-color" content="#ffffff" />
   <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="format-detection" content="telephone=no" />
   <meta name="msapplication-tap-highlight" content="no" />
@@ -17,9 +19,678 @@
   <!-- add to homescreen for ios -->
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+
+<!-- OLD SPLASH v1 (styles) - replaced by v2 below; inner comment markers changed to <!~~ ~~>
+  <!~~ =========================================================
+       CUSTOM ANIMATED SPLASH SCREEN
+       Inline on purpose: it must paint before the Angular bundle
+       loads. AppComponent calls window.hideAppSplash() when ready.
+       ========================================================= ~~>
+  <style>
+    html, body { background: #ffffff; }
+
+    #sa-splash {
+      --sa-green: #56b952;
+      --sa-green-dark: #00a95b;
+      --sa-grey: #808285;
+      position: fixed;
+      top: 0; right: 0; bottom: 0; left: 0;
+      z-index: 99999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 15% 12%, rgba(86, 185, 82, 0.16) 0%, rgba(86, 185, 82, 0) 42%),
+        radial-gradient(circle at 88% 90%, rgba(0, 169, 91, 0.14) 0%, rgba(0, 169, 91, 0) 45%),
+        linear-gradient(180deg, #ffffff 0%, #f3fbf6 100%);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      transition: opacity 0.55s ease, visibility 0.55s ease;
+    }
+
+    /* ---------- Floating background blobs ---------- */
+    .sa-blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(2px);
+      opacity: 0;
+      animation: sa-fade-in 1.2s ease forwards, sa-drift 9s ease-in-out infinite alternate;
+    }
+    .sa-blob--1 { width: 220px; height: 220px; top: -60px; left: -70px; background: rgba(86, 185, 82, 0.10); }
+    .sa-blob--2 { width: 160px; height: 160px; bottom: 8%; right: -50px; background: rgba(0, 169, 91, 0.10); animation-delay: 0.2s, 0.4s; }
+    .sa-blob--3 { width: 90px; height: 90px; top: 22%; right: 12%; background: rgba(128, 130, 133, 0.07); animation-delay: 0.4s, 1s; }
+
+    /* ---------- Small floating chat bubbles in the background ---------- */
+    .sa-mini {
+      position: absolute;
+      width: 26px; height: 18px;
+      border-radius: 9px;
+      border: 2.5px solid rgba(86, 185, 82, 0.35);
+      opacity: 0;
+      animation: sa-float-up 6s ease-in infinite;
+    }
+    .sa-mini::after {
+      content: ""; position: absolute; bottom: -6px; left: 4px;
+      border: 4px solid transparent; border-top-color: rgba(86, 185, 82, 0.35);
+    }
+    .sa-mini--1 { left: 12%; bottom: -30px; animation-delay: 0.6s; }
+    .sa-mini--2 { left: 78%; bottom: -30px; animation-delay: 1.8s; width: 21px; height: 14px; border-color: rgba(128, 130, 133, 0.3); }
+    .sa-mini--3 { left: 45%; bottom: -30px; animation-delay: 3.0s; width: 17px; height: 12px; }
+    .sa-mini--4 { left: 28%; bottom: -30px; animation-delay: 4.2s; width: 23px; height: 16px; border-color: rgba(128, 130, 133, 0.3); }
+
+    /* ---------- Center stage ---------- */
+    .sa-stage {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: -6vh;
+    }
+
+    .sa-logo-wrap {
+      position: relative;
+      width: 150px;
+      height: 150px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Ripple rings behind the logo */
+    .sa-ring {
+      position: absolute;
+      top: 0; right: 0; bottom: 0; left: 0;
+      border-radius: 50%;
+      border: 2px solid rgba(86, 185, 82, 0.35);
+      opacity: 0;
+      animation: sa-ripple 2.4s cubic-bezier(0.2, 0.6, 0.35, 1) infinite;
+    }
+    .sa-ring--2 { animation-delay: 0.8s; }
+    .sa-ring--3 { animation-delay: 1.6s; }
+
+    /* White disc that the icon sits on */
+    .sa-disc {
+      position: absolute;
+      top: 8px; right: 8px; bottom: 8px; left: 8px;
+      border-radius: 50%;
+      background: #ffffff;
+      box-shadow: 0 18px 40px rgba(0, 120, 60, 0.14), 0 2px 6px rgba(0, 0, 0, 0.04);
+      transform: scale(0);
+      animation: sa-pop 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s forwards;
+    }
+
+    .sa-icon {
+      position: relative;
+      width: 104px;
+      height: 104px;
+      overflow: visible;
+      animation: sa-heartbeat 0.9s ease-in-out 1.55s 1;
+    }
+    .sa-icon * { transform-box: fill-box; }
+
+    .sa-bubble path {
+      fill: none;
+      stroke-width: 7;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-dasharray: 1;
+      stroke-dashoffset: 1;
+    }
+    .sa-bubble--grey path { stroke: var(--sa-grey); animation: sa-draw 0.8s ease-out 0.35s forwards; }
+    .sa-bubble--green path { stroke: var(--sa-green); animation: sa-draw 0.8s ease-out 0.65s forwards; }
+
+    /* Entry slide for each bubble */
+    .sa-bubble--grey { opacity: 0; transform-origin: center; animation: sa-in-tr 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.3s forwards; }
+    .sa-bubble--green { opacity: 0; transform-origin: center; animation: sa-in-bl 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.6s forwards; }
+
+    /* Gentle float loop after entry (inner groups) */
+    .sa-float-a { animation: sa-bob 2.6s ease-in-out 1.6s infinite; }
+    .sa-float-b { animation: sa-bob 2.6s ease-in-out 2.0s infinite reverse; }
+
+    /* Typing dots */
+    .sa-dot { transform-origin: center; transform: scale(0); }
+    .sa-dot--g { fill: var(--sa-green); }
+    .sa-dot--k { fill: var(--sa-grey); }
+    .sa-dot.d1 { animation: sa-dot-pop 0.35s ease-out 1.10s forwards, sa-typing 1.2s ease-in-out 1.6s infinite; }
+    .sa-dot.d2 { animation: sa-dot-pop 0.35s ease-out 1.20s forwards, sa-typing 1.2s ease-in-out 1.75s infinite; }
+    .sa-dot.d3 { animation: sa-dot-pop 0.35s ease-out 1.30s forwards, sa-typing 1.2s ease-in-out 1.9s infinite; }
+    .sa-dot.d4 { animation: sa-dot-pop 0.35s ease-out 1.25s forwards, sa-typing 1.2s ease-in-out 2.2s infinite; }
+    .sa-dot.d5 { animation: sa-dot-pop 0.35s ease-out 1.35s forwards, sa-typing 1.2s ease-in-out 2.35s infinite; }
+    .sa-dot.d6 { animation: sa-dot-pop 0.35s ease-out 1.45s forwards, sa-typing 1.2s ease-in-out 2.5s infinite; }
+
+    /* Wordmark: wipes in from left, then a light shine sweeps across */
+    .sa-word {
+      position: relative;
+      margin-top: 30px;
+      width: 220px;
+      height: 50px;
+      overflow: hidden;
+      -webkit-clip-path: inset(0 100% 0 0);
+      clip-path: inset(0 100% 0 0);
+      animation: sa-wipe 0.8s cubic-bezier(0.65, 0, 0.35, 1) 1.65s forwards;
+    }
+    .sa-word img { width: 100%; height: 100%; object-fit: contain; display: block; }
+    .sa-word::after {
+      content: "";
+      position: absolute;
+      top: 0; bottom: 0; left: -60%;
+      width: 40%;
+      background: linear-gradient(100deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.85) 50%, rgba(255,255,255,0) 100%);
+      animation: sa-shine 1s ease-in-out 2.55s forwards;
+    }
+
+    .sa-tagline {
+      margin-top: 12px;
+      color: #5f6b65;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 2.4px;
+      text-transform: uppercase;
+      opacity: 0;
+      transform: translateY(10px);
+      animation: sa-rise 0.6s ease-out 2.2s forwards;
+    }
+
+    /* Loader */
+    .sa-loader {
+      margin-top: 34px;
+      width: 120px;
+      height: 3px;
+      border-radius: 3px;
+      background: rgba(86, 185, 82, 0.15);
+      overflow: hidden;
+      opacity: 0;
+      animation: sa-fade-in 0.4s ease 2.4s forwards;
+    }
+    .sa-loader span {
+      display: block;
+      width: 40%;
+      height: 100%;
+      border-radius: 3px;
+      background: linear-gradient(90deg, var(--sa-green), var(--sa-green-dark));
+      animation: sa-load 1.1s ease-in-out infinite;
+    }
+
+    /* "from DV Tech" footer, WhatsApp style */
+    .sa-footer {
+      position: absolute;
+      bottom: calc(34px + env(safe-area-inset-bottom, 0px));
+      text-align: center;
+      opacity: 0;
+      animation: sa-rise 0.6s ease-out 2.4s forwards;
+      transform: translateY(10px);
+    }
+    .sa-footer small { display: block; color: #8a958f; font-size: 12px; letter-spacing: 0.5px; }
+    .sa-footer strong {
+      display: block; margin-top: 3px;
+      font-size: 14px; font-weight: 700; letter-spacing: 3px;
+      background: linear-gradient(90deg, var(--sa-green-dark), var(--sa-green));
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+    }
+
+    /* ---------- Exit ---------- */
+    #sa-splash.sa-exit { opacity: 0; visibility: hidden; }
+    #sa-splash.sa-exit .sa-stage { transform: scale(1.12); opacity: 0; transition: transform 0.55s ease, opacity 0.45s ease; }
+
+    /* ---------- Keyframes ---------- */
+    @keyframes sa-fade-in { to { opacity: 1; } }
+    @keyframes sa-drift { from { transform: translate(0, 0) scale(1); } to { transform: translate(18px, 24px) scale(1.08); } }
+    @keyframes sa-float-up {
+      0% { opacity: 0; transform: translateY(0); }
+      15% { opacity: 1; }
+      80% { opacity: 0.8; }
+      100% { opacity: 0; transform: translateY(-105vh); }
+    }
+    @keyframes sa-ripple {
+      0% { transform: scale(0.7); opacity: 0.8; }
+      100% { transform: scale(1.9); opacity: 0; }
+    }
+    @keyframes sa-pop { to { transform: scale(1); } }
+    @keyframes sa-draw { to { stroke-dashoffset: 0; } }
+    @keyframes sa-in-tr { from { opacity: 0; transform: translate(14px, -14px) scale(0.85); } to { opacity: 1; transform: none; } }
+    @keyframes sa-in-bl { from { opacity: 0; transform: translate(-14px, 14px) scale(0.85); } to { opacity: 1; transform: none; } }
+    @keyframes sa-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+    @keyframes sa-dot-pop { 0% { transform: scale(0); } 70% { transform: scale(1.35); } 100% { transform: scale(1); } }
+    @keyframes sa-typing { 0%, 60%, 100% { transform: translateY(0) scale(1); } 30% { transform: translateY(-4px) scale(1.1); } }
+    @keyframes sa-heartbeat { 0%, 100% { transform: scale(1); } 30% { transform: scale(1.08); } 55% { transform: scale(0.97); } 75% { transform: scale(1.03); } }
+    @keyframes sa-wipe { to { -webkit-clip-path: inset(0 0 0 0); clip-path: inset(0 0 0 0); } }
+    @keyframes sa-shine { to { left: 120%; } }
+    @keyframes sa-rise { to { opacity: 1; transform: translateY(0); } }
+    @keyframes sa-load { 0% { transform: translateX(-110%); } 100% { transform: translateX(260%); } }
+
+    @media (prefers-reduced-motion: reduce) {
+      #sa-splash *, #sa-splash *::after { animation-duration: 0.01ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important; }
+    }
+  </style>
+  -->
+
+  <!-- =========================================================
+       CUSTOM ANIMATED SPLASH SCREEN (v2)
+       - Frame 1 is identical to the native launch screen
+         (white + same logo, same size, dead centre), drawn from
+         resources/android/splash/splash-icon.xml. So the hand-off
+         from the OS screen to this one is invisible.
+       - Animations stay paused until the native screen is gone
+         (deviceready / load), so the user sees the whole sequence.
+       - AppComponent calls window.hideAppSplash() when ready.
+       ========================================================= -->
+  <style>
+    html, body { background: #ffffff; margin: 0; }
+
+    #sa-splash {
+      --sa-green: #56b952;
+      --sa-green-dark: #00a95b;
+      --sa-grey: #808285;
+      position: fixed;
+      top: 0; right: 0; bottom: 0; left: 0;
+      z-index: 99999;
+      overflow: hidden;
+      background: #ffffff;                 /* same as native splash */
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+
+    /* Hold every animation on frame 1 until the native screen hands over */
+    #sa-splash:not(.sa-play) *,
+    #sa-splash:not(.sa-play) *::before,
+    #sa-splash:not(.sa-play) *::after,
+    #sa-splash:not(.sa-play)::before { animation-play-state: paused !important; }
+
+    /* Soft brand tint fades in over the white */
+    #sa-splash::before {
+      content: "";
+      position: absolute;
+      top: 0; right: 0; bottom: 0; left: 0;
+      background:
+        radial-gradient(circle at 15% 12%, rgba(86, 185, 82, 0.16) 0%, rgba(86, 185, 82, 0) 42%),
+        radial-gradient(circle at 88% 90%, rgba(0, 169, 91, 0.14) 0%, rgba(0, 169, 91, 0) 45%),
+        linear-gradient(180deg, #ffffff 0%, #f3fbf6 100%);
+      opacity: 0;
+      animation: sa-fade-in 0.9s ease 0.1s forwards;
+    }
+
+    /* ---------- Background decoration ---------- */
+    .sa-blob {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0;
+      animation: sa-fade-in 1.2s ease 0.3s forwards, sa-drift 9s ease-in-out 0.3s infinite alternate;
+    }
+    .sa-blob--1 { width: 220px; height: 220px; top: -60px; left: -70px; background: rgba(86, 185, 82, 0.10); }
+    .sa-blob--2 { width: 160px; height: 160px; bottom: 8%; right: -50px; background: rgba(0, 169, 91, 0.10); animation-delay: 0.5s, 0.8s; }
+    .sa-blob--3 { width: 90px; height: 90px; top: 20%; right: 12%; background: rgba(128, 130, 133, 0.07); animation-delay: 0.7s, 1.2s; }
+
+    .sa-mini {
+      position: absolute;
+      bottom: -30px;
+      width: 26px; height: 18px;
+      border-radius: 9px;
+      border: 2.5px solid rgba(86, 185, 82, 0.35);
+      opacity: 0;
+      animation: sa-float-up 6s ease-in infinite;
+    }
+    .sa-mini::after {
+      content: ""; position: absolute; bottom: -6px; left: 4px;
+      border: 4px solid transparent; border-top-color: rgba(86, 185, 82, 0.35);
+    }
+    .sa-mini--1 { left: 12%; animation-delay: 0.4s; }
+    .sa-mini--2 { left: 78%; animation-delay: 1.4s; width: 21px; height: 14px; border-color: rgba(128, 130, 133, 0.3); }
+    .sa-mini--3 { left: 45%; animation-delay: 2.4s; width: 17px; height: 12px; }
+    .sa-mini--4 { left: 28%; animation-delay: 3.4s; width: 23px; height: 16px; border-color: rgba(128, 130, 133, 0.3); }
+
+    /* ---------- Logo: fixed at the exact screen centre (matches native icon) ---------- */
+    .sa-logo-wrap {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 150px;
+      height: 150px;
+      margin: -75px 0 0 -75px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .sa-ring {
+      position: absolute;
+      top: 0; right: 0; bottom: 0; left: 0;
+      border-radius: 50%;
+      border: 2px solid rgba(86, 185, 82, 0.35);
+      opacity: 0;
+      animation: sa-ripple 2.4s cubic-bezier(0.2, 0.6, 0.35, 1) 0.5s infinite;
+    }
+    .sa-ring--2 { animation-delay: 1.3s; }
+    .sa-ring--3 { animation-delay: 2.1s; }
+
+    /* White disc: invisible on white at frame 1, its shadow fades in */
+    .sa-disc {
+      position: absolute;
+      top: 8px; right: 8px; bottom: 8px; left: 8px;
+      border-radius: 50%;
+      background: #ffffff;
+      box-shadow: 0 18px 40px rgba(0, 120, 60, 0.14), 0 2px 6px rgba(0, 0, 0, 0.04);
+      opacity: 0;
+      transform: scale(0.85);
+      animation: sa-disc-in 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 0.15s forwards;
+    }
+
+    /* 104px for a 120-unit viewBox = same scale as the native vector icon */
+    .sa-icon {
+      position: relative;
+      width: 104px;
+      height: 104px;
+      overflow: visible;
+      animation: sa-heartbeat 0.9s ease-in-out 0.2s 1;
+    }
+    .sa-icon * { transform-box: fill-box; }
+
+    .sa-bubble path {
+      fill: none;
+      stroke-width: 7;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .sa-bubble--grey path { stroke: var(--sa-grey); }
+    .sa-bubble--green path { stroke: var(--sa-green); }
+
+    .sa-float-a { animation: sa-bob 2.6s ease-in-out 1s infinite; }
+    .sa-float-b { animation: sa-bob 2.6s ease-in-out 1.3s infinite reverse; }
+
+    /* Dots visible from frame 1, then start "typing" */
+    .sa-dot { transform-origin: center; }
+    .sa-dot--g { fill: var(--sa-green); }
+    .sa-dot--k { fill: var(--sa-grey); }
+    .sa-dot.d1 { animation: sa-typing 1.2s ease-in-out 0.6s infinite; }
+    .sa-dot.d2 { animation: sa-typing 1.2s ease-in-out 0.75s infinite; }
+    .sa-dot.d3 { animation: sa-typing 1.2s ease-in-out 0.9s infinite; }
+    .sa-dot.d4 { animation: sa-typing 1.2s ease-in-out 1.2s infinite; }
+    .sa-dot.d5 { animation: sa-typing 1.2s ease-in-out 1.35s infinite; }
+    .sa-dot.d6 { animation: sa-typing 1.2s ease-in-out 1.5s infinite; }
+
+    /* ---------- Text block below the logo ---------- */
+    .sa-text {
+      position: absolute;
+      top: calc(50% + 86px);
+      left: 0;
+      right: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .sa-word {
+      position: relative;
+      width: 220px;
+      height: 50px;
+      overflow: hidden;
+      -webkit-clip-path: inset(0 100% 0 0);
+      clip-path: inset(0 100% 0 0);
+      animation: sa-wipe 0.8s cubic-bezier(0.65, 0, 0.35, 1) 0.7s forwards;
+    }
+    .sa-word img { width: 100%; height: 100%; object-fit: contain; display: block; }
+    .sa-word::after {
+      content: "";
+      position: absolute;
+      top: 0; bottom: 0; left: -60%;
+      width: 40%;
+      background: linear-gradient(100deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.85) 50%, rgba(255,255,255,0) 100%);
+      animation: sa-shine 1s ease-in-out 1.55s forwards;
+    }
+
+    .sa-tagline {
+      margin-top: 10px;
+      color: #5f6b65;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 2.4px;
+      text-transform: uppercase;
+      opacity: 0;
+      transform: translateY(10px);
+      animation: sa-rise 0.6s ease-out 1.15s forwards;
+    }
+
+    .sa-loader {
+      margin-top: 28px;
+      width: 120px;
+      height: 3px;
+      border-radius: 3px;
+      background: rgba(86, 185, 82, 0.15);
+      overflow: hidden;
+      opacity: 0;
+      animation: sa-fade-in 0.4s ease 1.35s forwards;
+    }
+    .sa-loader span {
+      display: block;
+      width: 40%;
+      height: 100%;
+      border-radius: 3px;
+      background: linear-gradient(90deg, var(--sa-green), var(--sa-green-dark));
+      animation: sa-load 1.1s ease-in-out infinite;
+    }
+
+    .sa-footer {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: calc(34px + env(safe-area-inset-bottom, 0px));
+      text-align: center;
+      opacity: 0;
+      transform: translateY(10px);
+      animation: sa-rise 0.6s ease-out 1.35s forwards;
+    }
+    .sa-footer small { display: block; color: #8a958f; font-size: 12px; letter-spacing: 0.5px; }
+    .sa-footer strong {
+      display: block; margin-top: 3px;
+      font-size: 14px; font-weight: 700; letter-spacing: 3px;
+      background: linear-gradient(90deg, var(--sa-green-dark), var(--sa-green));
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+    }
+
+    /* ---------- Exit ---------- */
+    #sa-splash.sa-exit { opacity: 0; visibility: hidden; }
+    #sa-splash.sa-exit .sa-logo-wrap,
+    #sa-splash.sa-exit .sa-text { transform: scale(1.1); opacity: 0; transition: transform 0.5s ease, opacity 0.4s ease; }
+
+    /* ---------- Keyframes ---------- */
+    @keyframes sa-fade-in { to { opacity: 1; } }
+    @keyframes sa-drift { from { transform: translate(0, 0) scale(1); } to { transform: translate(18px, 24px) scale(1.08); } }
+    @keyframes sa-float-up {
+      0% { opacity: 0; transform: translateY(0); }
+      15% { opacity: 1; }
+      80% { opacity: 0.8; }
+      100% { opacity: 0; transform: translateY(-105vh); }
+    }
+    @keyframes sa-ripple { 0% { transform: scale(0.7); opacity: 0.8; } 100% { transform: scale(1.9); opacity: 0; } }
+    @keyframes sa-disc-in { to { opacity: 1; transform: scale(1); } }
+    @keyframes sa-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+    @keyframes sa-typing { 0%, 60%, 100% { transform: translateY(0) scale(1); } 30% { transform: translateY(-4px) scale(1.1); } }
+    @keyframes sa-heartbeat { 0%, 100% { transform: scale(1); } 30% { transform: scale(1.08); } 55% { transform: scale(0.97); } 75% { transform: scale(1.03); } }
+    @keyframes sa-wipe { to { -webkit-clip-path: inset(0 0 0 0); clip-path: inset(0 0 0 0); } }
+    @keyframes sa-shine { to { left: 120%; } }
+    @keyframes sa-rise { to { opacity: 1; transform: translateY(0); } }
+    @keyframes sa-load { 0% { transform: translateX(-110%); } 100% { transform: translateX(260%); } }
+
+    @media (prefers-reduced-motion: reduce) {
+      #sa-splash *, #sa-splash *::after, #sa-splash::before {
+        animation-duration: 0.01ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important;
+      }
+    }
+  </style>
 </head>
 
 <body>
+  <!-- OLD SPLASH v1 (markup + script) - replaced by v2 below
+  <!~~ ================= CUSTOM SPLASH ================= ~~>
+  <div id="sa-splash" aria-hidden="true">
+    <span class="sa-blob sa-blob--1"></span>
+    <span class="sa-blob sa-blob--2"></span>
+    <span class="sa-blob sa-blob--3"></span>
+
+    <span class="sa-mini sa-mini--1"></span>
+    <span class="sa-mini sa-mini--2"></span>
+    <span class="sa-mini sa-mini--3"></span>
+    <span class="sa-mini sa-mini--4"></span>
+
+    <div class="sa-stage">
+      <div class="sa-logo-wrap">
+        <span class="sa-ring"></span>
+        <span class="sa-ring sa-ring--2"></span>
+        <span class="sa-ring sa-ring--3"></span>
+        <span class="sa-disc"></span>
+
+        <!~~ Animated version of the Super Assist chat-bubble icon ~~>
+        <svg class="sa-icon" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+          <g class="sa-bubble sa-bubble--grey">
+            <g class="sa-float-a">
+              <path pathLength="1" d="M58 18 H86 A14 14 0 0 1 100 32 V66 L91 59 Q88 56 83 56 H58 A14 14 0 0 1 44 42 V32 A14 14 0 0 1 58 18 Z" />
+              <circle class="sa-dot sa-dot--g d1" cx="62" cy="37" r="4" />
+              <circle class="sa-dot sa-dot--g d2" cx="72" cy="37" r="4" />
+              <circle class="sa-dot sa-dot--g d3" cx="82" cy="37" r="4" />
+            </g>
+          </g>
+          <g class="sa-bubble sa-bubble--green">
+            <g class="sa-float-b">
+              <path pathLength="1" d="M34 64 H62 A14 14 0 0 1 76 78 V86 A14 14 0 0 1 62 100 H37 Q32 100 29 103 L20 110 V78 A14 14 0 0 1 34 64 Z" />
+              <circle class="sa-dot sa-dot--k d4" cx="38" cy="82" r="4" />
+              <circle class="sa-dot sa-dot--k d5" cx="48" cy="82" r="4" />
+              <circle class="sa-dot sa-dot--k d6" cx="58" cy="82" r="4" />
+            </g>
+          </g>
+        </svg>
+      </div>
+
+      <div class="sa-word">
+        <img src="assets/images/super-assist-wordmark.png" alt="Super Assist" />
+      </div>
+      <div class="sa-tagline">Smart enterprise messaging</div>
+      <div class="sa-loader"><span></span></div>
+    </div>
+
+    <div class="sa-footer">
+      <small>from</small>
+      <strong>DV TECH</strong>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var MIN_VISIBLE_MS = 3600;          // let the full animation play once
+      var start = Date.now();
+      var done = false;
+      window.hideAppSplash = function () {
+        if (done) { return; }
+        var wait = Math.max(0, MIN_VISIBLE_MS - (Date.now() - start));
+        setTimeout(function () {
+          if (done) { return; }
+          done = true;
+          var el = document.getElementById('sa-splash');
+          if (!el) { return; }
+          el.classList.add('sa-exit');
+          setTimeout(function () { if (el.parentNode) { el.parentNode.removeChild(el); } }, 650);
+        }, wait);
+      };
+      // Safety net: never keep the user stuck on the splash
+      setTimeout(window.hideAppSplash, 9000);
+    })();
+  </script>
+
+  -->
+
+  <!-- ================= CUSTOM SPLASH (v2) ================= -->
+  <div id="sa-splash" aria-hidden="true">
+    <span class="sa-blob sa-blob--1"></span>
+    <span class="sa-blob sa-blob--2"></span>
+    <span class="sa-blob sa-blob--3"></span>
+
+    <span class="sa-mini sa-mini--1"></span>
+    <span class="sa-mini sa-mini--2"></span>
+    <span class="sa-mini sa-mini--3"></span>
+    <span class="sa-mini sa-mini--4"></span>
+
+    <div class="sa-logo-wrap">
+      <span class="sa-ring"></span>
+      <span class="sa-ring sa-ring--2"></span>
+      <span class="sa-ring sa-ring--3"></span>
+      <span class="sa-disc"></span>
+
+      <!-- Same paths as resources/android/splash/splash-icon.xml -->
+      <svg class="sa-icon" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+        <g class="sa-bubble sa-bubble--grey">
+          <g class="sa-float-a">
+            <path d="M58 18 H86 A14 14 0 0 1 100 32 V66 L91 59 Q88 56 83 56 H58 A14 14 0 0 1 44 42 V32 A14 14 0 0 1 58 18 Z" />
+            <circle class="sa-dot sa-dot--g d1" cx="62" cy="37" r="4" />
+            <circle class="sa-dot sa-dot--g d2" cx="72" cy="37" r="4" />
+            <circle class="sa-dot sa-dot--g d3" cx="82" cy="37" r="4" />
+          </g>
+        </g>
+        <g class="sa-bubble sa-bubble--green">
+          <g class="sa-float-b">
+            <path d="M34 64 H62 A14 14 0 0 1 76 78 V86 A14 14 0 0 1 62 100 H37 Q32 100 29 103 L20 110 V78 A14 14 0 0 1 34 64 Z" />
+            <circle class="sa-dot sa-dot--k d4" cx="38" cy="82" r="4" />
+            <circle class="sa-dot sa-dot--k d5" cx="48" cy="82" r="4" />
+            <circle class="sa-dot sa-dot--k d6" cx="58" cy="82" r="4" />
+          </g>
+        </g>
+      </svg>
+    </div>
+
+    <div class="sa-text">
+      <div class="sa-word">
+        <img src="assets/images/super-assist-wordmark.png" alt="Super Assist" />
+      </div>
+      <div class="sa-tagline">Smart enterprise messaging</div>
+      <div class="sa-loader"><span></span></div>
+    </div>
+
+    <div class="sa-footer">
+      <small>from</small>
+      <strong>DV TECH</strong>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var MIN_VISIBLE_MS = 3000;   // time the sequence plays once it is actually visible
+      var playStart = 0;
+      var hideRequested = false;
+      var done = false;
+
+      // Start animations when the native launch screen hands over to the WebView.
+      // Cordova closes the native splash on page load; deviceready comes right after.
+      function play() {
+        if (playStart) { return; }
+        playStart = Date.now();
+        var el = document.getElementById('sa-splash');
+        if (el) { el.classList.add('sa-play'); }
+        if (hideRequested) { scheduleHide(); }
+      }
+
+      function scheduleHide() {
+        var wait = Math.max(0, MIN_VISIBLE_MS - (Date.now() - playStart));
+        setTimeout(function () {
+          if (done) { return; }
+          done = true;
+          var el = document.getElementById('sa-splash');
+          if (!el) { return; }
+          el.classList.add('sa-exit');
+          setTimeout(function () { if (el.parentNode) { el.parentNode.removeChild(el); } }, 600);
+        }, wait);
+      }
+
+      window.hideAppSplash = function () {
+        if (hideRequested) { return; }
+        hideRequested = true;
+        if (playStart) { scheduleHide(); }   // otherwise play() schedules it
+      };
+
+      document.addEventListener('deviceready', play, false);
+      window.addEventListener('load', play, false);
+      setTimeout(play, 2500);                  // never stay frozen
+      setTimeout(window.hideAppSplash, 9000);  // never keep the user stuck
+    })();
+  </script>
+
   <app-root></app-root>
 </body>
 
