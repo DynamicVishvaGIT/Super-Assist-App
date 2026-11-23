@@ -1,7 +1,10 @@
 /* =========================================================
-   LOGIN PAGE (v4) - clean left-aligned layout
-   Input fields, validation, forgot link, button and footer
-   styles are carried over unchanged from v3 (see below).
+   LOGIN PAGE (v6) - client layout
+   Green gradient top + centred logo + heading, then a white card
+   with the wordmark, form and footer. Works on Android and iOS.
+   Fields, validation, forgot link, button and footer styles are
+   carried over unchanged from v5 (below the layout section).
+   Previous styles are commented out at the bottom of this file.
    ========================================================= */
 
 $green: #00a95b;
@@ -11,38 +14,28 @@ $grey: #808285;
 $ink: #111827;
 $muted: #6b7280;
 $border: #e3e8e5;
-$heading: #0f3d26;          /* deep brand green for the heading */
+$heading: #1f2a24;
+// $top: #a7d9aa;
+$top: #a5d6a7;               // top of the gradient = status bar colour (login.page.ts) - same mint as the client screenshot
 $ease-out: cubic-bezier(0.22, 1, 0.36, 1);
 $ease-back: cubic-bezier(0.34, 1.56, 0.64, 1);
 
+
+/* =========================================================
+   PAGE BACKGROUND
+   ========================================================= */
+
 ion-content.login-page {
-  // --background: #ffffff;
-  --background: #f1f6ef;      /* soft mint / sage tint like the reference */
+  --background: #{$top};
   --padding-start: 0;
   --padding-end: 0;
   --padding-top: 0;
   --padding-bottom: 0;
 }
 
-// OLD (near-white background)
-// ion-content.login-page::part(background) {
-//   background:
-//     radial-gradient(circle at 100% 0%, rgba(86, 185, 82, 0.16) 0%, rgba(86, 185, 82, 0) 38%),
-//     radial-gradient(circle at 0% 100%, rgba(0, 169, 91, 0.12) 0%, rgba(0, 169, 91, 0) 40%),
-//     linear-gradient(180deg, #ffffff 0%, #f6fbf8 100%);
-// }
-
-// OLD v4 (point 7: pale mint at the top didn't meet the white status bar)
-// ion-content.login-page::part(background) {
-//   background:
-//     radial-gradient(circle at 100% 0%, rgba(86, 185, 82, 0.20) 0%, rgba(86, 185, 82, 0) 40%),
-//     radial-gradient(circle at 0% 100%, rgba(86, 185, 82, 0.18) 0%, rgba(86, 185, 82, 0) 42%),
-//     linear-gradient(180deg, #f5f9f3 0%, #eef5ec 55%, #e7f1e5 100%);
-// }
 ion-content.login-page::part(background) {
-  background:
-    radial-gradient(circle at 0% 100%, rgba(86, 185, 82, 0.18) 0%, rgba(86, 185, 82, 0) 42%),
-    linear-gradient(180deg, #ffffff 0%, #f5f9f3 22%, #eef5ec 60%, #e7f1e5 100%);
+  // background: linear-gradient(180deg, #{$top} 0%, #c3e5c1 26%, #e3f2e0 48%, #f4f9f3 70%, #f8fbf7 100%);
+  background: linear-gradient(180deg, #{$top} 0%, #b9dfb9 18%, #cfe9cc 30%, #e8f4e6 42%, #fbfdfb 62%, #ffffff 100%);
 }
 
 ion-content.login-page::part(scroll) {
@@ -51,94 +44,114 @@ ion-content.login-page::part(scroll) {
   flex-direction: column;
 }
 
-
-/* =========================================================
-   BACKGROUND GLOWS (replace the leaves in the reference)
-   ========================================================= */
-
-.lg-glow {
-  position: absolute;
-  border-radius: 50%;
-  pointer-events: none;
-  filter: blur(8px);
-  z-index: 0;
-}
-.lg-glow--1 {
-  width: 210px; height: 210px;
-  // top: -70px; right: -60px;
-  top: 70px; right: -90px;     /* point 7: kept away from the status bar edge */
-  background: radial-gradient(circle, rgba(86, 185, 82, 0.22) 0%, rgba(86, 185, 82, 0) 70%);
-  animation: lg-drift 14s ease-in-out infinite alternate;   /* point 8: slower (was 9s) */
-}
-.lg-glow--2 {
-  width: 170px; height: 170px;
-  bottom: -50px; left: -60px;
-  background: radial-gradient(circle, rgba(0, 169, 91, 0.18) 0%, rgba(0, 169, 91, 0) 70%);
-  animation: lg-drift 16s ease-in-out 1s infinite alternate-reverse;   /* point 8: slower (was 11s) */
-}
-.lg-glow--3 {
-  width: 90px; height: 90px;
-  top: 34%; right: -30px;
-  background: radial-gradient(circle, rgba(128, 130, 133, 0.10) 0%, rgba(128, 130, 133, 0) 70%);
-  animation: none;   /* point 8: third glow stays still (was drifting) */
-}
-
-
-/* =========================================================
-   WRAPPER
-   ========================================================= */
-
-.lg-wrapper {
-  position: relative;
-  z-index: 1;
+.lg6-page {
   flex: 1;
   width: 100%;
-  max-width: 440px;
-  margin: 0 auto;
-  box-sizing: border-box;
+  min-height: 100%;
   display: flex;
   flex-direction: column;
-  // padding: calc(48px + env(safe-area-inset-top, 0px)) 24px env(safe-area-inset-bottom, 0px);
-  padding: 48px 24px env(safe-area-inset-bottom, 0px);   /* ion-app already adds the notch space */
+  align-items: center;
+  padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   GREEN TOP
+   ========================================================= */
+
+.lg6-hero {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  padding: 34px 24px 26px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
   transition: padding 0.35s ease;
 }
 
-
-/* =========================================================
-   BRAND ROW
-   ========================================================= */
-
-.lg-brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 34px;
-  animation: lg-slide-in 0.65s $ease-out 0.1s backwards;
+/* soft glows + small floating chat bubbles */
+.lg6-glow {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(6px);
+}
+.lg6-glow--1 {
+  width: 180px; height: 180px;
+  top: -40px; left: -70px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0) 70%);
+  animation: lg6-drift 14s ease-in-out infinite alternate;
+}
+.lg6-glow--2 {
+  width: 150px; height: 150px;
+  top: 40px; right: -60px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0) 70%);
+  animation: lg6-drift 16s ease-in-out 1s infinite alternate-reverse;
 }
 
-.lg-logo {
-  flex: 0 0 auto;
-  width: 54px;
-  height: 54px;
-  border-radius: 16px;
+.lg6-float {
+  position: absolute;
+  bottom: 10px;
+  width: 20px;
+  height: 14px;
+  border-radius: 7px;
+  border: 2px solid rgba(255, 255, 255, 0.7);
+  opacity: 0;
+  pointer-events: none;
+  animation: lg6-float-up 8s ease-in infinite;
+
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: -6px;
+    left: 3px;
+    border: 4px solid transparent;
+    border-top-color: rgba(255, 255, 255, 0.7);
+  }
+}
+.lg6-float--1 { left: 12%; animation-delay: 1.2s; }
+.lg6-float--2 { left: 84%; animation-delay: 3.6s; width: 15px; height: 11px; }
+.lg6-float--3 { left: 68%; animation-delay: 6s; width: 17px; height: 12px; }
+
+/* logo tile */
+.lg6-logo {
+  position: relative;
+  width: 92px;
+  height: 92px;
+  margin-bottom: 16px;
+  border-radius: 26px;
   background: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 8px 20px rgba(0, 110, 55, 0.12), 0 1px 3px rgba(0, 0, 0, 0.05);
-  border: 1px solid rgba(227, 232, 229, 0.8);
-  animation: lg-pop 0.6s $ease-back 0.15s backwards;
+  box-shadow: 0 14px 30px rgba(30, 90, 45, 0.18), 0 2px 6px rgba(0, 0, 0, 0.05);
+  animation: lg6-pop 0.7s $ease-back 0.1s backwards;
+  transition: width 0.35s ease, height 0.35s ease, border-radius 0.35s ease, margin 0.35s ease;
 }
 
-.lg-icon {
-  width: 40px;
-  height: 40px;
+.lg6-logo-ring {
+  position: absolute;
+  top: -3px; right: -3px; bottom: -3px; left: -3px;
+  border-radius: 29px;
+  border: 2px solid rgba(255, 255, 255, 0.85);
+  animation: lg6-ring 2.8s ease-out 1.2s 3;
+}
+
+.lg6-icon {
+  width: 64px;
+  height: 64px;
   overflow: visible;
+  transition: width 0.35s ease, height 0.35s ease;
 
   * { transform-box: fill-box; }
 }
 
-.lg-bubble path {
+.lg6-bubble path {
   fill: none;
   stroke-width: 7;
   stroke-linecap: round;
@@ -146,80 +159,103 @@ ion-content.login-page::part(scroll) {
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
 }
-.lg-bubble--grey path { stroke: $grey; animation: lg-draw 0.8s ease-out 0.35s forwards; }
-.lg-bubble--green path { stroke: $green-light; animation: lg-draw 0.8s ease-out 0.6s forwards; }
+.lg6-bubble--grey path { stroke: $grey; animation: lg6-draw 0.8s ease-out 0.4s forwards; }
+.lg6-bubble--green path { stroke: $green-light; animation: lg6-draw 0.8s ease-out 0.65s forwards; }
 
-.lg-dot { transform-origin: center; transform: scale(0); }
-.lg-dot--g { fill: $green-light; }
-.lg-dot--k { fill: $grey; }
-.lg-dot.d1 { animation: lg-dot-pop 0.35s ease-out 1.0s forwards, lg-typing 1.3s ease-in-out 1.5s 3; }   /* point 8: types 3x then rests (was infinite) */
-.lg-dot.d2 { animation: lg-dot-pop 0.35s ease-out 1.1s forwards, lg-typing 1.3s ease-in-out 1.65s 3; }   /* point 8: types 3x then rests (was infinite) */
-.lg-dot.d3 { animation: lg-dot-pop 0.35s ease-out 1.2s forwards, lg-typing 1.3s ease-in-out 1.8s 3; }   /* point 8: types 3x then rests (was infinite) */
-.lg-dot.d4 { animation: lg-dot-pop 0.35s ease-out 1.15s forwards, lg-typing 1.3s ease-in-out 2.1s 3; }   /* point 8: types 3x then rests (was infinite) */
-.lg-dot.d5 { animation: lg-dot-pop 0.35s ease-out 1.25s forwards, lg-typing 1.3s ease-in-out 2.25s 3; }   /* point 8: types 3x then rests (was infinite) */
-.lg-dot.d6 { animation: lg-dot-pop 0.35s ease-out 1.35s forwards, lg-typing 1.3s ease-in-out 2.4s 3; }   /* point 8: types 3x then rests (was infinite) */
+.lg6-dot { transform-origin: center; transform: scale(0); }
+.lg6-dot--g { fill: $green-light; }
+.lg6-dot--k { fill: $grey; }
+.lg6-dot.d1 { animation: lg6-dot-pop 0.35s ease-out 1.05s forwards, lg6-typing 1.3s ease-in-out 1.55s 3; }
+.lg6-dot.d2 { animation: lg6-dot-pop 0.35s ease-out 1.15s forwards, lg6-typing 1.3s ease-in-out 1.7s 3; }
+.lg6-dot.d3 { animation: lg6-dot-pop 0.35s ease-out 1.25s forwards, lg6-typing 1.3s ease-in-out 1.85s 3; }
+.lg6-dot.d4 { animation: lg6-dot-pop 0.35s ease-out 1.2s forwards, lg6-typing 1.3s ease-in-out 2.15s 3; }
+.lg6-dot.d5 { animation: lg6-dot-pop 0.35s ease-out 1.3s forwards, lg6-typing 1.3s ease-in-out 2.3s 3; }
+.lg6-dot.d6 { animation: lg6-dot-pop 0.35s ease-out 1.4s forwards, lg6-typing 1.3s ease-in-out 2.45s 3; }
 
-.lg-brand-text {
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-.lg-wordmark {
-  display: block;
-  width: 148px;
-  height: auto;
-}
-
-.lg-card-caption {
-  margin: 4px 0 0 2px;
-  color: $muted;
-  font-size: 12.5px;
-  font-weight: 500;
-  letter-spacing: 0.2px;
-}
-
-
-/* =========================================================
-   HEADING
-   ========================================================= */
-
-.lg-title {
+.lg6-title {
   margin: 0;
   color: $heading;
   font-size: 30px;
-  line-height: 1.15;
   font-weight: 800;
+  line-height: 1.15;
   letter-spacing: -0.6px;
   animation: lp-rise 0.6s $ease-out 0.3s backwards;
 }
 
-.lg-subtitle {
-  margin: 8px 0 28px;
-  color: $muted;
-  font-size: 15px;
-  line-height: 1.45;
+.lg6-subtitle {
+  margin: 6px 0 0;
+  max-width: 320px;
   max-height: 60px;
   overflow: hidden;
+  color: #3f5246;
+  font-size: 14.5px;
+  line-height: 1.45;
   animation: lp-rise 0.6s $ease-out 0.4s backwards;
   transition: opacity 0.25s ease, max-height 0.35s ease, margin 0.35s ease;
 }
 
-.lg-form {
+
+/* =========================================================
+   WHITE CARD
+   ========================================================= */
+
+.lg6-card {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  width: calc(100% - 32px);
+  max-width: 448px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  padding: 26px 20px 0;
+  border-radius: 28px;
+  // background: linear-gradient(180deg, #ffffff 0%, #fbfdfb 100%);
+  background: linear-gradient(180deg, #f2f8f1 0%, #fafcfa 14%, #ffffff 32%, #ffffff 100%);   /* faint green at the top edge, like the screenshot */
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow:
+    0 -4px 20px rgba(30, 90, 45, 0.06),
+    0 18px 40px rgba(16, 60, 38, 0.10);
+  animation: lg6-card-in 0.75s $ease-out 0.3s backwards;
+}
+
+.lg6-wordmark {
+  display: block;
+  width: 160px;
+  height: auto;
+  margin: 0 auto;
+  animation: lp-fade 0.6s ease 0.55s backwards;
+}
+
+.lg6-tagline {
+  margin: 8px 0 22px;
+  text-align: center;
+  color: $muted;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  animation: lp-fade 0.6s ease 0.65s backwards;
+}
+
+.lg6-form {
   width: 100%;
 }
 
 
 /* =========================================================
-   KEYBOARD OPEN - tighten the top so the form stays visible
+   KEYBOARD OPEN - compact top so the form stays visible
    ========================================================= */
 
-.lg-keyboard-open {
-  // &.lg-wrapper { padding-top: calc(20px + env(safe-area-inset-top, 0px)); }
-  &.lg-wrapper { padding-top: 20px; }
-  .lg-brand { margin-bottom: 18px; }
-  .lg-subtitle { opacity: 0; max-height: 0; margin: 0 0 16px; }
+.lg6-keyboard-open {
+  .lg6-hero { padding-top: 14px; padding-bottom: 14px; }
+  .lg6-logo { width: 56px; height: 56px; border-radius: 18px; margin-bottom: 8px; }
+  .lg6-logo-ring { display: none; }
+  .lg6-icon { width: 40px; height: 40px; }
+  .lg6-title { font-size: 24px; }
+  .lg6-subtitle { opacity: 0; max-height: 0; margin: 0; }
+  .lg6-card { padding-top: 18px; }
+  .lg6-tagline { margin-bottom: 14px; }
   .lp-footer { display: none; }
 }
 
@@ -229,22 +265,23 @@ ion-content.login-page::part(scroll) {
    ========================================================= */
 
 @media (max-width: 360px) {
-  .lg-wrapper { padding-left: 18px; padding-right: 18px; padding-top: 32px; } // was calc(32px + env(safe-area-inset-top, 0px))
-  .lg-title { font-size: 26px; }
-  .lg-subtitle { font-size: 14px; }
-  .lg-wordmark { width: 130px; }
+  .lg6-hero { padding: 24px 18px 20px; }
+  .lg6-logo { width: 80px; height: 80px; border-radius: 22px; }
+  .lg6-icon { width: 56px; height: 56px; }
+  .lg6-title { font-size: 26px; }
+  .lg6-subtitle { font-size: 13.5px; }
+  .lg6-card { width: calc(100% - 24px); padding: 22px 16px 0; }
   .lp-input, .lp-btn { height: 50px; }
 }
 
 @media (min-height: 760px) {
-  // .lg-wrapper { padding-top: calc(10vh + env(safe-area-inset-top, 0px)); }
-  .lg-wrapper { padding-top: 10vh; }
+  .lg6-hero { padding-top: 48px; padding-bottom: 32px; }
 }
 
 @media (min-width: 600px) {
-  .lg-wrapper { max-width: 460px; }
-  .lg-title { font-size: 34px; }
-  .lg-wordmark { width: 170px; }
+  .lg6-title { font-size: 34px; }
+  .lg6-card { padding: 34px 32px 0; }
+  .lg6-wordmark { width: 180px; }
 }
 
 
@@ -252,23 +289,41 @@ ion-content.login-page::part(scroll) {
    KEYFRAMES (layout)
    ========================================================= */
 
-@keyframes lg-slide-in { from { transform: translateX(-24px); opacity: 0; } to { transform: none; opacity: 1; } }
-@keyframes lg-pop { from { transform: scale(0.5) rotate(-10deg); opacity: 0; } to { transform: none; opacity: 1; } }
-@keyframes lg-draw { to { stroke-dashoffset: 0; } }
-@keyframes lg-dot-pop { 0% { transform: scale(0); } 70% { transform: scale(1.35); } 100% { transform: scale(1); } }
-@keyframes lg-typing { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-4px); } }
-@keyframes lg-drift { from { transform: translate(0, 0) scale(1); } to { transform: translate(-14px, 18px) scale(1.12); } }
+@keyframes lg6-pop { from { transform: scale(0.5) rotate(-10deg); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes lg6-ring { 0% { transform: scale(1); opacity: 0.9; } 100% { transform: scale(1.35); opacity: 0; } }
+@keyframes lg6-draw { to { stroke-dashoffset: 0; } }
+@keyframes lg6-dot-pop { 0% { transform: scale(0); } 70% { transform: scale(1.35); } 100% { transform: scale(1); } }
+@keyframes lg6-typing { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-4px); } }
+@keyframes lg6-drift { from { transform: translate(0, 0) scale(1); } to { transform: translate(14px, 16px) scale(1.12); } }
+@keyframes lg6-float-up {
+  0% { opacity: 0; transform: translateY(0); }
+  15% { opacity: 1; }
+  85% { opacity: 0.5; }
+  100% { opacity: 0; transform: translateY(-170px); }
+}
+@keyframes lg6-card-in { from { transform: translateY(60px); opacity: 0; } to { transform: none; opacity: 1; } }
 
-/* shared with the carried-over v3 styles */
+/* shared with the carried-over v5 styles */
 @keyframes lp-rise { from { transform: translateY(14px); opacity: 0; } to { transform: none; opacity: 1; } }
 @keyframes lp-fade { from { opacity: 0; } to { opacity: 1; } }
 @keyframes lp-shine { 0% { left: -75%; } 35%, 100% { left: 130%; } }
 @keyframes lp-nudge { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(4px); } }
 
+@media (prefers-reduced-motion: reduce) {
+  .lg6-page *,
+  .lg6-page *::before,
+  .lg6-page *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 
 /* =========================================================
-   CARRIED OVER FROM v3 (unchanged): fields, validation,
-   forgot password, login button, footer
+   CARRIED OVER FROM v5 (unchanged): fields, validation,
+   forgot password, login button (+ loading state), footer
    ========================================================= */
 
 /* Stagger the form rows */
@@ -627,41 +682,8 @@ $error: #e5383b;
 }
 
 
-/* =========================================================
-   REDUCED MOTION
-   ========================================================= */
 
-@media (prefers-reduced-motion: reduce) {
-  .lg-wrapper *,
-  .lg-wrapper *::before,
-  .lg-wrapper *::after {
-    animation-duration: 0.01ms !important;
-    animation-delay: 0s !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-}
-
-
-
-// =====================================================================
-
-
-/* =========================================================
-   v5 REVIEW FIXES
-   ========================================================= */
-
-/* point 11: brand tagline under the wordmark (same as the splash) */
-.lg-tagline {
-  margin: 5px 0 0 2px;
-  color: #6b7280;
-  font-size: 10.5px;
-  font-weight: 600;
-  letter-spacing: 1.6px;
-  text-transform: uppercase;
-  animation: lp-fade 0.6s ease 0.5s backwards;
-}
-
+/* ---------- v5: button loading state + calmer shine ---------- */
 /* point 6: loading state inside the button */
 .lp-btn--loading,
 .lp-btn:disabled {
@@ -695,6 +717,707 @@ $error: #e5383b;
   50% { opacity: 0.7; }
 }
 
+
+// =====================================================================
+// OLD LOGIN STYLES (v5 - left-aligned) - commented out, replaced by v6 above.
+// =====================================================================
+// /* =========================================================
+//    LOGIN PAGE (v4) - clean left-aligned layout
+//    Input fields, validation, forgot link, button and footer
+//    styles are carried over unchanged from v3 (see below).
+//    ========================================================= */
+//
+// $green: #00a95b;
+// $green-light: #56b952;
+// $green-deep: #008a4b;
+// $grey: #808285;
+// $ink: #111827;
+// $muted: #6b7280;
+// $border: #e3e8e5;
+// $heading: #0f3d26;          /* deep brand green for the heading */
+// $ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+// $ease-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+//
+// ion-content.login-page {
+//   // --background: #ffffff;
+//   --background: #f1f6ef;      /* soft mint / sage tint like the reference */
+//   --padding-start: 0;
+//   --padding-end: 0;
+//   --padding-top: 0;
+//   --padding-bottom: 0;
+// }
+//
+// // OLD (near-white background)
+// // ion-content.login-page::part(background) {
+// //   background:
+// //     radial-gradient(circle at 100% 0%, rgba(86, 185, 82, 0.16) 0%, rgba(86, 185, 82, 0) 38%),
+// //     radial-gradient(circle at 0% 100%, rgba(0, 169, 91, 0.12) 0%, rgba(0, 169, 91, 0) 40%),
+// //     linear-gradient(180deg, #ffffff 0%, #f6fbf8 100%);
+// // }
+//
+// // OLD v4 (point 7: pale mint at the top didn't meet the white status bar)
+// // ion-content.login-page::part(background) {
+// //   background:
+// //     radial-gradient(circle at 100% 0%, rgba(86, 185, 82, 0.20) 0%, rgba(86, 185, 82, 0) 40%),
+// //     radial-gradient(circle at 0% 100%, rgba(86, 185, 82, 0.18) 0%, rgba(86, 185, 82, 0) 42%),
+// //     linear-gradient(180deg, #f5f9f3 0%, #eef5ec 55%, #e7f1e5 100%);
+// // }
+// ion-content.login-page::part(background) {
+//   background:
+//     radial-gradient(circle at 0% 100%, rgba(86, 185, 82, 0.18) 0%, rgba(86, 185, 82, 0) 42%),
+//     linear-gradient(180deg, #ffffff 0%, #f5f9f3 22%, #eef5ec 60%, #e7f1e5 100%);
+// }
+//
+// ion-content.login-page::part(scroll) {
+//   min-height: 100%;
+//   display: flex;
+//   flex-direction: column;
+// }
+//
+//
+// /* =========================================================
+//    BACKGROUND GLOWS (replace the leaves in the reference)
+//    ========================================================= */
+//
+// .lg-glow {
+//   position: absolute;
+//   border-radius: 50%;
+//   pointer-events: none;
+//   filter: blur(8px);
+//   z-index: 0;
+// }
+// .lg-glow--1 {
+//   width: 210px; height: 210px;
+//   // top: -70px; right: -60px;
+//   top: 70px; right: -90px;     /* point 7: kept away from the status bar edge */
+//   background: radial-gradient(circle, rgba(86, 185, 82, 0.22) 0%, rgba(86, 185, 82, 0) 70%);
+//   animation: lg-drift 14s ease-in-out infinite alternate;   /* point 8: slower (was 9s) */
+// }
+// .lg-glow--2 {
+//   width: 170px; height: 170px;
+//   bottom: -50px; left: -60px;
+//   background: radial-gradient(circle, rgba(0, 169, 91, 0.18) 0%, rgba(0, 169, 91, 0) 70%);
+//   animation: lg-drift 16s ease-in-out 1s infinite alternate-reverse;   /* point 8: slower (was 11s) */
+// }
+// .lg-glow--3 {
+//   width: 90px; height: 90px;
+//   top: 34%; right: -30px;
+//   background: radial-gradient(circle, rgba(128, 130, 133, 0.10) 0%, rgba(128, 130, 133, 0) 70%);
+//   animation: none;   /* point 8: third glow stays still (was drifting) */
+// }
+//
+//
+// /* =========================================================
+//    WRAPPER
+//    ========================================================= */
+//
+// .lg-wrapper {
+//   position: relative;
+//   z-index: 1;
+//   flex: 1;
+//   width: 100%;
+//   max-width: 440px;
+//   margin: 0 auto;
+//   box-sizing: border-box;
+//   display: flex;
+//   flex-direction: column;
+//   // padding: calc(48px + env(safe-area-inset-top, 0px)) 24px env(safe-area-inset-bottom, 0px);
+//   padding: 48px 24px env(safe-area-inset-bottom, 0px);   /* ion-app already adds the notch space */
+//   transition: padding 0.35s ease;
+// }
+//
+//
+// /* =========================================================
+//    BRAND ROW
+//    ========================================================= */
+//
+// .lg-brand {
+//   display: flex;
+//   align-items: center;
+//   gap: 12px;
+//   margin-bottom: 34px;
+//   animation: lg-slide-in 0.65s $ease-out 0.1s backwards;
+// }
+//
+// .lg-logo {
+//   flex: 0 0 auto;
+//   width: 54px;
+//   height: 54px;
+//   border-radius: 16px;
+//   background: #ffffff;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   box-shadow: 0 8px 20px rgba(0, 110, 55, 0.12), 0 1px 3px rgba(0, 0, 0, 0.05);
+//   border: 1px solid rgba(227, 232, 229, 0.8);
+//   animation: lg-pop 0.6s $ease-back 0.15s backwards;
+// }
+//
+// .lg-icon {
+//   width: 40px;
+//   height: 40px;
+//   overflow: visible;
+//
+//   * { transform-box: fill-box; }
+// }
+//
+// .lg-bubble path {
+//   fill: none;
+//   stroke-width: 7;
+//   stroke-linecap: round;
+//   stroke-linejoin: round;
+//   stroke-dasharray: 1;
+//   stroke-dashoffset: 1;
+// }
+// .lg-bubble--grey path { stroke: $grey; animation: lg-draw 0.8s ease-out 0.35s forwards; }
+// .lg-bubble--green path { stroke: $green-light; animation: lg-draw 0.8s ease-out 0.6s forwards; }
+//
+// .lg-dot { transform-origin: center; transform: scale(0); }
+// .lg-dot--g { fill: $green-light; }
+// .lg-dot--k { fill: $grey; }
+// .lg-dot.d1 { animation: lg-dot-pop 0.35s ease-out 1.0s forwards, lg-typing 1.3s ease-in-out 1.5s 3; }   /* point 8: types 3x then rests (was infinite) */
+// .lg-dot.d2 { animation: lg-dot-pop 0.35s ease-out 1.1s forwards, lg-typing 1.3s ease-in-out 1.65s 3; }   /* point 8: types 3x then rests (was infinite) */
+// .lg-dot.d3 { animation: lg-dot-pop 0.35s ease-out 1.2s forwards, lg-typing 1.3s ease-in-out 1.8s 3; }   /* point 8: types 3x then rests (was infinite) */
+// .lg-dot.d4 { animation: lg-dot-pop 0.35s ease-out 1.15s forwards, lg-typing 1.3s ease-in-out 2.1s 3; }   /* point 8: types 3x then rests (was infinite) */
+// .lg-dot.d5 { animation: lg-dot-pop 0.35s ease-out 1.25s forwards, lg-typing 1.3s ease-in-out 2.25s 3; }   /* point 8: types 3x then rests (was infinite) */
+// .lg-dot.d6 { animation: lg-dot-pop 0.35s ease-out 1.35s forwards, lg-typing 1.3s ease-in-out 2.4s 3; }   /* point 8: types 3x then rests (was infinite) */
+//
+// .lg-brand-text {
+//   min-width: 0;
+//   display: flex;
+//   flex-direction: column;
+//   align-items: flex-start;
+// }
+//
+// .lg-wordmark {
+//   display: block;
+//   width: 148px;
+//   height: auto;
+// }
+//
+// .lg-card-caption {
+//   margin: 4px 0 0 2px;
+//   color: $muted;
+//   font-size: 12.5px;
+//   font-weight: 500;
+//   letter-spacing: 0.2px;
+// }
+//
+//
+// /* =========================================================
+//    HEADING
+//    ========================================================= */
+//
+// .lg-title {
+//   margin: 0;
+//   color: $heading;
+//   font-size: 30px;
+//   line-height: 1.15;
+//   font-weight: 800;
+//   letter-spacing: -0.6px;
+//   animation: lp-rise 0.6s $ease-out 0.3s backwards;
+// }
+//
+// .lg-subtitle {
+//   margin: 8px 0 28px;
+//   color: $muted;
+//   font-size: 15px;
+//   line-height: 1.45;
+//   max-height: 60px;
+//   overflow: hidden;
+//   animation: lp-rise 0.6s $ease-out 0.4s backwards;
+//   transition: opacity 0.25s ease, max-height 0.35s ease, margin 0.35s ease;
+// }
+//
+// .lg-form {
+//   width: 100%;
+// }
+//
+//
+// /* =========================================================
+//    KEYBOARD OPEN - tighten the top so the form stays visible
+//    ========================================================= */
+//
+// .lg-keyboard-open {
+//   // &.lg-wrapper { padding-top: calc(20px + env(safe-area-inset-top, 0px)); }
+//   &.lg-wrapper { padding-top: 20px; }
+//   .lg-brand { margin-bottom: 18px; }
+//   .lg-subtitle { opacity: 0; max-height: 0; margin: 0 0 16px; }
+//   .lp-footer { display: none; }
+// }
+//
+//
+// /* =========================================================
+//    RESPONSIVE
+//    ========================================================= */
+//
+// @media (max-width: 360px) {
+//   .lg-wrapper { padding-left: 18px; padding-right: 18px; padding-top: 32px; } // was calc(32px + env(safe-area-inset-top, 0px))
+//   .lg-title { font-size: 26px; }
+//   .lg-subtitle { font-size: 14px; }
+//   .lg-wordmark { width: 130px; }
+//   .lp-input, .lp-btn { height: 50px; }
+// }
+//
+// @media (min-height: 760px) {
+//   // .lg-wrapper { padding-top: calc(10vh + env(safe-area-inset-top, 0px)); }
+//   .lg-wrapper { padding-top: 10vh; }
+// }
+//
+// @media (min-width: 600px) {
+//   .lg-wrapper { max-width: 460px; }
+//   .lg-title { font-size: 34px; }
+//   .lg-wordmark { width: 170px; }
+// }
+//
+//
+// /* =========================================================
+//    KEYFRAMES (layout)
+//    ========================================================= */
+//
+// @keyframes lg-slide-in { from { transform: translateX(-24px); opacity: 0; } to { transform: none; opacity: 1; } }
+// @keyframes lg-pop { from { transform: scale(0.5) rotate(-10deg); opacity: 0; } to { transform: none; opacity: 1; } }
+// @keyframes lg-draw { to { stroke-dashoffset: 0; } }
+// @keyframes lg-dot-pop { 0% { transform: scale(0); } 70% { transform: scale(1.35); } 100% { transform: scale(1); } }
+// @keyframes lg-typing { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-4px); } }
+// @keyframes lg-drift { from { transform: translate(0, 0) scale(1); } to { transform: translate(-14px, 18px) scale(1.12); } }
+//
+// /* shared with the carried-over v3 styles */
+// @keyframes lp-rise { from { transform: translateY(14px); opacity: 0; } to { transform: none; opacity: 1; } }
+// @keyframes lp-fade { from { opacity: 0; } to { opacity: 1; } }
+// @keyframes lp-shine { 0% { left: -75%; } 35%, 100% { left: 130%; } }
+// @keyframes lp-nudge { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(4px); } }
+//
+//
+// /* =========================================================
+//    CARRIED OVER FROM v3 (unchanged): fields, validation,
+//    forgot password, login button, footer
+//    ========================================================= */
+//
+// /* Stagger the form rows */
+// .lp-stagger-1 { animation: lp-rise 0.55s $ease-out 0.75s backwards; }
+// .lp-stagger-2 { animation: lp-rise 0.55s $ease-out 0.85s backwards; }
+// .lp-stagger-3 { animation: lp-rise 0.55s $ease-out 0.95s backwards; }
+// .lp-stagger-4 { animation: lp-rise 0.55s $ease-out 1.05s backwards; }
+//
+// /* ---------- Fields ---------- */
+//
+// .lp-field {
+//   margin-bottom: 16px;
+//
+//   label {
+//     display: block;
+//     margin: 0 0 7px 4px;
+//     color: #374151;
+//     font-size: 13px;
+//     font-weight: 600;
+//     letter-spacing: 0.2px;
+//     transition: color 0.2s ease;
+//   }
+//
+//   &:focus-within label { color: $green; }
+// }
+//
+// .lp-input {
+//   position: relative;
+//   height: 54px;
+//   display: flex;
+//   align-items: center;
+//   gap: 12px;
+//   padding: 0 14px;
+//   background: #f7f9f8;
+//   border: 1.5px solid $border;
+//   border-radius: 14px;
+//   transition: border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+//
+//   /* animated underline that grows from the center on focus */
+//   &::after {
+//     content: "";
+//     position: absolute;
+//     left: 14px;
+//     right: 14px;
+//     bottom: -1.5px;
+//     height: 2px;
+//     border-radius: 2px;
+//     background: linear-gradient(90deg, $green-light, $green);
+//     transform: scaleX(0);
+//     transition: transform 0.35s $ease-out;
+//   }
+//
+//   &:focus-within {
+//     background: #fff;
+//     border-color: rgba(0, 169, 91, 0.55);
+//     box-shadow: 0 0 0 4px rgba(0, 169, 91, 0.10), 0 6px 16px rgba(0, 169, 91, 0.08);
+//     // transform: translateY(-1px);  // removed: lifting the field hid the caret on some WebViews
+//
+//     &::after { transform: scaleX(1); }
+//
+//     .lp-input-icon {
+//       color: $green;
+//       transform: scale(1.12);
+//     }
+//   }
+// }
+//
+// .lp-input-icon {
+//   flex: 0 0 auto;
+//   font-size: 20px;
+//   color: #9aa5a0;
+//   transition: color 0.25s ease, transform 0.3s $ease-back;
+// }
+//
+// ion-input {
+//   --background: transparent;
+//   --color: #{$ink};
+//   // --placeholder-color: #b4bcb8;
+//   --placeholder-color: #87928d;   /* point 9: readable contrast */
+//   --placeholder-opacity: 1;
+//   --padding-start: 0;
+//   --padding-end: 0;
+//   --padding-top: 0;
+//   --padding-bottom: 0;
+//   --highlight-color-focused: transparent;
+//   --highlight-color-valid: transparent;
+//   --highlight-color-invalid: transparent;
+//   --border-width: 0;
+//   flex: 1;
+//   min-width: 0;
+//   // min-height: 100% !important;
+//   height: 100%;
+//   min-height: 0 !important;
+//   display: flex;
+//   align-items: center;
+//   font-size: 15.5px;
+//   line-height: normal;
+//   caret-color: $green;
+// }
+//
+// ion-input::part(native) {
+//   border: none !important;
+//   outline: none !important;
+//   box-shadow: none !important;
+// }
+//
+// /* Ionic's inner wrappers: stretch to the field height and centre the text */
+// ion-input ::ng-deep .input-wrapper,
+// ion-input ::ng-deep .native-wrapper {
+//   height: 100%;
+//   min-height: 0 !important;
+//   display: flex;
+//   align-items: center;
+// }
+//
+// ion-input ::ng-deep input.native-input {
+//   height: 100%;
+//   padding: 0 !important;
+//   margin: 0;
+//   line-height: normal;
+//   caret-color: $green !important;
+// }
+//
+// /* Show / hide password */
+// .lp-eye {
+//   flex: 0 0 auto;
+//   width: 36px;
+//   height: 36px;
+//   margin-right: -6px;
+//   padding: 0;
+//   border: 0;
+//   border-radius: 50%;
+//   background: transparent;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   color: #9aa5a0;
+//   cursor: pointer;
+//   -webkit-tap-highlight-color: transparent;
+//   transition: background 0.2s ease, color 0.2s ease;
+//
+//   ion-icon {
+//     font-size: 20px;
+//     pointer-events: none;
+//     transition: transform 0.3s $ease-back;
+//   }
+//
+//   &:active { background: rgba(0, 169, 91, 0.10); }
+//
+//   &--on {
+//     color: $green;
+//
+//     ion-icon { transform: rotate(-12deg) scale(1.08); }
+//   }
+// }
+//
+//
+// /* ---------- Inline validation ---------- */
+//
+// $error: #e5383b;
+//
+// .lp-req {
+//   color: $error;
+//   font-weight: 700;
+// }
+//
+// /* green tick when the field is valid */
+// .lp-valid-icon {
+//   flex: 0 0 auto;
+//   font-size: 20px;
+//   color: $green;
+//   opacity: 0;
+//   transform: scale(0);
+//   width: 0;
+//   transition: opacity 0.2s ease, transform 0.3s $ease-back, width 0.2s ease;
+// }
+//
+// .lp-field--valid {
+//   .lp-input { border-color: rgba(0, 169, 91, 0.45); }
+//   .lp-valid-icon { opacity: 1; transform: scale(1); width: 20px; }
+// }
+//
+// .lp-field--error {
+//   label { color: $error !important; }
+//
+//   .lp-input,
+//   .lp-input:focus-within {
+//     background: #fff8f8;
+//     border-color: $error;
+//     box-shadow: 0 0 0 4px rgba(229, 56, 59, 0.10);
+//
+//     &::after { background: $error; }
+//
+//     .lp-input-icon { color: $error; }
+//   }
+// }
+//
+// .lp-error {
+//   display: flex;
+//   align-items: center;
+//   gap: 6px;
+//   margin: 7px 0 0 4px;
+//   color: $error;
+//   font-size: 12.5px;
+//   font-weight: 500;
+//   line-height: 1.3;
+//   animation: lp-error-in 0.3s $ease-out both;
+//
+//   ion-icon {
+//     flex: 0 0 auto;
+//     font-size: 15px;
+//   }
+// }
+//
+// .lp-shake { animation: lp-shake 0.45s ease-in-out; }
+//
+// @keyframes lp-error-in {
+//   from { opacity: 0; transform: translateY(-6px); }
+//   to { opacity: 1; transform: none; }
+// }
+//
+// @keyframes lp-shake {
+//   0%, 100% { transform: translateX(0); }
+//   15%, 55% { transform: translateX(-7px); }
+//   35%, 75% { transform: translateX(7px); }
+//   90% { transform: translateX(-2px); }
+// }
+//
+//
+// /* ---------- Forgot password ---------- */
+//
+// .lp-row {
+//   display: flex;
+//   justify-content: flex-end;
+//   margin: 2px 0 22px;
+// }
+//
+// .lp-forgot {
+//   position: relative;
+//   color: $green;
+//   font-size: 13.5px;
+//   font-weight: 600;
+//   cursor: pointer;
+//   user-select: none;
+//   padding: 4px 2px;
+//
+//   &::after {
+//     content: "";
+//     position: absolute;
+//     left: 2px;
+//     right: 2px;
+//     bottom: 1px;
+//     height: 1.5px;
+//     background: currentColor;
+//     transform: scaleX(0);
+//     transform-origin: right;
+//     transition: transform 0.3s ease;
+//   }
+//
+//   &:active::after,
+//   &:hover::after {
+//     transform: scaleX(1);
+//     transform-origin: left;
+//   }
+// }
+//
+//
+// /* ---------- Login button ---------- */
+//
+// .lp-btn {
+//   /* point 1/6: now a real <button> - reset browser defaults */
+//   width: 100%;
+//   border: 0;
+//   padding: 0;
+//   font-family: inherit;
+//   -webkit-appearance: none;
+//   appearance: none;
+//   position: relative;
+//   overflow: hidden;
+//   height: 54px;
+//   border-radius: 14px;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   gap: 10px;
+//   color: #fff;
+//   font-size: 15.5px;
+//   font-weight: 700;
+//   letter-spacing: 0.2px;
+//   cursor: pointer;
+//   user-select: none;
+//   -webkit-tap-highlight-color: transparent;
+//   background: linear-gradient(135deg, $green-light 0%, $green 60%, $green-deep 100%);
+//   background-size: 200% 200%;
+//   box-shadow: 0 10px 22px rgba(0, 169, 91, 0.28);
+//   transition: transform 0.15s ease, box-shadow 0.2s ease;
+//
+//   span, ion-icon { position: relative; z-index: 1; }
+//
+//   ion-icon {
+//     font-size: 20px;
+//     // animation: lp-nudge 1.8s ease-in-out 2s infinite;
+//     animation: lp-nudge 1.8s ease-in-out 2s 2;   /* point 8: nudges twice, then rests */
+//   }
+//
+//   /* shine sweep */
+//   &::before {
+//     content: "";
+//     position: absolute;
+//     top: 0;
+//     bottom: 0;
+//     left: -75%;
+//     width: 50%;
+//     background: linear-gradient(100deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.35) 50%, rgba(255, 255, 255, 0) 100%);
+//     transform: skewX(-20deg);
+//     // animation: lp-shine 3.6s ease-in-out 1.8s infinite;
+//     animation: lp-shine-slow 7s ease-in-out 1.8s infinite;   /* point 8: one sweep every 7s */
+//   }
+//
+//   &:active {
+//     transform: scale(0.97);
+//     box-shadow: 0 5px 12px rgba(0, 169, 91, 0.22);
+//   }
+// }
+//
+//
+// /* =========================================================
+//    FOOTER
+//    ========================================================= */
+//
+// .lp-footer {
+//   margin-top: auto;
+//   flex-shrink: 0;
+//   padding: 28px 0 22px;
+//   text-align: center;
+//   animation: lp-fade 0.6s ease 1.2s both;
+//
+//   small {
+//     display: block;
+//     color: #9aa5a0;
+//     font-size: 11.5px;
+//     letter-spacing: 0.4px;
+//   }
+//
+//   strong {
+//     display: block;
+//     margin-top: 2px;
+//     font-size: 13px;
+//     font-weight: 700;
+//     letter-spacing: 3px;
+//     background: linear-gradient(90deg, $green, $green-light);
+//     -webkit-background-clip: text;
+//     background-clip: text;
+//     color: transparent;
+//   }
+// }
+//
+//
+// /* =========================================================
+//    REDUCED MOTION
+//    ========================================================= */
+//
+// @media (prefers-reduced-motion: reduce) {
+//   .lg-wrapper *,
+//   .lg-wrapper *::before,
+//   .lg-wrapper *::after {
+//     animation-duration: 0.01ms !important;
+//     animation-delay: 0s !important;
+//     animation-iteration-count: 1 !important;
+//     transition-duration: 0.01ms !important;
+//   }
+// }
+//
+//
+//
+// // =====================================================================
+//
+//
+// /* =========================================================
+//    v5 REVIEW FIXES
+//    ========================================================= */
+//
+// /* point 11: brand tagline under the wordmark (same as the splash) */
+// .lg-tagline {
+//   margin: 5px 0 0 2px;
+//   color: #6b7280;
+//   font-size: 10.5px;
+//   font-weight: 600;
+//   letter-spacing: 1.6px;
+//   text-transform: uppercase;
+//   animation: lp-fade 0.6s ease 0.5s backwards;
+// }
+//
+// /* point 6: loading state inside the button */
+// .lp-btn--loading,
+// .lp-btn:disabled {
+//   cursor: default;
+//   box-shadow: 0 6px 14px rgba(0, 169, 91, 0.20);
+//
+//   &::before { animation: none; opacity: 0; }
+// }
+//
+// .lp-btn ion-spinner {
+//   position: relative;
+//   z-index: 1;
+//   width: 20px;
+//   height: 20px;
+//   color: #ffffff;
+//   animation: lp-fade 0.2s ease;
+// }
+//
+// .lp-btn--loading span {
+//   animation: lp-breathe 1.4s ease-in-out infinite;
+// }
+//
+// /* point 8: one quick sweep, then a long rest */
+// @keyframes lp-shine-slow {
+//   0% { left: -75%; }
+//   18%, 100% { left: 130%; }
+// }
+//
+// @keyframes lp-breathe {
+//   0%, 100% { opacity: 1; }
+//   50% { opacity: 0.7; }
+// }
+//
 
 // OLD LOGIN STYLES (v3 - green hero + card) - commented out, replaced by v4 above.
 // =====================================================================

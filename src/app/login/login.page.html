@@ -1,9 +1,8 @@
 <!-- =====================================================================
-     LOGIN PAGE (v5) - clean left-aligned layout + review fixes
-     Same content, input fields, validation and button as v3.
-     Bindings: login_data.username, login_data.password, showPassword,
-     errors, touched, shake, togglePassword(), onForgotPassword(),
-     onLogin(), onFieldBlur(), onFieldChange(), isKeyboardOpen
+     LOGIN PAGE (v6) - client layout: green gradient top, centred logo,
+     heading, then a white card with the wordmark, form and footer.
+     Content, fields, validation and button are the same as v5.
+     Previous versions are commented out at the bottom of this file.
      ===================================================================== -->
 <ion-content
   class="login-page"
@@ -11,75 +10,59 @@
   [scrollY]="true"
 >
 
-  <!-- soft animated background glows -->
-  <span class="lg-glow lg-glow--1"></span>
-  <span class="lg-glow lg-glow--2"></span>
-  <span class="lg-glow lg-glow--3"></span>
+  <div class="lg6-page" [class.lg6-keyboard-open]="isKeyboardOpen">
 
-  <div class="lg-wrapper" [class.lg-keyboard-open]="isKeyboardOpen">
+    <!-- ================= GREEN TOP ================= -->
+    <header class="lg6-hero">
+      <!-- soft decoration -->
+      <span class="lg6-glow lg6-glow--1"></span>
+      <span class="lg6-glow lg6-glow--2"></span>
+      <span class="lg6-float lg6-float--1"></span>
+      <span class="lg6-float lg6-float--2"></span>
+      <span class="lg6-float lg6-float--3"></span>
 
-    <!-- ================= BRAND ================= -->
-    <header class="lg-brand">
-      <div class="lg-logo">
-        <svg class="lg-icon" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-          <g class="lg-bubble lg-bubble--grey">
+      <!-- logo tile (animated chat bubbles) -->
+      <div class="lg6-logo">
+        <span class="lg6-logo-ring"></span>
+        <svg class="lg6-icon" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+          <g class="lg6-bubble lg6-bubble--grey">
             <path pathLength="1" d="M58 18 H86 A14 14 0 0 1 100 32 V66 L91 59 Q88 56 83 56 H58 A14 14 0 0 1 44 42 V32 A14 14 0 0 1 58 18 Z" />
-            <circle class="lg-dot lg-dot--g d1" cx="62" cy="37" r="4" />
-            <circle class="lg-dot lg-dot--g d2" cx="72" cy="37" r="4" />
-            <circle class="lg-dot lg-dot--g d3" cx="82" cy="37" r="4" />
+            <circle class="lg6-dot lg6-dot--g d1" cx="62" cy="37" r="4" />
+            <circle class="lg6-dot lg6-dot--g d2" cx="72" cy="37" r="4" />
+            <circle class="lg6-dot lg6-dot--g d3" cx="82" cy="37" r="4" />
           </g>
-          <g class="lg-bubble lg-bubble--green">
+          <g class="lg6-bubble lg6-bubble--green">
             <path pathLength="1" d="M34 64 H62 A14 14 0 0 1 76 78 V86 A14 14 0 0 1 62 100 H37 Q32 100 29 103 L20 110 V78 A14 14 0 0 1 34 64 Z" />
-            <circle class="lg-dot lg-dot--k d4" cx="38" cy="82" r="4" />
-            <circle class="lg-dot lg-dot--k d5" cx="48" cy="82" r="4" />
-            <circle class="lg-dot lg-dot--k d6" cx="58" cy="82" r="4" />
+            <circle class="lg6-dot lg6-dot--k d4" cx="38" cy="82" r="4" />
+            <circle class="lg6-dot lg6-dot--k d5" cx="48" cy="82" r="4" />
+            <circle class="lg6-dot lg6-dot--k d6" cx="58" cy="82" r="4" />
           </g>
         </svg>
       </div>
-      <div class="lg-brand-text">
-        <img
-          src="assets/images/super-assist-wordmark.png"
-          alt="Super Assist"
-          class="lg-wordmark"
-        >
-        <!-- OLD v4:
-        <p class="lg-card-caption">Sign in to your account</p>
-        -->
-        <p class="lg-tagline">Smart enterprise messaging</p>
-      </div>
+
+      <h1 class="lg6-title">Welcome Back</h1>
+      <p class="lg6-subtitle">Sign in to continue to your conversations.</p>
     </header>
 
-    <!-- ================= HEADING ================= -->
-    <h1 class="lg-title">Welcome Back</h1>
-    <!-- OLD v4:
-    <p class="lg-subtitle">Access your enterprise dashboard to continue.</p>
-    -->
-    <p class="lg-subtitle">Sign in to continue to your conversations.</p>
+    <!-- ================= WHITE CARD ================= -->
+    <section class="lg6-card">
 
-    <!-- ================= FORM (fields + validation unchanged) ================= -->
-    <section class="lg-form">
+      <img
+        src="assets/images/super-assist-wordmark.png"
+        alt="Super Assist"
+        class="lg6-wordmark"
+      >
+      <p class="lg6-tagline">Smart enterprise messaging</p>
+
+      <div class="lg6-form">
 
       <!-- EMAIL (with inline validation) -->
       <div class="lp-field lp-stagger-1"
            [class.lp-field--error]="errors.username"
            [class.lp-field--valid]="touched.username && !errors.username && login_data.username">
-        <!-- OLD v4:
-        <label>Email Address <span class="lp-req">*</span></label>
-        -->
         <label>Email Address</label>
         <div class="lp-input" [class.lp-shake]="shake.username">
           <ion-icon name="mail-outline" class="lp-input-icon"></ion-icon>
-          <!-- OLD v4:
-          <ion-input
-            type="email"
-            inputmode="email"
-            autocomplete="email"
-            placeholder="name@company.com"
-            [(ngModel)]="login_data.username"
-            (ngModelChange)="onFieldChange('username')"
-            (ionBlur)="onFieldBlur('username')">
-          </ion-input>
-          -->
           <ion-input
             type="email"
             inputmode="email"
@@ -106,22 +89,9 @@
       <div class="lp-field lp-stagger-2"
            [class.lp-field--error]="errors.password"
            [class.lp-field--valid]="touched.password && !errors.password && login_data.password">
-        <!-- OLD v4:
-        <label>Password <span class="lp-req">*</span></label>
-        -->
         <label>Password</label>
         <div class="lp-input" [class.lp-shake]="shake.password">
           <ion-icon name="lock-closed-outline" class="lp-input-icon"></ion-icon>
-          <!-- OLD v4:
-          <ion-input
-            [type]="showPassword ? 'text' : 'password'"
-            autocomplete="current-password"
-            placeholder="••••••••"
-            [(ngModel)]="login_data.password"
-            (ngModelChange)="onFieldChange('password')"
-            (ionBlur)="onFieldBlur('password')">
-          </ion-input>
-          -->
           <ion-input
             #pwInput
             [type]="showPassword ? 'text' : 'password'"
@@ -154,12 +124,198 @@
       </div>
 
       <!-- LOGIN BUTTON -->
-      <!-- OLD v4:
+      <button
+        type="button"
+        class="lp-btn lp-stagger-4"
+        [class.lp-btn--loading]="isSubmitting"
+        [disabled]="isSubmitting"
+        (click)="onLogin()">
+        <span>Log in to your account</span>
+        <ion-icon name="arrow-forward-outline" *ngIf="!isSubmitting"></ion-icon>
+        <ion-spinner name="crescent" *ngIf="isSubmitting"></ion-spinner>
+      </button>
+
+      </div>
+
+      <!-- ================= FOOTER ================= -->
+      <footer class="lp-footer">
+        <small>from</small>
+        <strong>DV TECH</strong>
+      </footer>
+    </section>
+
+  </div>
+
+</ion-content>
+
+
+<!-- =====================================================================
+     OLD LOGIN TEMPLATE (v5 - left-aligned) - commented out, replaced by v6 above.
+     Inner comment markers were changed to <!~~ ~~> so this block stays one comment.
+     =====================================================================
+
+<!~~ =====================================================================
+     LOGIN PAGE (v5) - clean left-aligned layout + review fixes
+     Same content, input fields, validation and button as v3.
+     Bindings: login_data.username, login_data.password, showPassword,
+     errors, touched, shake, togglePassword(), onForgotPassword(),
+     onLogin(), onFieldBlur(), onFieldChange(), isKeyboardOpen
+     ===================================================================== ~~>
+<ion-content
+  class="login-page"
+  [fullscreen]="true"
+  [scrollY]="true"
+>
+
+  <!~~ soft animated background glows ~~>
+  <span class="lg-glow lg-glow--1"></span>
+  <span class="lg-glow lg-glow--2"></span>
+  <span class="lg-glow lg-glow--3"></span>
+
+  <div class="lg-wrapper" [class.lg-keyboard-open]="isKeyboardOpen">
+
+    <!~~ ================= BRAND ================= ~~>
+    <header class="lg-brand">
+      <div class="lg-logo">
+        <svg class="lg-icon" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+          <g class="lg-bubble lg-bubble--grey">
+            <path pathLength="1" d="M58 18 H86 A14 14 0 0 1 100 32 V66 L91 59 Q88 56 83 56 H58 A14 14 0 0 1 44 42 V32 A14 14 0 0 1 58 18 Z" />
+            <circle class="lg-dot lg-dot--g d1" cx="62" cy="37" r="4" />
+            <circle class="lg-dot lg-dot--g d2" cx="72" cy="37" r="4" />
+            <circle class="lg-dot lg-dot--g d3" cx="82" cy="37" r="4" />
+          </g>
+          <g class="lg-bubble lg-bubble--green">
+            <path pathLength="1" d="M34 64 H62 A14 14 0 0 1 76 78 V86 A14 14 0 0 1 62 100 H37 Q32 100 29 103 L20 110 V78 A14 14 0 0 1 34 64 Z" />
+            <circle class="lg-dot lg-dot--k d4" cx="38" cy="82" r="4" />
+            <circle class="lg-dot lg-dot--k d5" cx="48" cy="82" r="4" />
+            <circle class="lg-dot lg-dot--k d6" cx="58" cy="82" r="4" />
+          </g>
+        </svg>
+      </div>
+      <div class="lg-brand-text">
+        <img
+          src="assets/images/super-assist-wordmark.png"
+          alt="Super Assist"
+          class="lg-wordmark"
+        >
+        <!~~ OLD v4:
+        <p class="lg-card-caption">Sign in to your account</p>
+        ~~>
+        <p class="lg-tagline">Smart enterprise messaging</p>
+      </div>
+    </header>
+
+    <!~~ ================= HEADING ================= ~~>
+    <h1 class="lg-title">Welcome Back</h1>
+    <!~~ OLD v4:
+    <p class="lg-subtitle">Access your enterprise dashboard to continue.</p>
+    ~~>
+    <p class="lg-subtitle">Sign in to continue to your conversations.</p>
+
+    <!~~ ================= FORM (fields + validation unchanged) ================= ~~>
+    <section class="lg-form">
+
+      <!~~ EMAIL (with inline validation) ~~>
+      <div class="lp-field lp-stagger-1"
+           [class.lp-field--error]="errors.username"
+           [class.lp-field--valid]="touched.username && !errors.username && login_data.username">
+        <!~~ OLD v4:
+        <label>Email Address <span class="lp-req">*</span></label>
+        ~~>
+        <label>Email Address</label>
+        <div class="lp-input" [class.lp-shake]="shake.username">
+          <ion-icon name="mail-outline" class="lp-input-icon"></ion-icon>
+          <!~~ OLD v4:
+          <ion-input
+            type="email"
+            inputmode="email"
+            autocomplete="email"
+            placeholder="name@company.com"
+            [(ngModel)]="login_data.username"
+            (ngModelChange)="onFieldChange('username')"
+            (ionBlur)="onFieldBlur('username')">
+          </ion-input>
+          ~~>
+          <ion-input
+            type="email"
+            inputmode="email"
+            autocomplete="email"
+            autocapitalize="off"
+            autocorrect="off"
+            [spellcheck]="false"
+            enterkeyhint="next"
+            placeholder="name@company.com"
+            [(ngModel)]="login_data.username"
+            (ngModelChange)="onFieldChange('username')"
+            (ionBlur)="onFieldBlur('username')"
+            (keyup.enter)="focusPassword(pwInput)">
+          </ion-input>
+          <ion-icon name="checkmark-circle" class="lp-valid-icon"></ion-icon>
+        </div>
+        <div class="lp-error" *ngIf="errors.username">
+          <ion-icon name="alert-circle"></ion-icon>
+          <span>{{ errors.username }}</span>
+        </div>
+      </div>
+
+      <!~~ PASSWORD (with inline validation) ~~>
+      <div class="lp-field lp-stagger-2"
+           [class.lp-field--error]="errors.password"
+           [class.lp-field--valid]="touched.password && !errors.password && login_data.password">
+        <!~~ OLD v4:
+        <label>Password <span class="lp-req">*</span></label>
+        ~~>
+        <label>Password</label>
+        <div class="lp-input" [class.lp-shake]="shake.password">
+          <ion-icon name="lock-closed-outline" class="lp-input-icon"></ion-icon>
+          <!~~ OLD v4:
+          <ion-input
+            [type]="showPassword ? 'text' : 'password'"
+            autocomplete="current-password"
+            placeholder="••••••••"
+            [(ngModel)]="login_data.password"
+            (ngModelChange)="onFieldChange('password')"
+            (ionBlur)="onFieldBlur('password')">
+          </ion-input>
+          ~~>
+          <ion-input
+            #pwInput
+            [type]="showPassword ? 'text' : 'password'"
+            autocomplete="current-password"
+            enterkeyhint="go"
+            placeholder="••••••••"
+            [(ngModel)]="login_data.password"
+            (ngModelChange)="onFieldChange('password')"
+            (ionBlur)="onFieldBlur('password')"
+            (keyup.enter)="onLogin()">
+          </ion-input>
+          <button
+            type="button"
+            class="lp-eye"
+            [class.lp-eye--on]="showPassword"
+            (click)="togglePassword()"
+            [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'">
+            <ion-icon [name]="showPassword ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+          </button>
+        </div>
+        <div class="lp-error" *ngIf="errors.password">
+          <ion-icon name="alert-circle"></ion-icon>
+          <span>{{ errors.password }}</span>
+        </div>
+      </div>
+
+      <!~~ FORGOT PASSWORD ~~>
+      <div class="lp-row lp-stagger-3">
+        <div class="lp-forgot" (click)="onForgotPassword()">Forgot password?</div>
+      </div>
+
+      <!~~ LOGIN BUTTON ~~>
+      <!~~ OLD v4:
       <div class="lp-btn lp-stagger-4" (click)="onLogin()">
         <span>Log in to your account</span>
         <ion-icon name="arrow-forward-outline"></ion-icon>
       </div>
-      -->
+      ~~>
       <button
         type="button"
         class="lp-btn lp-stagger-4"
@@ -173,7 +329,7 @@
 
     </section>
 
-    <!-- ================= FOOTER ================= -->
+    <!~~ ================= FOOTER ================= ~~>
     <footer class="lp-footer">
       <small>from</small>
       <strong>DV TECH</strong>
@@ -182,6 +338,11 @@
   </div>
 
 </ion-content>
+
+
+
+
+-->
 
 
 <!-- =====================================================================

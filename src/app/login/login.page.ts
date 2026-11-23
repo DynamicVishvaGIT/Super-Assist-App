@@ -5,6 +5,7 @@ import { Common } from '../common';
 import { Api } from '../api';
 import { User } from '../user';
 import { Platform } from '@ionic/angular';
+import { StatusBar } from '@awesome-cordova-plugins/status-bar/ngx';
 
 declare var Keyboard: any;
 
@@ -33,7 +34,7 @@ export class LoginPage implements OnInit {
   // (point 6) spinner inside the button instead of a full-screen loader
   isSubmitting = false;
 
-  constructor(private router: Router, private commonService: Common, private apiService: Api, private userService: User, private platform: Platform) { 
+  constructor(private router: Router, private commonService: Common, private apiService: Api, private userService: User, private platform: Platform, private statusBar: StatusBar) { 
     this._unsubscribeAll = new Subject();
   }
 
@@ -166,6 +167,35 @@ export class LoginPage implements OnInit {
   /** (point 1) Enter / "Next" on the email field moves to the password field */
   focusPassword(input: any) {
     input?.setFocus?.();
+  }
+
+  // =========================================================
+  // (v6 design) status bar matches the green top of this screen
+  // =========================================================
+  // private readonly LOGIN_STATUS_COLOR = '#a7d9aa';
+  private readonly LOGIN_STATUS_COLOR = '#a5d6a7';   // same as the top of the page gradient
+  private readonly APP_STATUS_COLOR = '#ffffff';     // app default (set in AppComponent)
+
+  ionViewWillEnter() {
+    this.setStatusBar(this.LOGIN_STATUS_COLOR);
+  }
+
+  ionViewWillLeave() {
+    // this.setStatusBar(this.APP_STATUS_COLOR);
+    // Forgot Password uses the same mint top - only reset for other pages
+    if (!this.router.url.includes('forgot-password')) {
+      this.setStatusBar(this.APP_STATUS_COLOR);
+    }
+  }
+
+  private setStatusBar(color: string) {
+    this.platform.ready().then(() => {
+      if (!this.platform.is('hybrid')) { return; }    // browser preview: nothing to do
+      try {
+        this.statusBar.backgroundColorByHexString(color);
+        this.statusBar.styleDefault();               // dark icons on the light colour
+      } catch (e) { /* plugin unavailable */ }
+    });
   }
 
   togglePassword() {

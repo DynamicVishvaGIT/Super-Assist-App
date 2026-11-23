@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ToastController } from '@ionic/angular';
+// import { ToastController } from '@ionic/angular';
+import { Platform, ToastController } from '@ionic/angular';
+import { StatusBar } from '@awesome-cordova-plugins/status-bar/ngx';
 
 @Component({
   selector: 'app-forgot-password',
@@ -25,8 +27,37 @@ export class ForgotPasswordPage implements OnInit {
 
   constructor(
     private router: Router,
-    private toastController: ToastController
+    private toastController: ToastController,
+    private platform: Platform,
+    private statusBar: StatusBar
   ) {}
+
+  // =====================================================
+  // (v3 design) status bar matches the mint top, like the login page
+  // =====================================================
+  private readonly PAGE_STATUS_COLOR = '#a5d6a7';
+  private readonly APP_STATUS_COLOR = '#ffffff';
+
+  ionViewWillEnter() {
+    this.setStatusBar(this.PAGE_STATUS_COLOR);
+  }
+
+  ionViewWillLeave() {
+    // going back to the login keeps the same mint top - only reset for other pages
+    if (!this.router.url.includes('login')) {
+      this.setStatusBar(this.APP_STATUS_COLOR);
+    }
+  }
+
+  private setStatusBar(color: string) {
+    this.platform.ready().then(() => {
+      if (!this.platform.is('hybrid')) { return; }
+      try {
+        this.statusBar.backgroundColorByHexString(color);
+        this.statusBar.styleDefault();
+      } catch (e) { /* plugin unavailable */ }
+    });
+  }
 
   ngOnInit() {
   }
